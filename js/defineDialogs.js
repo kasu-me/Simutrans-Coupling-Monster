@@ -74,7 +74,7 @@ window.addEventListener("load", function () {
 				<td>画像名</td>
 				<td>
 				<span class="selectbox-fluctuation-button">
-					<select id="addon-image-file-name"></select>
+					<select id="addon-image-file-name" disabled></select>
 				</span>
 			</tr>
 		</table>
