@@ -11,7 +11,7 @@ window.addEventListener("load", () => {
 	let showBalloon = (elem) => {
 		let message = elem.getAttribute("mku-balloon-message");
 		elem.addEventListener("mouseenter", (e) => {
-			document.getElementById("stylesheet").innerHTML = "";
+			gebi("stylesheet").innerHTML = "";
 			balloon.innerHTML = message;
 			balloon.classList.add("on");
 			balloon.style.top = `${elem.getBoundingClientRect().top - balloon.clientHeight - 7 + window.scrollY}px`;
@@ -23,7 +23,7 @@ window.addEventListener("load", () => {
 				if (balloonBeforeLeft < 7) {
 					balloonBeforeLeft = 7;
 				}
-				document.getElementById("stylesheet").innerHTML = `
+				gebi("stylesheet").innerHTML = `
 					#mku-balloon::before {
 						left: ${balloonBeforeLeft}px;
 					}

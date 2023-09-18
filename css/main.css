@@ -90,10 +90,8 @@ header div.button-group div.button-group-title {
 	overflow: hidden;
 }
 
-.image-container img {
-	position: absolute;
-	top: 0;
-	left: 0;
+#constraint-container>div:nth-child(2) #main-image-container .image-container {
+	cursor: pointer;
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container {
@@ -113,6 +111,16 @@ header div.button-group div.button-group-title {
 	font-weight: bold;
 }
 
+table#main-proptable th,
+table#main-proptable td {
+	padding: 10px;
+	text-align: center;
+	border: 1px solid #ccc;
+}
+
+table#main-proptable tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
 
 #constraint-container>div:nth-child(2) #main-proptable-container table#main-proptable input {
 	width: 100%;
@@ -181,7 +189,7 @@ div.dialog-main-message:has(.dialog-preview) {
 	padding-bottom: 1.0em;
 }
 
-/* 画像指定ダイアログ */
+/* 画像ファイル指定ダイアログ */
 
 #selectImageDialog #selected-image-preview {
 	text-align: center;
@@ -196,6 +204,37 @@ div.dialog-main-message:has(.dialog-preview) {
 
 #selectImageDialog #image-file-input {
 	display: none;
+}
+
+/* 車両に画像指定ダイアログ */
+#editImageDialog .input-area {
+	margin-bottom: 1em;
+}
+
+#editImageDialog #direction-selectbox {
+	width: unset;
+}
+
+#editImageDialog #addon-image-whole-preview {
+	width: 500px;
+	position: relative;
+	background-color: var(--simutrans-transparent);
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+#editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer {
+	position: absolute;
+	border: 2px solid #f00;
+}
+
+#editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer.cursor {
+	border: 2px solid #00f;
+	display: none;
+}
+
+#editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer.cursor.on {
+	display: block;
 }
 
 /* ヘルプダイアログ */

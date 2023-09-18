@@ -17,6 +17,8 @@ NOIMAGE.classList.add("noimage");
 //datファイル定型句
 const CONSTRAINT = "constraint";
 const EMPTYIMAGE = "emptyimage";
+const DIRECTIONS = ["s", "e", "se", "sw", "n", "w", "nw", "ne"];
+const EMPTYIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${EMPTYIMAGE}[${x}]`);
 //pakタイプ
 const PAK_TYPE = 128;
 
@@ -180,13 +182,19 @@ function saveDat() {
 
 //アドオンから代表画像名･表示位置を取得
 function getImageNameAndPositionsFromAddon(addon) {
-	return addon[`${EMPTYIMAGE}[s]`].split(".");
+	return getImageNameAndPositionsFromAddonByDirection(addon, "s");
+}
+function getImageNameAndPositionsFromAddonByDirection(addon, direction) {
+	return addon[`${EMPTYIMAGE}[${direction}]`].split(".");
 }
 
 //アドオンプレビューをセット
 function setAddonPreviewImage(target, addon) {
+	return setAddonPreviewImageByDirection(target, addon, "s");
+}
+function setAddonPreviewImageByDirection(target, addon, direction) {
 	if (addon == undefined) { return }
-	let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(addon);
+	let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddonByDirection(addon, direction);
 	let img = imageFiles.get(imgName);
 
 	let div = document.createElement("div");
@@ -201,6 +209,8 @@ function setAddonPreviewImage(target, addon) {
 		div.style.backgroundPositionY = 0;
 	}
 	target.appendChild(div);
+	return div;
+
 }
 
 //表示更新
@@ -223,7 +233,10 @@ function refresh() {
 	//編集中アドオンの画像設定
 	let mainImageContainer = gebi("main-image-container");
 	mainImageContainer.innerHTML = "";
-	setAddonPreviewImage(mainImageContainer, editingAddon);
+	let imageContainer = setAddonPreviewImage(mainImageContainer, editingAddon);
+	imageContainer.addEventListener("click", () => {
+		Dialog.list.editImageDialog.functions.display();
+	});
 
 	//前後の連結設定を表示
 	let areas = {
@@ -248,7 +261,7 @@ function refresh() {
 	setDragAndDropAddonEvents();
 
 	//選択中のアドオンをハイライト
-	document.getElementById("addons-list").querySelectorAll(".draggable-object").forEach((addon) => {
+	gebi("addons-list").querySelectorAll(".draggable-object").forEach((addon) => {
 		if (addon.dataset.addonName == editingAddon.name) {
 			addon.classList.add("editing");
 		} else {
@@ -257,7 +270,7 @@ function refresh() {
 	});
 
 	//選択中のアドオンのプロパティを表示
-	let propTable = document.getElementById("main-proptable");
+	let propTable = gebi("main-proptable");
 	propTable.innerHTML = "";
 	for (let prop in editingAddon) {
 		if (prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
@@ -304,7 +317,7 @@ function setDragAndDropAddonEvents() {
 	let constraintViews = document.querySelectorAll("#constraint-container>div");
 	let addonsList = document.querySelectorAll("#addons-list .draggable-object");
 	let changeSelect = function (addonName) {
-		let selectBox = document.getElementById("carsSelectBox");
+		let selectBox = gebi("carsSelectBox");
 		selectBox.value = addonName;
 		selectBox.dispatchEvent(new Event("change"));
 	}

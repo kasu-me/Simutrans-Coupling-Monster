@@ -11,7 +11,7 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 
-	new Dialog("selectImageDialog", "画像指定", `
+	new Dialog("selectImageDialog", "画像ファイル指定", `
 		<p>
 		<span class="selectbox-fluctuation-button" style="margin-right:1.5em;">
 		<select id="imageSelectBox">
@@ -31,7 +31,7 @@ window.addEventListener("load", function () {
 				Dialog.list.selectImageDialog.on();
 				updateViewSelectImageDialogPreviewingImage();
 				if (x != undefined) {
-					let selectBox = document.getElementById("imageSelectBox");
+					let selectBox = gebi("imageSelectBox");
 					selectBox.value = x;
 					selectBox.dispatchEvent(new Event("change"));
 				}
@@ -43,9 +43,160 @@ window.addEventListener("load", function () {
 		<div id="dat-preview" class="dialog-preview"></div>
 		`, [{ "content": "保存", "event": `saveDat();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.previewDatDialog.off();`, "icon": "close" }], {
 		display: function (datText) {
-			document.getElementById("dat-preview").innerHTML = datText.replace(/\n/g, "<br>");
+			gebi("dat-preview").innerHTML = datText.replace(/\n/g, "<br>");
 			Dialog.list.previewDatDialog.on();
 		}
+	});
+
+	let directionSelectBox = "";
+	DIRECTIONS.forEach((dir) => {
+		directionSelectBox += `<option value="${dir}">${dir}</option>`;
+	})
+	new Dialog("editImageDialog", "車両に画像を確認", `
+		<table class="input-area">
+			<tr>
+				<td>車両名</td>
+				<td>
+					<span class="selectbox-fluctuation-button">
+						<select id="preview-addon-name"></select>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>方角</td>
+				<td>
+					<span class="selectbox-fluctuation-button">
+						<select id="direction-selectbox">${directionSelectBox}</select>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>画像名</td>
+				<td>
+				<span class="selectbox-fluctuation-button">
+					<select id="addon-image-file-name"></select>
+				</span>
+			</tr>
+		</table>
+		<div id="addon-image-preview"></div>
+		<div id="addon-image-whole-preview">
+			<div class="addon-image-whole-preview-position-pointer" id="position-pointer"></div>
+			<div class="addon-image-whole-preview-position-pointer cursor" id="position-pointer-cursor"></div>
+		</div>
+		<div id="addon-image-positions"></div>
+		`, [{ "content": "閉じる", "event": `Dialog.list.editImageDialog.off();`, "icon": "close" }], {
+		editingAddon: null,
+		imageDisplaySizeRatio: 1,
+		editingAddonMainImageData: null,
+		selectedDirection: -1,
+		display: function () {
+			//編集中アドオンセット
+			Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
+
+			//アドオン名セレクトボックスセット
+			let previewAddonNameSelectBox = gebi("preview-addon-name");
+			setAddonNamesToSelectBox(previewAddonNameSelectBox);
+			previewAddonNameSelectBox.value = Dialog.list.editImageDialog.functions.editingAddon.name;
+			previewAddonNameSelectBox.addEventListener("change", () => {
+				gebi("carsSelectBox").value = previewAddonNameSelectBox.value;
+				gebi("carsSelectBox").dispatchEvent(new Event("change"));
+				Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
+				Dialog.list.editImageDialog.functions.refresh();
+			});
+			gebi("direction-selectbox").selectedIndex = 0;
+
+			//画像ファイル名セレクトボックスセット
+			setImageNamesToSelectBox(gebi("addon-image-file-name"));
+
+			Dialog.list.editImageDialog.functions.refresh();
+
+			Dialog.list.editImageDialog.on();
+		},
+		showPositionPointerCursor: function (e) {
+			let addonWholeImageArea = gebi("addon-image-whole-preview");
+			let positionPointerCursor = gebi("position-pointer-cursor");
+			let addonImagePositionsArea = gebi("addon-image-positions");
+			positionPointerCursor.classList.add("on");
+			addonWholeImageArea.addEventListener("mouseleave", (e) => {
+				positionPointerCursor.classList.remove("on");
+				addonImagePositionsArea.innerHTML = `x:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[2]}, y:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[1]}`;
+			}, { once: true });
+		},
+		movePositionPointerCursor: function (e) {
+			let addonWholeImageArea = gebi("addon-image-whole-preview");
+			let positionPointerCursor = gebi("position-pointer-cursor");
+			let addonImagePositionsArea = gebi("addon-image-positions");
+			let x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			if (x >= 0 && y >= 0) {
+				positionPointerCursor.classList.add("on");
+				positionPointerCursor.style.left = `${x * PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				positionPointerCursor.style.top = `${y * PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				addonImagePositionsArea.innerHTML = `x:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[2]}, y:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[1]} => x:${x}, y:${y}`;
+			} else {
+				positionPointerCursor.classList.remove("on");
+			}
+		},
+		clickPositionPointerCursor: function (e) {
+			let addonWholeImageArea = gebi("addon-image-whole-preview");
+			let x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			Dialog.list.editImageDialog.functions.editingAddon[`${EMPTYIMAGE}[${Dialog.list.editImageDialog.functions.selectedDirection}]`] = `${Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]}.${y}.${x}`;
+			Dialog.list.editImageDialog.functions.refresh();
+		},
+		refresh: function () {
+			refresh();
+
+			//イベントリセット
+			let addonWholeImageArea = gebi("addon-image-whole-preview");
+			addonWholeImageArea.removeEventListener("mouseenter", Dialog.list.editImageDialog.functions.showPositionPointerCursor);
+			addonWholeImageArea.removeEventListener("mousemove", Dialog.list.editImageDialog.functions.movePositionPointerCursor);
+			addonWholeImageArea.removeEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
+
+			//セレクトボックスに方向をセット
+			let selectBox = gebi("direction-selectbox");
+			Dialog.list.editImageDialog.functions.selectedDirection = selectBox.value;
+
+			//その方角に指定されている画像ファイル名をセット
+			Dialog.list.editImageDialog.functions.editingAddonMainImageData = getImageNameAndPositionsFromAddonByDirection(Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
+			let addonImageFileNameArea = gebi("addon-image-file-name");
+			addonImageFileNameArea.value = Dialog.list.editImageDialog.functions.editingAddonMainImageData[0];
+
+			//その方角に指定されている画像プレビューをセット
+			let addonImageArea = gebi("addon-image-preview");
+			addonImageArea.innerHTML = "";
+			setAddonPreviewImageByDirection(addonImageArea, Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
+
+			//全体内での位置表示用の全体画像
+			let image = imageFiles.get(Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]);
+			addonWholeImageArea.style.backgroundImage = `url(${image.src})`;
+			Dialog.list.editImageDialog.functions.imageDisplaySizeRatio = 500 / image.width;
+			addonWholeImageArea.style.height = `${image.height * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+
+			//全体内での位置選択
+			let positionPointerCursor = gebi("position-pointer-cursor");
+			positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+			positionPointerCursor.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+			addonWholeImageArea.appendChild(positionPointerCursor);
+			addonWholeImageArea.addEventListener("mouseenter", Dialog.list.editImageDialog.functions.showPositionPointerCursor);
+			addonWholeImageArea.addEventListener("mousemove", Dialog.list.editImageDialog.functions.movePositionPointerCursor);
+			addonWholeImageArea.addEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
+
+			//全体内での現在位置表示
+			let positionPointer = gebi("position-pointer");
+			positionPointer.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+			positionPointer.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+			positionPointer.style.top = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[1] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+			positionPointer.style.left = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[2] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+			addonWholeImageArea.appendChild(positionPointer);
+
+			//その方角に指定されているdatファイルの記述
+			let addonImagePositionsArea = gebi("addon-image-positions");
+			addonImagePositionsArea.innerHTML = `x:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[2]}, y:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[1]}`;
+		}
+	});
+	gebi("direction-selectbox").addEventListener("change", () => {
+		Dialog.list.editImageDialog.functions.refresh();
 	});
 
 	new Dialog("helpDialog", "Coupling Monster について", `
@@ -74,7 +225,7 @@ window.addEventListener("load", function () {
 	//アラート:alrt
 	new Dialog("alertDialog", "警告", `< img src = "./js/img/alert.svg" class="dialog-icon" > <div id="alrt-main"></div>`, [{ "content": "OK", "event": `Dialog.list.alertDialog.off()`, "icon": "check" }], {
 		display: function (message) {
-			document.getElementById("alrt-main").innerHTML = message;
+			gebi("alrt-main").innerHTML = message;
 			Dialog.list.alertDialog.on();
 			Dialog.list.alertDialog.buttons.querySelector("button[icon='check']").focus();
 		}
@@ -83,7 +234,7 @@ window.addEventListener("load", function () {
 	//確認:cnfm
 	new Dialog("confirmDialog", "確認", `< img src = "./js/img/confirm.svg" class="dialog-icon" > <div id="cnfm-main"></div>`, [{ "content": "OK", "event": `Dialog.list.confirmDialog.functions.callback(); Dialog.list.confirmDialog.off()`, "icon": "check" }, { "content": "NO", "event": `Dialog.list.confirmDialog.off(); Dialog.list.confirmDialog.functions.interruption(); `, "icon": "close" }], {
 		display: function (message, callback, interruption) {
-			document.getElementById("cnfm-main").innerHTML = message;
+			gebi("cnfm-main").innerHTML = message;
 			Dialog.list.confirmDialog.functions.callback = callback || function () { };
 			Dialog.list.confirmDialog.functions.interruption = interruption || function () { };
 			Dialog.list.confirmDialog.on();
@@ -96,7 +247,7 @@ window.addEventListener("load", function () {
 	//情報:info
 	new Dialog("infoDialog", "情報", `< img src = "./js/img/info.svg" class="dialog-icon" > <div id="info-main"></div>`, [{ "content": "OK", "event": `Dialog.list.infoDialog.off()`, "icon": "close" }], {
 		display: function (message) {
-			document.getElementById("info-main").innerHTML = message;
+			gebi("info-main").innerHTML = message;
 			Dialog.list.infoDialog.on();
 			Dialog.list.infoDialog.buttons.querySelector("button[icon='check']").focus();
 		}
