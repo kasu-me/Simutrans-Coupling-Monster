@@ -48,7 +48,7 @@ window.addEventListener("load", function () {
 		}
 	});
 
-	new Dialog("helpDialog", "Coupling Monsterについて", `
+	new Dialog("helpDialog", "Coupling Monster について", `
 		<div class="dialog-preview">
 			<h2>このアプリは何？</h2>
 			<p>フリー輸送シミュレーションゲーム「Simutrans」のアドオン製作を支援するWebアプリケーションです。</p>
@@ -64,7 +64,7 @@ window.addEventListener("load", function () {
 			<p>御礼申し上げます。</p>
 			<h2>お問い合わせ</h2>
 			<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
-			<!--<p>変更履歴は<a href="https://github.com/kasu-me/formation-manager" target="_blank">GitHub</a>をご覧ください。</p>-->
+			<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
 			<p>© 2023 M_Kasumi</p>
 		</div>
 		`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {});
