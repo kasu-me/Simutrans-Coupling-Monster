@@ -58,6 +58,10 @@ h2 {
 	margin-top: 1.5em;
 }
 
+.fluctuation-button {
+	width: 2em;
+	text-align: center;
+}
 
 /* リンク */
 a:link,

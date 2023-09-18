@@ -3,6 +3,7 @@ window.addEventListener("load", function () {
 	selectAreas.forEach((selectArea) => {
 		let selectBox = selectArea.querySelector("select");
 		let decrementButton = this.document.createElement("button");
+		decrementButton.classList.add("fluctuation-button");
 		decrementButton.innerHTML = "－";
 		decrementButton.addEventListener("click", () => {
 			let i = selectBox.selectedIndex - 1;
@@ -10,6 +11,7 @@ window.addEventListener("load", function () {
 			selectBox.dispatchEvent(new Event("change"));
 		});
 		let incrementButton = this.document.createElement("button");
+		incrementButton.classList.add("fluctuation-button");
 		incrementButton.innerHTML = "＋";
 		incrementButton.addEventListener("click", () => {
 			let i = selectBox.selectedIndex + 1;
