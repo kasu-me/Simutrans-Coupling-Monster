@@ -40,6 +40,10 @@ header div.button-group div.button-group-title {
 
 
 /* メイン画面 */
+select#carsSelectBox {
+	max-width: calc(100vw / 3 - 12em);
+}
+
 #constraint-container {
 	column-count: 3;
 	column-gap: 1.6em;
