@@ -251,7 +251,9 @@ function refresh() {
 	function setArea(mode) {
 		if (constraints[mode] != undefined) {
 			constraints[mode].forEach((constraint) => {
-				setAddonPreviewBox(areas[mode], document.createElement("li"), searchObjectsByItsName(masterAddons, constraint)[0]);
+				if (constraint != "none") {
+					setAddonPreviewBox(areas[mode], document.createElement("li"), searchObjectsByItsName(masterAddons, constraint)[0]);
+				}
 			});
 		}
 	}
