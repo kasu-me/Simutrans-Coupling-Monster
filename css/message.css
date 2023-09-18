@@ -1,0 +1,57 @@
+.message-content {
+	display: none;
+	position: fixed;
+	top: 30px;
+	left: 50%;
+	transform: translate(-50%, 0);
+	visibility: visible;
+	background-color: #fff;
+	padding: 0;
+	max-width: calc(100% - 6.0em);
+	max-height: 100%;
+	text-align: center;
+	border: 1px solid var(--main-color);
+	transition: var(--main-transition);
+	box-shadow: 0px 0px 10px #000;
+	overflow: hidden;
+	width: max-content;
+	z-index: 999998;
+	padding: 1.0em;
+	border-radius: 4px;
+}
+
+.message-content.on {
+	display: block;
+	animation: message-show 300ms ease-out 0s;
+}
+
+.message-content.off {
+	display: block;
+	animation: message-hide forwards 300ms ease-in 0s;
+}
+
+@keyframes message-show {
+	from {
+		opacity: 0;
+		transform: translate(-50%, -50%);
+	}
+
+	to {
+		opacity: 1;
+		visibility: visible;
+		transform: translate(-50%, 0);
+	}
+}
+
+@keyframes message-hide {
+	0% {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+
+	100% {
+		opacity: 0;
+		visibility: hidden;
+		transform: translate(-50%, -50%);
+	}
+}

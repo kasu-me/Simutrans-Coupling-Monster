@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8">
+	<title>Simutrans Coupling Monster</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="css/general.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="ligatureSymbols/style.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="css/dialog.css">
+	<script src="js/dialog.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="css/message.css">
+	<script src="js/message.js"></script>
+	<script src="js/defineDialogs.js"></script>
+	<script src="js/fluctuation.js"></script>
+	<script src="js/drag.js"></script>
+	<link rel="stylesheet" href="css/drag.css">
+	<script src="js/main.js"></script>
+	<script src="js/keyboard.js"></script>
+	<script src="js/utils/balloon.js"></script>
+	<link rel="stylesheet" href="css/utils/balloon.css">
+	<style id="stylesheet"></style>
+</head>
+
+<body>
+	<header>
+		<div class="button-group">
+			<div class="button-group-title">dat</div>
+			<button class="lsf-icon" icon="file" onclick="Dialog.list.openDatFileDialog.functions.display()">開く</button>
+			<button class="lsf-icon" icon="view" onclick="viewDat()">プレビュー</button>
+			<button class="lsf-icon" icon="download" onclick="saveDat()">保存</button>
+		</div>
+		<div class="button-group">
+			<div class="button-group-title">指定</div>
+			<button class="lsf-icon" icon="image"
+				onclick="Dialog.list.selectImageDialog.functions.display()">画像指定</button>
+		</div>
+		<div class="button-group">
+			<div class="button-group-title">ヘルプ</div>
+			<button class="lsf-icon" icon="help" onclick="Dialog.list.helpDialog.functions.display()">このアプリについて</button>
+		</div>
+	</header>
+	<div id="constraint-container">
+		<div id="constraint-prev-container" class="constraint-view">
+			<p class="constraint-title">PREV</p>
+			<ul id="constraint-prev">
+
+			</ul>
+		</div>
+		<div>
+			<p>
+				<span class="selectbox-fluctuation-button">
+					<select id="carsSelectBox">
+					</select>
+				</span>
+			</p>
+			<div id="main-image-container"></div>
+			<div id="main-proptable-container">
+				<table id="main-proptable">
+				</table>
+			</div>
+		</div>
+		<div id="constraint-next-container" class="constraint-view">
+			<p class="constraint-title">NEXT</p>
+			<ul id="constraint-next">
+
+			</ul>
+		</div>
+	</div>
+	<footer>
+		<p>現在読み込まれている車両 ドラッグ&ドロップで連結設定に追加</p>
+		<div id="addons-list"></div>
+	</footer>
+</body>
+
+</html>

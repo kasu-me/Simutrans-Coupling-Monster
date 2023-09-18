@@ -1,0 +1,213 @@
+:root {
+	--main-padding: 2.0em;
+	--simutrans-transparent: #e7ffff;
+	--simutrans-paktype: 128px;
+}
+
+/* 画像なし画像 */
+.noimage {
+	margin-top: 2.0em;
+}
+
+/* ヘッダ */
+header {
+	z-index: 99998;
+	position: sticky;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+	margin: 0;
+	margin-bottom: 2.0em;
+	padding: 0.8em var(--main-padding);
+	border-bottom: 1px solid var(--formation-table-main-border);
+	display: flex;
+}
+
+header div.button-group {
+	margin-right: 1.0em;
+	padding-right: 1.0em;
+}
+
+header div.button-group:not(:last-child) {
+	border-right: 1px solid #bbb;
+}
+
+header div.button-group div.button-group-title {
+	font-weight: bold;
+	margin-bottom: 0.1em;
+}
+
+
+/* メイン画面 */
+#constraint-container {
+	column-count: 3;
+	column-gap: 1.6em;
+	padding: 0 var(--main-padding);
+	margin-top: 1em;
+	margin-bottom: 3em;
+}
+
+#constraint-container>div {
+	page-break-inside: avoid;
+	break-inside: avoid;
+	break-before: column;
+	height: calc(100vh - 20.5em - var(--simutrans-paktype));
+	border: 1px solid var(--formation-table-main-border);
+	padding: 1.0em;
+}
+
+#constraint-container>div:nth-child(2) {
+	text-align: center;
+	overflow-y: hidden;
+}
+
+#constraint-container>div.constraint-view {
+	overflow-y: scroll;
+}
+
+#constraint-container>div.constraint-view>ul {
+	padding-left: 0;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#constraint-container>div.constraint-view>ul>li.draggable-object {
+	list-style: none;
+}
+
+#constraint-container>div p {
+	margin-top: 0;
+}
+
+.image-container {
+	display: inline-block;
+	user-select: none;
+	border: 1px solid var(--formation-table-main-border);
+	width: var(--simutrans-paktype);
+	height: var(--simutrans-paktype);
+	background-color: var(--simutrans-transparent);
+	overflow: hidden;
+}
+
+.image-container img {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#constraint-container>div:nth-child(2) #main-proptable-container {
+	height: calc((100vh - 20.5em - var(--simutrans-paktype)) - var(--simutrans-paktype) - 7.5em);
+	overflow-y: scroll;
+	border: 1px solid var(--formation-table-main-border);
+	margin-top: 1em;
+}
+
+#constraint-container>div:nth-child(2) #main-proptable-container table#main-proptable {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#constraint-container>div:nth-child(2) #main-proptable-container table#main-proptable td:first-child {
+	text-align: right;
+	font-weight: bold;
+}
+
+
+#constraint-container>div:nth-child(2) #main-proptable-container table#main-proptable input {
+	width: 100%;
+}
+
+/* 選択中のアドオン */
+#addons-list .draggable-object.editing {
+	border: 2px solid var(--formation-table-main-border);
+}
+
+/* フッタ */
+footer {
+	z-index: 999;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+	margin: 0;
+	margin-bottom: 0;
+	padding: 0.8em var(--main-padding);
+	border-top: 1px solid var(--formation-table-main-border);
+}
+
+footer p {
+	margin-top: 0;
+}
+
+footer #addons-list {
+	border: 1px solid var(--formation-table-main-border);
+	display: flex;
+	width: 100%;
+	overflow-x: scroll;
+	min-height: var(--simutrans-paktype);
+}
+
+footer #addons-list>div.draggable-object:not(:last-child) {
+	margin-right: 0;
+}
+
+/* ダイアログ */
+
+#openDatFileDialog,
+#selectImageDialog {
+	top: 10%;
+}
+
+/* DATを開くダイアログ*/
+#openDatFileDialog .filefield {
+	min-width: 100%;
+	width: 60vw;
+	height: 45vh;
+	text-align: center;
+	border: dashed var(--formation-table-main-border);
+}
+
+/* DATプレビューダイアログ */
+div.dialog-main-message:has(.dialog-preview) {
+	padding: 0.5em;
+	margin: 0 1.8em;
+	border: solid 1px var(--formation-table-main-border);
+}
+
+#previewDatDialog div.dialog-main-message:has(.dialog-preview) {
+	padding-top: 1.0em;
+	padding-bottom: 1.0em;
+}
+
+/* 画像指定ダイアログ */
+
+#selectImageDialog #selected-image-preview {
+	text-align: center;
+	border: 1px solid var(--formation-table-main-border);
+	background-color: var(--simutrans-transparent);
+	width: calc(var(--simutrans-paktype) * 8px + var(--scrollbar-width));
+	height: 50vh;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	user-select: none;
+}
+
+#selectImageDialog #image-file-input {
+	display: none;
+}
+
+/* ヘルプダイアログ */
+#helpDialog {
+	max-width: 762px;
+}
+
+/* メッセージ */
+.message-content.dat-file-loaded {
+	top: calc(40px + 0em);
+}
+
+.message-content.image-file-loaded {
+	top: calc(40px + 4.5em);
+}

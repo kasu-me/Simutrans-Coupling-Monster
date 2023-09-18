@@ -1,0 +1,411 @@
+/* 汎用パーツ定義 */
+
+/* 色 */
+:root {
+	--formation-table-main-border: #5c3d7e;
+	--sub-light-color: #dcccee;
+	--button-face: #4c2d5e;
+	--button-face-hover: #8c6eae;
+	--button-face-active: #6c4e86;
+	--table-alternate-color-1: #fdfbff;
+	--table-alternate-color-2: #f7f0ff;
+	--selection-hover-highlight: #c7def5;
+	--selection-highlight: #275f97;
+	--input-focus: #3498db;
+	--scrollbar-width: 16px;
+}
+
+/* ページ全体 */
+* {
+	font-family: sans-serif;
+	box-sizing: border-box;
+	color: #000;
+}
+
+body {
+	margin: 0;
+	font-size: 11pt;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+	width: var(--scrollbar-width);
+	height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+	background-color: buttonface;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--button-face);
+	border-radius: calc(var(--scrollbar-width) / 2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: var(--button-face-hover);
+}
+
+::-webkit-scrollbar-thumb:active {
+	background-color: var(--button-face-active);
+}
+
+h2 {
+	border-left: 7px solid var(--formation-table-main-border);
+	padding-left: 0.35em;
+	font-size: 105%;
+	margin-top: 1.5em;
+}
+
+
+/* リンク */
+a:link,
+a:visited {
+	text-decoration: none;
+	color: #00f;
+}
+
+a:hover {
+	color: #f00;
+	text-decoration: none;
+}
+
+/* input要素 */
+input:not([type="range"]) {
+	border: 1px solid #000 !important;
+	outline: none;
+	box-shadow: 0 0 5px transparent;
+}
+
+input:not([type="range"]):not([type="checkbox"]):focus,
+textarea:focus,
+select:focus {
+	border: 1px solid var(--input-focus) !important;
+	outline: none;
+	box-shadow: 0 0 5px var(--input-focus);
+}
+
+/* セレクトボックス */
+select {
+	cursor: pointer;
+	padding: 4px;
+}
+
+/* ボタン */
+button,
+.button {
+	cursor: pointer;
+	background-color: var(--button-face);
+	border: 1px solid var(--button-face);
+	border-radius: 0.3em;
+	color: #fff;
+	padding: 1px 6px;
+	font-size: 10pt;
+	display: inline-block;
+}
+
+button:hover,
+.button:hover {
+	background-color: var(--button-face-hover);
+}
+
+button:active,
+button:focus,
+.button:active,
+.button:focus {
+	background-color: var(--button-face-active);
+}
+
+button:disabled,
+.button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+	pointer-events: none;
+	background-color: #ddd;
+	border-color: #ccc;
+	color: #777;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+	background-color: #e4e4e4;
+	border-color: #acacac !important;
+}
+
+select:disabled {
+	opacity: 1;
+}
+
+option:disabled {
+	color: #e4e4e4;
+}
+
+label {
+	user-select: none;
+	cursor: pointer;
+}
+
+/* ラベルボタン */
+label.button input[type="checkbox"] {
+	display: none;
+}
+
+label.button:has(input[type="checkbox"]:checked) {
+	border: 1px solid var(--button-face);
+	background-color: var(--selection-hover-highlight);
+	color: #000;
+}
+
+/* トグル(インライン) */
+label.mku-checkbox-container.inline {
+	display: inline-block;
+	vertical-align: bottom;
+	margin-left: 0.5em;
+}
+
+/* トグル(小) */
+.mku-checkbox-container.small {
+	display: inline-block;
+	font-size: 0.8em;
+	vertical-align: bottom;
+	margin-right: 0.4em;
+}
+
+table th,
+table td {
+	padding: 10px;
+	text-align: center;
+	border: 1px solid #ccc;
+}
+
+table tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+/* セパレータ */
+div.separator {
+	display: inline-block;
+	width: 1px;
+	margin: 0 0.5em;
+	height: 1.5em;
+	vertical-align: middle;
+	background-color: #bbb;
+}
+
+td.separator {
+	width: 0;
+	padding: 1px;
+}
+
+/* 年月遷移リンク */
+a.update-yearmonth-link {
+	text-decoration: none;
+}
+
+a.update-yearmonth-link::before {
+	content: "time";
+}
+
+a.update-yearmonth-link:hover {
+	color: #f00;
+}
+
+a.update-yearmonth-link::before,
+#cref-new-formated-template-table a::after {
+	margin: 0 0.1em;
+	font-size: 100%;
+	font-family: 'LigatureSymbols';
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	-ms-text-rendering: optimizeLegibility;
+	-o-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-ms-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+	-webkit-font-feature-settings: "liga" 1, "dlig" 1;
+	-moz-font-feature-settings: "liga=1, dlig=1";
+	-ms-font-feature-settings: "liga" 1, "dlig" 1;
+	-o-font-feature-settings: "liga" 1, "dlig" 1;
+	font-feature-settings: "liga" 1, "dlig" 1;
+	font-weight: 100;
+}
+
+/* 年月 */
+.yearmonth-y {
+	width: 5em !important;
+}
+
+.yearmonth-m {
+	width: 3.5em !important;
+}
+
+/* フィールドセット */
+.input-area {
+	border-collapse: collapse;
+}
+
+.input-area td:first-child {
+	background-color: #f5f5f5;
+}
+
+.input-area td {
+	padding: 6px;
+	border: 1px solid #ccc;
+}
+
+.input-area td:first-child::after {
+	content: "：";
+	float: right;
+}
+
+.input-area input:not([type="checkbox"]),
+.input-area select,
+.input-area textarea {
+	padding: 4px;
+	border: 1px solid var(--formation-table-main-border);
+	width: 20em;
+}
+
+.input-area textarea {
+	height: 10em;
+	display: block;
+}
+
+
+.input-area button {
+	padding: 0.25em;
+}
+
+/* フィールドセットの下の要素 */
+.element-bottom-of-input-area {
+	margin-top: 1.5em;
+}
+
+/* 入れの子のフィールドセット */
+
+.input-area .input-area {
+	border-width: 1px;
+}
+
+.input-area .input-area td {
+	border-color: #acacac;
+}
+
+.input-area .input-area input:not([type="checkbox"]),
+.input-area .input-area select {
+	width: 15em;
+}
+
+/* フィールドセットここまで */
+
+/* スライダーのトラック */
+input[type="range"] {
+	-webkit-appearance: none;
+	appearance: none;
+	height: 10px;
+	border-radius: 5px;
+	background-color: #ddd;
+	outline: none;
+}
+
+/* スライダーのハンドル（つまみ） */
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: var(--button-face);
+	cursor: pointer;
+	transform: translateY(-5px);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+	background-color: var(--button-face-hover);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+	background-color: var(--button-face-active);
+}
+
+/* スライダーのトラックの進行状況 */
+input[type="range"]::-webkit-slider-runnable-track {
+	width: 100%;
+	height: 10px;
+	border-radius: 5px;
+	background-color: var(--sub-light-color);
+}
+
+/* スライダーの値のハイライト */
+input[type="range"]::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: var(--button-face);
+	cursor: pointer;
+}
+
+/* スライダーの値のトラックの進行状況 */
+input[type="range"]::-moz-range-progress {
+	height: 10px;
+	border-radius: 5px;
+	background-color: var(--button-face-hover);
+}
+
+/* Firefoxでスライダーの外見を調整するためのスタイル */
+input[type="range"]::-moz-range-track {
+	width: 100%;
+	height: 10px;
+	border-radius: 5px;
+	background-color: #ddd;
+	outline: none;
+}
+
+/* テーブル */
+p.table-title {
+	font-weight: bold;
+	margin-bottom: 0;
+}
+
+p.table-subtitle {
+	font-size: 0.8em;
+	margin: 0;
+}
+
+/* メッセージ */
+.message {
+	padding: 1.5em;
+	margin: 1.0em auto;
+}
+
+.warning {
+	margin-bottom: 2.0em;
+	background-color: #ffebeb;
+	color: #ff0000;
+	border: 1px solid #ff0000;
+	padding: 15px;
+	border-radius: 5px;
+}
+
+/* 小さいボタン */
+p.car-name button,
+td.formation-name button,
+.remark button,
+#fmdt-remark button,
+.table-title button {
+	font-size: 0.7em;
+	margin-left: 0.5em;
+	transform: translateY(-0.1em);
+}
+
+.filefield {
+	border: 1px solid;
+	padding: 30px;
+	margin-bottom: 1.0em;
+}

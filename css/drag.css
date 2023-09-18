@@ -1,0 +1,44 @@
+#drag-container {
+	position: absolute;
+	border: 1px solid #000;
+	background-color: #fff;
+	cursor: grabbing;
+	z-index: 9999999;
+	user-select: none;
+	opacity: 0.8;
+	margin: 0;
+}
+
+.draggable-object {
+	cursor: grab;
+	padding: 1em;
+	margin: 1em;
+	width: calc(var(--simutrans-paktype) + 2em + 2px);
+	word-wrap: break-word;
+	border: 1px solid buttonface;
+	background-color: buttonface;
+	user-select: none;
+}
+
+.draggable-object>p {
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 75%;
+	width: 100%;
+	overflow-x: hidden;
+	word-wrap: normal;
+	text-overflow: ellipsis;
+}
+
+.draggable-object.selected-origin {
+	opacity: 0.5;
+}
+
+.drag-target {
+	background-color: #c7def5 !important;
+}
+
+#constraint-container>div:nth-child(2).drag-target {
+	border: 2px solid var(--formation-table-main-border);
+	background-color: #fff !important;
+}

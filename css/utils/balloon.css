@@ -1,0 +1,29 @@
+#mku-balloon {
+	background-color: rgba(0, 0, 0, 0.85);
+	color: #fff;
+	position: absolute;
+	z-index: 999999;
+	top: 0;
+	left: 0;
+	display: none;
+	font-size: 8.5pt;
+	padding: 0.6em;
+	border-radius: 2px;
+	max-width: 25em;
+	min-width: 27px;
+}
+
+#mku-balloon::before {
+	display: block;
+	content: "";
+	position: absolute;
+	bottom: -7px;
+	left: 7px;
+	border-left: transparent 7px solid;
+	border-right: transparent 7px solid;
+	border-top: rgba(0, 0, 0, 0.85) 7px solid;
+}
+
+#mku-balloon.on {
+	display: block;
+}
