@@ -389,8 +389,10 @@ function loadAndSetDatFile(files) {
 			notDatFilesCount++;
 		}
 	}
+	loader.start();
 	//全DAT読み込み完了後
 	Promise.all(promises).then(() => {
+		loader.finish();
 		let message = ``;
 		if (promises.length == 0) {
 			message = `DATファイルを選択してください。`;
@@ -449,8 +451,10 @@ function loadAndSetImageFile(files, forceAttachMode) {
 			}
 		};
 	}
+	loader.start();
 	//全PNG読み込み後
 	return Promise.all(promises).then(() => {
+		loader.finish();
 		let message = ``;
 		message = `${promises.length}件のPNGファイルを読み込みました。${failureCount > 0 ? `${failureCount}件のPNGファイルはDATから参照されていないため読み込みませんでした。` : ""}${notImageFilesCount > 0 ? `${notImageFilesCount}件のファイルはPNGファイルではないため読み込みませんでした。` : ""}`;
 		new Message(message, ["image-file-loaded"], 3000, true, true);
