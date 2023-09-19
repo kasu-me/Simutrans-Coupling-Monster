@@ -13,6 +13,13 @@ class Message {
 		classNames.forEach((className) => { this.message.classList.add(className); });
 		this.message.innerHTML = this.mainMessage;
 
+		let closeButton = document.createElement("a");
+		closeButton.innerHTML = "×";
+		closeButton.addEventListener("click", () => {
+			this.off();
+		});
+		this.message.appendChild(closeButton);
+
 		document.body.appendChild(this.message);
 
 		if (isImmediate) {

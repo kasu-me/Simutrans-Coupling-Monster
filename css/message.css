@@ -30,6 +30,16 @@
 	animation: message-hide forwards 300ms ease-in 0s;
 }
 
+.message-content a {
+	margin-left: 1.0em;
+	color: #00f;
+	cursor: pointer;
+}
+
+.message-content a:hover {
+	color: #f00;
+}
+
 @keyframes message-show {
 	from {
 		opacity: 0;
