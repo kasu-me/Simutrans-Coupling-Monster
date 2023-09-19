@@ -215,8 +215,16 @@ div.dialog-main-message:has(.dialog-preview) {
 	margin-bottom: 1em;
 }
 
+#editImageDialog select {
+	width: calc(500px - 11em);
+}
+
 #editImageDialog #direction-selectbox {
 	width: unset;
+}
+
+#editImageDialog #addon-image-preview {
+	text-align: center;
 }
 
 #editImageDialog #addon-image-whole-preview {

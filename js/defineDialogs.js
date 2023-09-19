@@ -52,7 +52,7 @@ window.addEventListener("load", function () {
 	DIRECTIONS.forEach((dir) => {
 		directionSelectBox += `<option value="${dir}">${dir}</option>`;
 	})
-	new Dialog("editImageDialog", "車両に画像を確認", `
+	new Dialog("editImageDialog", "車両に設定されている画像を確認", `
 		<table class="input-area">
 			<tr>
 				<td>車両名</td>
