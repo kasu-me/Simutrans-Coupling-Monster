@@ -216,7 +216,7 @@ window.addEventListener("load", function () {
 			<h2>お問い合わせ</h2>
 			<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
 			<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
-			<p>© 2023 M_Kasumi</p>
+			<p style="margin-bottom:2em;">© 2023 M_Kasumi</p>
 		</div>
 		`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {});
 
