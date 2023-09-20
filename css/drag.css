@@ -28,6 +28,7 @@
 	overflow-x: hidden;
 	word-wrap: normal;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .draggable-object.selected-origin {

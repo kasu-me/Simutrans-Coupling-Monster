@@ -348,6 +348,11 @@ function setAddonPreviewBox(parent, box, addon) {
 	let title = document.createElement("p");
 	title.innerHTML = addon.name;
 	box.appendChild(title);
+	if (jatab.has(addon)) {
+		let titleJa = document.createElement("p");
+		titleJa.innerHTML = jatab.get(addon);
+		box.appendChild(titleJa);
+	}
 	setAddonPreviewImage(box, addon);
 	parent.appendChild(box);
 }
