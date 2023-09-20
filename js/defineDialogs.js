@@ -70,7 +70,7 @@ window.addEventListener("load", function () {
 	DIRECTIONS.forEach((dir) => {
 		directionSelectBox += `<option value="${dir}">${dir}</option>`;
 	})
-	new Dialog("editImageDialog", "車両に設定されている画像を確認", `
+	new Dialog("editImageDialog", "車両と画像の対応", `
 		<table class="input-area">
 			<tr>
 				<td>車両名</td>
@@ -196,26 +196,32 @@ window.addEventListener("load", function () {
 
 			//全体内での位置表示用の全体画像
 			let image = imageFiles.get(Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]);
-			addonWholeImageArea.style.backgroundImage = `url(${image.src})`;
-			Dialog.list.editImageDialog.functions.imageDisplaySizeRatio = 500 / image.width;
-			addonWholeImageArea.style.height = `${image.height * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-
-			//全体内での位置選択
 			let positionPointerCursor = gebi("position-pointer-cursor");
-			positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-			positionPointerCursor.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-			addonWholeImageArea.appendChild(positionPointerCursor);
-			addonWholeImageArea.addEventListener("mouseenter", Dialog.list.editImageDialog.functions.showPositionPointerCursor);
-			addonWholeImageArea.addEventListener("mousemove", Dialog.list.editImageDialog.functions.movePositionPointerCursor);
-			addonWholeImageArea.addEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
-
-			//全体内での現在位置表示
 			let positionPointer = gebi("position-pointer");
-			positionPointer.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-			positionPointer.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-			positionPointer.style.top = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[1] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-			positionPointer.style.left = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[2] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-			addonWholeImageArea.appendChild(positionPointer);
+			if (image != undefined) {
+				addonWholeImageArea.style.backgroundImage = `url(${image.src})`;
+				Dialog.list.editImageDialog.functions.imageDisplaySizeRatio = 500 / image.width;
+				addonWholeImageArea.style.height = `${image.height * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+
+				//全体内での位置選択
+				positionPointerCursor.classList.add("on");
+				positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				positionPointerCursor.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				addonWholeImageArea.appendChild(positionPointerCursor);
+				addonWholeImageArea.addEventListener("mouseenter", Dialog.list.editImageDialog.functions.showPositionPointerCursor);
+				addonWholeImageArea.addEventListener("mousemove", Dialog.list.editImageDialog.functions.movePositionPointerCursor);
+				addonWholeImageArea.addEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
+
+				//全体内での現在位置表示
+				positionPointer.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				positionPointer.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				positionPointer.style.top = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[1] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				positionPointer.style.left = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[2] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				addonWholeImageArea.appendChild(positionPointer);
+			} else {
+				//画像が存在しない場合
+				positionPointerCursor.classList.remove("on");
+			}
 
 			//その方角に指定されているdatファイルの記述
 			let addonImagePositionsArea = gebi("addon-image-positions");
