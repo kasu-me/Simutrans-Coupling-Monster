@@ -85,6 +85,11 @@ input:not([type="range"]),
 	padding: 1px 2px;
 }
 
+.input-textbox {
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
 input:not([type="range"]):not([type="checkbox"]):focus,
 .input-textbox:focus,
 textarea:focus,
@@ -248,6 +253,8 @@ a.update-yearmonth-link::before,
 .input-area {
 	border: 1px solid var(--formation-table-main-border);
 	border-collapse: collapse;
+	word-break: break-all;
+	word-wrap: break-word;
 }
 
 .input-area td:first-child {

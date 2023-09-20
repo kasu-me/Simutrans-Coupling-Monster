@@ -130,14 +130,17 @@ select#carsSelectBox {
 	text-align: center;
 	border: 1px solid #ccc;
 	font-size: 75%;
+	width: 100%;
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container table tr:nth-child(even) {
 	background-color: #f2f2f2;
 }
 
-#constraint-container>div:nth-child(2) #main-proptable-container table input {
-	width: 100%;
+#constraint-container>div:nth-child(2) #main-proptable-container table input,
+#constraint-container>div:nth-child(2) #main-proptable-container table .input-textbox {
+	width: 21em;
+	font-size: 9pt;
 }
 
 /* 選択中のアドオン */
