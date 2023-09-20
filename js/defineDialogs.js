@@ -121,12 +121,7 @@ window.addEventListener("load", function () {
 			let previewAddonNameSelectBox = gebi("preview-addon-name");
 			setAddonNamesToSelectBox(previewAddonNameSelectBox);
 			previewAddonNameSelectBox.value = Dialog.list.editImageDialog.functions.editingAddon.name;
-			previewAddonNameSelectBox.addEventListener("change", () => {
-				gebi("carsSelectBox").value = previewAddonNameSelectBox.value;
-				gebi("carsSelectBox").dispatchEvent(new Event("change"));
-				Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
-				Dialog.list.editImageDialog.functions.refresh();
-			});
+
 			gebi("direction-selectbox").selectedIndex = 0;
 
 			//画像ファイル名セレクトボックスセット
@@ -236,6 +231,12 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 	gebi("direction-selectbox").addEventListener("change", () => {
+		Dialog.list.editImageDialog.functions.refresh();
+	});
+	gebi("preview-addon-name").addEventListener("change", () => {
+		gebi("carsSelectBox").value = gebi("preview-addon-name").value;
+		gebi("carsSelectBox").dispatchEvent(new Event("change"));
+		Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
 		Dialog.list.editImageDialog.functions.refresh();
 	});
 
