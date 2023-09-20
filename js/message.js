@@ -35,7 +35,7 @@ class Message {
 	}
 	off() {
 		this.message.classList.add("off");
-		if (this.isDisposable) {
+		if (this.isDisposable && document.body.contains(this.message)) {
 			setTimeout(() => { document.body.removeChild(this.message) }, Message.fadeInTime);
 		}
 	}
