@@ -120,6 +120,10 @@ select#carsSelectBox {
 	font-weight: bold;
 }
 
+#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
+	text-align: left;
+}
+
 #constraint-container>div:nth-child(2) #main-proptable-container table th,
 #constraint-container>div:nth-child(2) #main-proptable-container table td {
 	padding: 10px;

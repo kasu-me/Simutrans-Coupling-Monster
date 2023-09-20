@@ -309,7 +309,7 @@ function refresh() {
 		}
 	})
 	let jatabInput = gebi("jatabtable-japanese-name");
-	jatabInput.value = jatab.has(editingAddon) ? jatab.get(editingAddon) : "";
+	jatabInput.innerHTML = jatab.has(editingAddon) ? jatab.get(editingAddon) : "";
 
 	for (let prop in editingAddon) {
 		if (prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
@@ -633,12 +633,18 @@ window.addEventListener("load", () => {
 	//日本語名指定イベント
 	let jatabInput = gebi("jatabtable-japanese-name");
 	jatabInput.addEventListener("input", () => {
-		if (jatabInput.value.trim() == "") {
+		if (jatabInput.innerText.trim() == "") {
 			jatab.delete(getEditingAddon())
 		} else {
-			jatab.set(getEditingAddon(), jatabInput.value);
+			jatab.set(getEditingAddon(), jatabInput.innerText);
 		}
 	});
+	jatabInput.addEventListener("keydown", (e) => {
+
+		if (e.key === 'Enter') {
+			return e.preventDefault()
+		}
+	})
 
 	//画像指定セレクトボックスのイベント
 	let imageSelectBox = gebi("imageSelectBox");

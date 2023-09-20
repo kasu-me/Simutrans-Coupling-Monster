@@ -76,13 +76,17 @@ a:hover {
 }
 
 /* input要素 */
-input:not([type="range"]) {
+input:not([type="range"]),
+.input-textbox {
 	border: 1px solid #000 !important;
 	outline: none;
 	box-shadow: 0 0 5px transparent;
+	display: inline-block;
+	padding: 1px 2px;
 }
 
 input:not([type="range"]):not([type="checkbox"]):focus,
+.input-textbox:focus,
 textarea:focus,
 select:focus {
 	border: 1px solid var(--input-focus) !important;
@@ -124,6 +128,7 @@ button:focus,
 button:disabled,
 .button:disabled,
 input:disabled,
+.input-textbox:disabled,
 select:disabled,
 textarea:disabled {
 	pointer-events: none;
@@ -133,6 +138,7 @@ textarea:disabled {
 }
 
 input:disabled,
+.input-textbox:disabled,
 select:disabled,
 textarea:disabled {
 	background-color: #e4e4e4;
@@ -263,6 +269,7 @@ a.update-yearmonth-link::before,
 }
 
 .input-area input:not([type="checkbox"]),
+.input-area .input-textbox,
 .input-area select,
 .input-area textarea {
 	padding: 4px;
@@ -296,6 +303,7 @@ a.update-yearmonth-link::before,
 }
 
 .input-area .input-area input:not([type="checkbox"]),
+.input-area .input-area .input-textbox,
 .input-area .input-area select {
 	width: 15em;
 }
