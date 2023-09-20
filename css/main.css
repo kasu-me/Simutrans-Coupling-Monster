@@ -265,3 +265,7 @@ div.dialog-main-message:has(.dialog-preview) {
 .message-content.image-file-loaded {
 	top: calc(40px + 4.5em);
 }
+
+.message-content.tab-file-loaded {
+	top: calc(40px + 9.0em);
+}

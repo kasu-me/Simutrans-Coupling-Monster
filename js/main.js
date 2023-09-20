@@ -408,6 +408,7 @@ function loadAndSetDatFile(files) {
 	resetDat();
 	let promises = [];
 	let droppedImageFiles = [];
+	let droppedJaTabFiles = [];
 	let notDatFilesCount = 0;
 	for (let file of files) {
 		if (file.name.toUpperCase().endsWith(".DAT")) {
@@ -415,6 +416,9 @@ function loadAndSetDatFile(files) {
 		} else if (file.name.toUpperCase().endsWith(".PNG")) {
 			//画像ファイルはあとで処理するため別リストに隔離(datが出揃わないことには処理が継続できないため)
 			droppedImageFiles.push(file);
+		} else if (file.name.toUpperCase().endsWith(".TAB")) {
+			//TABファイルはあとで処理するため別リストに隔離(datが出揃わないことには処理が継続できないため)
+			droppedJaTabFiles.push(file);
 		} else {
 			notDatFilesCount++;
 		}
@@ -432,20 +436,42 @@ function loadAndSetDatFile(files) {
 		new Message(message, ["dat-file-loaded"], 3000, true, true);
 		//DATを1件以上読み込んだら、画像選択ダイアログに遷移する
 		if (promises.length > 0) {
-			//この画面で選択した画像を読み込む非同期処理
-			loadAndSetImageFile(droppedImageFiles, true).then(() => {
-				if (droppedImageFiles.length > 0) {
-					let notFoundImages = Array.from(imageFileNames).filter(imageFileName => !imageFiles.has(imageFileName));
-					if (notFoundImages.length > 0) {
-						//画像が不足していれば画像読み込み画面に移動し不足している画像を選択状態にする
-						Dialog.list.selectImageDialog.functions.display(notFoundImages[0]);
-					} else {
-						//画像が不足していなければメイン画面に移動
-						Dialog.list.selectImageDialog.off();
-					}
+			//この画面で選択した画像およびjatabを読み込む非同期処理
+			Promise.all(
+				[
+					//画像読み込み
+					new Promise((resolve) => {
+						loadAndSetImageFile(droppedImageFiles, true).then(() => {
+							if (droppedImageFiles.length > 0) {
+								let notFoundImages = Array.from(imageFileNames).filter(imageFileName => !imageFiles.has(imageFileName));
+								if (notFoundImages.length > 0) {
+									//画像が不足していれば画像読み込み画面に移動し不足している画像を選択状態にする
+									resolve([0, notFoundImages[0]]);
+									//
+								} else {
+									//画像が不足していなければ画像読み込み画面に移動せずメイン画面を表示
+									resolve([-1, -2]);
+								}
+							} else {
+								//画像が読み込まれていなければ画像読み込み画面に移動
+								resolve([-1, -1]);
+							}
+						});
+					}),
+					//DAT読み込み
+					new Promise((resolve) => {
+						loadAndSetJaTabFile(droppedJaTabFiles).then(() => {
+							resolve();
+						});
+					}),
+				]
+			).then((results) => {
+				let imgLoadedStatus = results[0][0];
+				if (imgLoadedStatus >= 0) {
+					let notFoundImages = results[0][1];
+					Dialog.list.selectImageDialog.functions.display(notFoundImages);
 				} else {
-					//画像が読み込まれていなければ画像読み込み画面に移動
-					Dialog.list.selectImageDialog.functions.display();
+					Dialog.list.openDatFileDialog.off();
 				}
 			});
 			refresh();
@@ -525,7 +551,7 @@ function loadAndSetJaTabFile(files) {
 		loader.finish();
 		let message = ``;
 		message = `${count.reduce((sum, val) => sum + val)}件の車両に日本語名を適用しました。${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
-		new Message(message, ["image-file-loaded"], 3000, true, true);
+		new Message(message, ["tab-file-loaded"], 3000, true, true);
 		updateViewSelectImageDialogPreviewingImage();
 		refresh();
 	});

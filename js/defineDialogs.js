@@ -3,7 +3,7 @@ window.addEventListener("load", function () {
 	new Dialog("openDatFileDialog", "DATファイルを開く", `
 		<div id="dat-file-drop-area" class="filefield">
 			<p>ここにdatファイルをドラッグ＆ドロップ (複数ファイル可)</p>
-			<p>pngファイルとdatファイルをまとめてドラッグ＆ドロップすると画像の読み込みまで行います</p>
+			<p>dat,png,tabファイルをまとめてドラッグ＆ドロップすると全ての読み込みを行います</p>
 		</div>
 		`, [{ "content": "キャンセル", "event": `refresh();Dialog.list.openDatFileDialog.off();`, "icon": "close" }], {
 		display: function () {
