@@ -236,6 +236,11 @@ div.dialog-main-message:has(.dialog-preview) {
 	background-color: var(--simutrans-transparent);
 	background-size: cover;
 	background-repeat: no-repeat;
+	display: none;
+}
+
+#editImageDialog #addon-image-whole-preview.on {
+	display: block;
 }
 
 #editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer {

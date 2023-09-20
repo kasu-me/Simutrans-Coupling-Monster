@@ -515,7 +515,11 @@ function loadAndSetImageFile(files, forceAttachMode) {
 		message = `${promises.length}件のPNGファイルを読み込みました。${failureCount > 0 ? `${failureCount}件のPNGファイルはDATから参照されていないため読み込みませんでした。` : ""}${notImageFilesCount > 0 ? `${notImageFilesCount}件のファイルはPNGファイルではないため読み込みませんでした。` : ""}`;
 		new Message(message, ["image-file-loaded"], 3000, true, true);
 		updateViewSelectImageDialogPreviewingImage();
-		refresh();
+		if (Dialog.list.editImageDialog.isActive) {
+			Dialog.list.editImageDialog.functions.refresh();
+		} else {
+			refresh();
+		}
 	});
 }
 //画像をリストに登録
@@ -535,7 +539,6 @@ function appendImageToImagesList(fileName, file) {
 //jatab指定
 function loadAndSetJaTabFile(files) {
 	let promises = [];
-	let failureCount = 0;
 	let notTabFilesCount = 0;
 	let jaTabText = "";
 	for (let file of files) {
@@ -550,8 +553,13 @@ function loadAndSetJaTabFile(files) {
 	return Promise.all(promises).then((count) => {
 		loader.finish();
 		let message = ``;
-		message = `${count.reduce((sum, val) => sum + val)}件の車両に日本語名を適用しました。${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
-		new Message(message, ["tab-file-loaded"], 3000, true, true);
+		if (count.length != 0) {
+			message = `${count.reduce((sum, val) => sum + val)}件の車両に日本語名を適用しました。${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
+			new Message(message, ["tab-file-loaded"], 3000, true, true);
+		} else if (notTabFilesCount > 0) {
+			message = `${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
+			new Message(message, ["tab-file-loaded"], 3000, true, true);
+		}
 		updateViewSelectImageDialogPreviewingImage();
 		refresh();
 	});

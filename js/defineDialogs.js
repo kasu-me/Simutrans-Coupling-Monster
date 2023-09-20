@@ -106,6 +106,7 @@ window.addEventListener("load", function () {
 			<div class="addon-image-whole-preview-position-pointer" id="position-pointer"></div>
 			<div class="addon-image-whole-preview-position-pointer cursor" id="position-pointer-cursor"></div>
 		</div>
+		<button id="open-select-image-dialog-button" class="isf-icon" icon="image">画像ファイルを指定</button>
 		<div id="addon-image-positions"></div>
 		`, [{ "content": "閉じる", "event": `Dialog.list.editImageDialog.off();`, "icon": "close" }], {
 		editingAddon: null,
@@ -195,10 +196,15 @@ window.addEventListener("load", function () {
 			setAddonPreviewImageByDirection(addonImageArea, Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
 
 			//全体内での位置表示用の全体画像
+			gebi("open-select-image-dialog-button").onclick = () => {
+				Dialog.list.selectImageDialog.functions.display(Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]);
+			}
 			let image = imageFiles.get(Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]);
 			let positionPointerCursor = gebi("position-pointer-cursor");
 			let positionPointer = gebi("position-pointer");
 			if (image != undefined) {
+				addonWholeImageArea.classList.add("on");
+
 				addonWholeImageArea.style.backgroundImage = `url(${image.src})`;
 				Dialog.list.editImageDialog.functions.imageDisplaySizeRatio = 500 / image.width;
 				addonWholeImageArea.style.height = `${image.height * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
@@ -220,6 +226,7 @@ window.addEventListener("load", function () {
 				addonWholeImageArea.appendChild(positionPointer);
 			} else {
 				//画像が存在しない場合
+				addonWholeImageArea.classList.remove("on");
 				positionPointerCursor.classList.remove("on");
 			}
 
