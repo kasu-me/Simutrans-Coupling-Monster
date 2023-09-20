@@ -576,7 +576,7 @@ function appendJaTab(file) {
 			masterAddons.forEach((addon) => {
 				let name = addon.name;
 				let index = tabs.indexOf(name);
-				if (index != -1) {
+				if (index != -1 && tabs[index + 1].trim() != "") {
 					jatab.set(addon, tabs[index + 1]);
 					count++;
 				}
@@ -625,7 +625,11 @@ window.addEventListener("load", () => {
 	//日本語名指定イベント
 	let jatabInput = gebi("jatabtable-japanese-name");
 	jatabInput.addEventListener("input", () => {
-		jatab.set(getEditingAddon(), jatabInput.value);
+		if (jatabInput.value.trim() == "") {
+			jatab.delete(getEditingAddon())
+		} else {
+			jatab.set(getEditingAddon(), jatabInput.value);
+		}
 	});
 
 	//画像指定セレクトボックスのイベント

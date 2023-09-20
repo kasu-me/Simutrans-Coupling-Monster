@@ -64,7 +64,7 @@ window.addEventListener("load", function () {
 			Dialog.list.previewDialog.dialogTitle.innerHTML = `${type}プレビュー`;
 			Dialog.list.previewDialog.on();
 		}
-	});
+	}, true);
 
 	let directionSelectBox = "";
 	DIRECTIONS.forEach((dir) => {
@@ -179,7 +179,7 @@ window.addEventListener("load", function () {
 
 			//日本語名をセット
 			let japaneseName = gebi("display-japanese-name");
-			japaneseName.innerHTML = jatab.has(Dialog.list.editImageDialog.functions.editingAddon) ? jatab.get(Dialog.list.editImageDialog.functions.editingAddon) : "未設定";
+			japaneseName.innerHTML = jatab.has(Dialog.list.editImageDialog.functions.editingAddon) ? jatab.get(Dialog.list.editImageDialog.functions.editingAddon) : "(未設定)";
 
 			//セレクトボックスに方向をセット
 			let selectBox = gebi("direction-selectbox");
@@ -234,7 +234,7 @@ window.addEventListener("load", function () {
 			let addonImagePositionsArea = gebi("addon-image-positions");
 			addonImagePositionsArea.innerHTML = `x:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[2]}, y:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[1]}`;
 		}
-	});
+	}, true);
 	gebi("direction-selectbox").addEventListener("change", () => {
 		Dialog.list.editImageDialog.functions.refresh();
 	});
@@ -258,7 +258,7 @@ window.addEventListener("load", function () {
 			<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
 			<p style="margin-bottom:2em;">© 2023 M_Kasumi</p>
 		</div>
-		`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {});
+		`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);
 
 
 
