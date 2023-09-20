@@ -170,7 +170,7 @@ function viewDat() {
 
 //jatab出力
 function writeJaTab() {
-	let tab = "";
+	let tab = "§###########################################################\n";
 	jatab.forEach((japaneseName, addon) => {
 		tab += `${addon.name}\n`;
 		tab += `${japaneseName}\n`;
