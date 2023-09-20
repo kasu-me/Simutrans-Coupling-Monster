@@ -41,5 +41,11 @@ class Message {
 	}
 }
 
-window.addEventListener("load", function () {
-});
+document.addEventListener("keydown", (e) => {
+	if (e.key == "Escape") {
+		let messages = document.querySelectorAll(".message-content");
+		messages.forEach((message) => {
+			message.classList.add("off");
+		});
+	}
+})
