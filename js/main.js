@@ -192,14 +192,22 @@ function viewJaTab() {
 function saveFile(type) {
 	if (masterAddons.length != 0) {
 		let text = type == "dat" ? writeDat() : writeJaTab();
-		let blob = new Blob([text], { type: "text/plan" });
-		let link = document.createElement("a");
-		link.href = URL.createObjectURL(blob);
-		link.download = type == "dat" ? masterDatFileName : "ja.tab";
-		link.click();
+		let fileName = type == "dat" ? masterDatFileName : "ja.tab";
+		if (type == "ja.tab" && jatab.size == 0) {
+			new Message("日本語化ファイルは内容が存在しないため保存しませんでした。", ["file-saved"], 3000, true, true);
+		} else {
+			downloadFile(text, fileName);
+		}
 	} else {
 		Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
 	}
+}
+function downloadFile(text, fileName) {
+	let blob = new Blob([text], { type: "text/plan" });
+	let link = document.createElement("a");
+	link.href = URL.createObjectURL(blob);
+	link.download = fileName;
+	link.click();
 }
 
 //アドオンから代表画像名･表示位置を取得
