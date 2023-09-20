@@ -11,7 +11,7 @@
 
 .draggable-object {
 	cursor: grab;
-	padding: 1em;
+	padding: 0.5em 1em;
 	margin: 1em;
 	width: calc(var(--simutrans-paktype) + 2em + 2px);
 	word-wrap: break-word;
