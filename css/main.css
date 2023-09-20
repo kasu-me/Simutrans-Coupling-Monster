@@ -105,28 +105,29 @@ select#carsSelectBox {
 	margin-top: 1em;
 }
 
-#constraint-container>div:nth-child(2) #main-proptable-container table#main-proptable {
+#constraint-container>div:nth-child(2) #main-proptable-container table {
 	width: 100%;
 	border-collapse: collapse;
 }
 
-#constraint-container>div:nth-child(2) #main-proptable-container table#main-proptable td:first-child {
+#constraint-container>div:nth-child(2) #main-proptable-container table td:first-child {
 	text-align: right;
 	font-weight: bold;
 }
 
-table#main-proptable th,
-table#main-proptable td {
+#constraint-container>div:nth-child(2) #main-proptable-container table th,
+#constraint-container>div:nth-child(2) #main-proptable-container table td {
 	padding: 10px;
 	text-align: center;
 	border: 1px solid #ccc;
+	font-size: 75%;
 }
 
-table#main-proptable tr:nth-child(even) {
+#constraint-container>div:nth-child(2) #main-proptable-container table tr:nth-child(even) {
 	background-color: #f2f2f2;
 }
 
-#constraint-container>div:nth-child(2) #main-proptable-container table#main-proptable input {
+#constraint-container>div:nth-child(2) #main-proptable-container table input {
 	width: 100%;
 }
 
@@ -168,12 +169,14 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 /* ダイアログ */
 
 #openDatFileDialog,
-#selectImageDialog {
+#selectImageDialog,
+#openJaTabFileDialog {
 	top: 10%;
 }
 
 /* DATを開くダイアログ*/
-#openDatFileDialog .filefield {
+#openDatFileDialog .filefield,
+#openJaTabFileDialog .filefield {
 	min-width: 100%;
 	width: 60vw;
 	height: 45vh;
@@ -188,7 +191,7 @@ div.dialog-main-message:has(.dialog-preview) {
 	border: solid 1px var(--formation-table-main-border);
 }
 
-#previewDatDialog div.dialog-main-message:has(.dialog-preview) {
+#previewDialog div.dialog-main-message:has(.dialog-preview) {
 	padding-top: 1.0em;
 	padding-bottom: 1.0em;
 }

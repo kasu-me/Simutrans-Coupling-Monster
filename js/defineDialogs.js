@@ -1,7 +1,7 @@
 window.addEventListener("load", function () {
 
 	new Dialog("openDatFileDialog", "DATファイルを開く", `
-		<div id="dropArea" class="filefield">
+		<div id="dat-file-drop-area" class="filefield">
 			<p>ここにdatファイルをドラッグ＆ドロップ (複数ファイル可)</p>
 			<p>pngファイルとdatファイルをまとめてドラッグ＆ドロップすると画像の読み込みまで行います</p>
 		</div>
@@ -39,12 +39,30 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 
-	new Dialog("previewDatDialog", "datプレビュー", `
+	new Dialog("openJaTabFileDialog", "日本語化ファイル指定", `
+		<div id="jatab-file-drop-area" class="filefield">
+			<p>ここにja.tabファイルをドラッグ＆ドロップ (複数ファイル可)</p>
+		</div>
+		`, [{ "content": "完了", "event": `Dialog.list.openJaTabFileDialog.off();`, "icon": "check" }], {
+		display: function (x) {
+			if (masterAddons.length == 0) {
+				Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
+			} else {
+				Dialog.list.openJaTabFileDialog.on();
+			}
+		}
+	}, true);
+
+
+	new Dialog("previewDialog", "プレビュー", `
 		<div id="dat-preview" class="dialog-preview"></div>
-		`, [{ "content": "保存", "event": `saveDat();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.previewDatDialog.off();`, "icon": "close" }], {
-		display: function (datText) {
+		`, [{ "content": "保存", "event": `saveFile(Dialog.list.previewDialog.functions.type);`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.previewDialog.off();`, "icon": "close" }], {
+		type: "",
+		display: function (datText, type) {
+			Dialog.list.previewDialog.functions.type = type;
 			gebi("dat-preview").innerHTML = datText.replace(/\n/g, "<br>");
-			Dialog.list.previewDatDialog.on();
+			Dialog.list.previewDialog.dialogTitle.innerHTML = `${type}プレビュー`;
+			Dialog.list.previewDialog.on();
 		}
 	});
 
@@ -60,6 +78,11 @@ window.addEventListener("load", function () {
 					<span class="selectbox-fluctuation-button">
 						<select id="preview-addon-name"></select>
 					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>日本語名</td>
+				<td id="display-japanese-name">
 				</td>
 			</tr>
 			<tr>
@@ -153,6 +176,10 @@ window.addEventListener("load", function () {
 			addonWholeImageArea.removeEventListener("mousemove", Dialog.list.editImageDialog.functions.movePositionPointerCursor);
 			addonWholeImageArea.removeEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
 
+			//日本語名をセット
+			let japaneseName = gebi("display-japanese-name");
+			japaneseName.innerHTML = jatab.has(Dialog.list.editImageDialog.functions.editingAddon) ? jatab.get(Dialog.list.editImageDialog.functions.editingAddon) : "未設定";
+
 			//セレクトボックスに方向をセット
 			let selectBox = gebi("direction-selectbox");
 			Dialog.list.editImageDialog.functions.selectedDirection = selectBox.value;
@@ -223,7 +250,7 @@ window.addEventListener("load", function () {
 
 
 	//アラート:alrt
-	new Dialog("alertDialog", "警告", `< img src = "./js/img/alert.svg" class="dialog-icon" > <div id="alrt-main"></div>`, [{ "content": "OK", "event": `Dialog.list.alertDialog.off()`, "icon": "check" }], {
+	new Dialog("alertDialog", "警告", `<img src="./js/img/alert.svg" class="dialog-icon"><div id="alrt-main"></div>`, [{ "content": "OK", "event": `Dialog.list.alertDialog.off()`, "icon": "check" }], {
 		display: function (message) {
 			gebi("alrt-main").innerHTML = message;
 			Dialog.list.alertDialog.on();
@@ -232,7 +259,7 @@ window.addEventListener("load", function () {
 	}, true);
 
 	//確認:cnfm
-	new Dialog("confirmDialog", "確認", `< img src = "./js/img/confirm.svg" class="dialog-icon" > <div id="cnfm-main"></div>`, [{ "content": "OK", "event": `Dialog.list.confirmDialog.functions.callback(); Dialog.list.confirmDialog.off()`, "icon": "check" }, { "content": "NO", "event": `Dialog.list.confirmDialog.off(); Dialog.list.confirmDialog.functions.interruption(); `, "icon": "close" }], {
+	new Dialog("confirmDialog", "確認", `<img src="./js/img/confirm.svg" class="dialog-icon"><div id="cnfm-main"></div>`, [{ "content": "OK", "event": `Dialog.list.confirmDialog.functions.callback(); Dialog.list.confirmDialog.off()`, "icon": "check" }, { "content": "NO", "event": `Dialog.list.confirmDialog.off(); Dialog.list.confirmDialog.functions.interruption(); `, "icon": "close" }], {
 		display: function (message, callback, interruption) {
 			gebi("cnfm-main").innerHTML = message;
 			Dialog.list.confirmDialog.functions.callback = callback || function () { };
@@ -245,7 +272,7 @@ window.addEventListener("load", function () {
 	}, true);
 
 	//情報:info
-	new Dialog("infoDialog", "情報", `< img src = "./js/img/info.svg" class="dialog-icon" > <div id="info-main"></div>`, [{ "content": "OK", "event": `Dialog.list.infoDialog.off()`, "icon": "close" }], {
+	new Dialog("infoDialog", "情報", `<img src="./js/img/info.svg" class="dialog-icon"><div id="info-main"></div>`, [{ "content": "OK", "event": `Dialog.list.infoDialog.off()`, "icon": "close" }], {
 		display: function (message) {
 			gebi("info-main").innerHTML = message;
 			Dialog.list.infoDialog.on();

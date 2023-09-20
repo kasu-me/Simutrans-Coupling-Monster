@@ -7,6 +7,8 @@ let masterAddons = [];
 let imageFileNames = new Set();
 //現在読み込み中のデータ内で使用されている画像ファイル名をキーとした画像オブジェクト
 let imageFiles = new Map();
+//アドオンをキーとするjatabデータ
+let jatab = new Map();
 
 //固定値
 //画像なし画像
@@ -32,6 +34,7 @@ function reset() {
 	resetDat();
 	imageFileNames = new Set();
 	imageFiles = new Map();
+	jatab = new Map();
 	gebi("image-file-input").value = "";
 	[
 		gebi("carsSelectBox"),
@@ -159,26 +162,45 @@ function writeDat() {
 function viewDat() {
 	if (masterAddons.length != 0) {
 		let datText = writeDat();
-		Dialog.list.previewDatDialog.functions.display(datText);
+		Dialog.list.previewDialog.functions.display(datText, "dat");
 	} else {
 		Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
 	}
 }
 
-//dat保存
-function saveDat() {
+//jatab出力
+function writeJaTab() {
+	let tab = "";
+	jatab.forEach((japaneseName, addon) => {
+		tab += `${addon.name}\n`;
+		tab += `${japaneseName}\n`;
+	})
+	return tab
+}
+
+//jatabプレビュー
+function viewJaTab() {
 	if (masterAddons.length != 0) {
-		let datText = writeDat();
-		let blob = new Blob([datText], { type: "text/plan" });
+		let jaTabText = writeJaTab();
+		Dialog.list.previewDialog.functions.display(jaTabText, "ja.tab");
+	} else {
+		Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
+	}
+}
+
+//ファイル保存
+function saveFile(type) {
+	if (masterAddons.length != 0) {
+		let text = type == "dat" ? writeDat() : writeJaTab();
+		let blob = new Blob([text], { type: "text/plan" });
 		let link = document.createElement("a");
 		link.href = URL.createObjectURL(blob);
-		link.download = masterDatFileName;
+		link.download = type == "dat" ? masterDatFileName : "ja.tab";
 		link.click();
 	} else {
 		Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
 	}
 }
-
 
 //アドオンから代表画像名･表示位置を取得
 function getImageNameAndPositionsFromAddon(addon) {
@@ -217,8 +239,8 @@ function setAddonPreviewImageByDirection(target, addon, direction) {
 function refresh() {
 	let hasNoAddon = masterAddons.length == 0;
 
-	document.querySelectorAll(".button-group button").forEach((button) => {
-		if (button.innerHTML != "開く" && button.innerHTML != "このアプリについて") {
+	document.querySelectorAll(".button-group button").forEach((button, i) => {
+		if (i != 0 && button.innerHTML != "このアプリについて") {
 			button.disabled = hasNoAddon;
 		}
 	});
@@ -273,7 +295,14 @@ function refresh() {
 
 	//選択中のアドオンのプロパティを表示
 	let propTable = gebi("main-proptable");
-	propTable.innerHTML = "";
+	propTable.querySelectorAll("tr").forEach((tr, i) => {
+		if (i != 0) {
+			propTable.removeChild(tr);
+		}
+	})
+	let jatabInput = gebi("jatabtable-japanese-name");
+	jatabInput.value = jatab.has(editingAddon) ? jatab.get(editingAddon) : "";
+
 	for (let prop in editingAddon) {
 		if (prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
 		let tr = document.createElement("tr");
@@ -282,6 +311,7 @@ function refresh() {
 		let valInput = document.createElement("input");
 		tdProp.innerHTML = prop;
 		valInput.value = editingAddon[prop];
+		valInput.disabled = prop == "name";
 		valInput.addEventListener("input", () => {
 			editingAddon[prop] = valInput.value;
 		});
@@ -476,6 +506,52 @@ function appendImageToImagesList(fileName, file) {
 	});
 }
 
+//jatab指定
+function loadAndSetJaTabFile(files) {
+	let promises = [];
+	let failureCount = 0;
+	let notTabFilesCount = 0;
+	let jaTabText = "";
+	for (let file of files) {
+		if (file.name.toUpperCase().endsWith(".TAB")) {
+			promises.push(appendJaTab(file));
+		} else {
+			notTabFilesCount++;
+		}
+	}
+	loader.start();
+	//全TAB読み込み後
+	return Promise.all(promises).then((count) => {
+		loader.finish();
+		let message = ``;
+		message = `${count.reduce((sum, val) => sum + val)}件の車両に日本語名を適用しました。${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
+		new Message(message, ["image-file-loaded"], 3000, true, true);
+		updateViewSelectImageDialogPreviewingImage();
+		refresh();
+	});
+}
+//jatabをリストに登録
+function appendJaTab(file) {
+	return new Promise((resolve) => {
+		new Promise((resolve, reject) => {
+			readFile(file, resolve, reject);
+		}).then((tab) => {
+			let count = 0;
+			let tabs = tab.split("\n").map(x => x.trim()).filter(x => x != "");
+			//アドオンに対してマッチするものがあればjatabマスタデータに追加
+			masterAddons.forEach((addon) => {
+				let name = addon.name;
+				let index = tabs.indexOf(name);
+				if (index != -1) {
+					jatab.set(addon, tabs[index + 1]);
+					count++;
+				}
+			})
+			resolve(count);
+		});
+	});
+}
+
 //ファイルドラッグアンドドロップイベントをセット
 function setDragAndDropFileEvents(target, callback) {
 	target.addEventListener('dragover', function (e) {
@@ -497,16 +573,25 @@ window.addEventListener("load", () => {
 	reset(); refresh();
 
 	//ドラッグアンドドロップの整備
-	let dropDatFileArea = gebi("dropArea");
+	let dropDatFileArea = gebi("dat-file-drop-area");
 	setDragAndDropFileEvents(dropDatFileArea, loadAndSetDatFile);
 
 	let dragImageFileArea = gebi("selected-image-preview");
 	setDragAndDropFileEvents(dragImageFileArea, loadAndSetImageFile);
 
+	let dragJaTabFileArea = gebi("jatab-file-drop-area");
+	setDragAndDropFileEvents(dragJaTabFileArea, loadAndSetJaTabFile);
+
 	//車両選択セレクトボックスのイベント
 	let carsSelectBox = gebi("carsSelectBox");
 	carsSelectBox.addEventListener("change", () => {
 		refresh();
+	});
+
+	//日本語名指定イベント
+	let jatabInput = gebi("jatabtable-japanese-name");
+	jatabInput.addEventListener("input", () => {
+		jatab.set(getEditingAddon(), jatabInput.value);
 	});
 
 	//画像指定セレクトボックスのイベント
