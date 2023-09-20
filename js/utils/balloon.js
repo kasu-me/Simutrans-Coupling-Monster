@@ -12,7 +12,7 @@ window.addEventListener("load", () => {
 		let message = elem.getAttribute("mku-balloon-message");
 		elem.addEventListener("mouseenter", (e) => {
 			gebi("stylesheet").innerHTML = "";
-			balloon.innerHTML = message;
+			balloon.innerHTML = message.replace(/\n/g, "<br>");
 			balloon.classList.add("on");
 			balloon.style.top = `${elem.getBoundingClientRect().top - balloon.clientHeight - 7 + window.scrollY}px`;
 			let left = (elem.getBoundingClientRect().left + elem.getBoundingClientRect().right) / 2 - 14;

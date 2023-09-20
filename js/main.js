@@ -343,7 +343,7 @@ function setFooterAddonsList() {
 function setAddonPreviewBox(parent, box, addon) {
 	box.classList.add("draggable-object");
 	box.classList.add("mku-balloon");
-	box.setAttribute("mku-balloon-message", addon.name);
+	box.setAttribute("mku-balloon-message", `${addon.name}${jatab.has(addon) ? `\n${jatab.get(addon)}` : ""}`);
 	box.dataset.addonName = addon.name;
 	let title = document.createElement("p");
 	title.innerHTML = addon.name;
