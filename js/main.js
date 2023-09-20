@@ -235,8 +235,7 @@ function setAddonPreviewImageByDirection(target, addon, direction) {
 		div.style.backgroundPositionY = `${-imgPositionY * PAK_TYPE}px`;
 	} else {
 		div.style.backgroundImage = `url(${NOIMAGE_IMGFILEPATH})`;
-		div.style.backgroundPositionX = 0;
-		div.style.backgroundPositionY = 0;
+		div.classList.add("no-image");
 	}
 	target.appendChild(div);
 	return div;

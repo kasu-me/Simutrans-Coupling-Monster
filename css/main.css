@@ -97,6 +97,12 @@ select#carsSelectBox {
 	height: var(--simutrans-paktype);
 	background-color: var(--simutrans-transparent);
 	overflow: hidden;
+	background-repeat: no-repeat;
+}
+
+.image-container.no-image {
+	background-position: center;
+	background-size: 50%;
 }
 
 #constraint-container>div:nth-child(2) #main-image-container .image-container {
