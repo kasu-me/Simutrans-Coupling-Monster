@@ -106,7 +106,7 @@ window.addEventListener("load", function () {
 			<div class="addon-image-whole-preview-position-pointer" id="position-pointer"></div>
 			<div class="addon-image-whole-preview-position-pointer cursor" id="position-pointer-cursor"></div>
 		</div>
-		<button id="open-select-image-dialog-button" class="isf-icon" icon="image">画像ファイルを指定</button>
+		<button id="open-select-image-dialog-button" class="lsf-icon" icon="image">画像ファイルを指定</button>
 		<div id="addon-image-positions"></div>
 		`, [{ "content": "閉じる", "event": `Dialog.list.editImageDialog.off();`, "icon": "close" }], {
 		editingAddon: null,
