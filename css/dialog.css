@@ -48,7 +48,7 @@ body:has(.dialog-area.on)>footer {
 }
 
 .dialog-area-overlay .dialog-content {
-	top: 25%;
+	top: 10%;
 	min-width: 480px;
 }
 

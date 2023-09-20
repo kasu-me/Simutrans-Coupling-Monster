@@ -4,6 +4,10 @@
 	--simutrans-paktype: 128px;
 }
 
+body {
+	background: #ddd;
+}
+
 /* 画像なし画像 */
 .noimage {
 	margin-top: 2.0em;
@@ -59,6 +63,7 @@ select#carsSelectBox {
 	height: calc(100vh - 20.5em - var(--simutrans-paktype));
 	border: 1px solid var(--formation-table-main-border);
 	padding: 1.0em;
+	background-color: #fff;
 }
 
 #constraint-container>div:nth-child(2) {
@@ -168,10 +173,10 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 
 /* ダイアログ */
 
-#openDatFileDialog,
-#selectImageDialog,
-#openJaTabFileDialog {
-	top: 10%;
+#infoDialog,
+#alertDialog,
+#confirmDialog {
+	top: 25%;
 }
 
 /* DATを開くダイアログ*/
@@ -184,16 +189,11 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	border: dashed var(--formation-table-main-border);
 }
 
-/* DATプレビューダイアログ */
-div.dialog-main-message:has(.dialog-preview) {
-	padding: 0.5em;
+/* プレビューダイアログ */
+#previewDialog div.dialog-main-message:has(.dialog-preview) {
+	padding: 1.0em;
 	margin: 0 1.8em;
 	border: solid 1px var(--formation-table-main-border);
-}
-
-#previewDialog div.dialog-main-message:has(.dialog-preview) {
-	padding-top: 1.0em;
-	padding-bottom: 1.0em;
 }
 
 /* 画像ファイル指定ダイアログ */
@@ -214,12 +214,27 @@ div.dialog-main-message:has(.dialog-preview) {
 }
 
 /* 車両に画像指定ダイアログ */
+#editImageDialog div.dialog-main-message {
+	padding: 1.0em;
+	margin: 0 1.8em;
+	border: solid 1px var(--formation-table-main-border);
+}
+
 #editImageDialog .input-area {
 	margin-bottom: 1em;
+	width: 600px;
+	position: sticky;
+	top: 0;
+	left: 0;
+	background: rgba(255, 255, 255, 0.9);
+}
+
+#editImageDialog .input-area td:first-child {
+	width: 6em;
 }
 
 #editImageDialog select {
-	width: calc(500px - 11em);
+	width: calc(600px - 12.5em);
 }
 
 #editImageDialog #direction-selectbox {
@@ -231,7 +246,7 @@ div.dialog-main-message:has(.dialog-preview) {
 }
 
 #editImageDialog #addon-image-whole-preview {
-	width: 500px;
+	width: 600px;
 	position: relative;
 	background-color: var(--simutrans-transparent);
 	background-size: cover;
@@ -247,10 +262,12 @@ div.dialog-main-message:has(.dialog-preview) {
 	position: absolute;
 	border: 2px solid #f00;
 	display: none;
+	cursor: default;
 }
 
 #editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer.cursor {
 	border: 2px solid #00f;
+	cursor: pointer;
 }
 
 #editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer.on {
@@ -260,6 +277,16 @@ div.dialog-main-message:has(.dialog-preview) {
 /* ヘルプダイアログ */
 #helpDialog {
 	max-width: 762px;
+}
+
+#helpDialog div.dialog-main-message {
+	padding: 0 1.0em;
+	margin: 0 1.8em;
+	border: solid 1px var(--formation-table-main-border);
+}
+
+#helpDialog div.dialog-main-message p:first-child {
+	margin-top: 0;
 }
 
 /* メッセージ */

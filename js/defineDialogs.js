@@ -206,11 +206,10 @@ window.addEventListener("load", function () {
 				addonWholeImageArea.classList.add("on");
 
 				addonWholeImageArea.style.backgroundImage = `url(${image.src})`;
-				Dialog.list.editImageDialog.functions.imageDisplaySizeRatio = 500 / image.width;
+				Dialog.list.editImageDialog.functions.imageDisplaySizeRatio = 600 / image.width;
 				addonWholeImageArea.style.height = `${image.height * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
 
 				//全体内での位置選択
-				positionPointerCursor.classList.add("on");
 				positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
 				positionPointerCursor.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
 				addonWholeImageArea.appendChild(positionPointerCursor);
@@ -219,6 +218,7 @@ window.addEventListener("load", function () {
 				addonWholeImageArea.addEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
 
 				//全体内での現在位置表示
+				positionPointer.classList.add("on");
 				positionPointer.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
 				positionPointer.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
 				positionPointer.style.top = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[1] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
