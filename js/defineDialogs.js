@@ -174,7 +174,7 @@ window.addEventListener("load", function () {
 
 			//日本語名をセット
 			let japaneseName = gebi("display-japanese-name");
-			japaneseName.innerHTML = jatab.has(Dialog.list.editImageDialog.functions.editingAddon) ? jatab.get(Dialog.list.editImageDialog.functions.editingAddon) : "(未設定)";
+			japaneseName.innerHTML = getJapaneseNameFromAddon(Dialog.list.editImageDialog.functions.editingAddon, "(未設定)")
 
 			//セレクトボックスに方向をセット
 			let selectBox = gebi("direction-selectbox");
@@ -240,8 +240,107 @@ window.addEventListener("load", function () {
 		Dialog.list.editImageDialog.functions.refresh();
 	});
 
+	new Dialog("couplingPreviewDialog", "連結設定プレビュー", `
+		<div>
+			<p>編成</p>
+			<div id="preview-current-formation" class="cars-container"></div>
+		</div>
+		<div>
+			<p>連結候補</p>
+			<div id="preview-current-candidate" class="cars-container"></div>
+		</div>
+		<div id="cp-preview-addon-name-preview-container" class="status-bar">
+			<span id="cp-preview-addon-name-preview"></span>
+		</div>
+		`, [{ "content": "撮影", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "image" }, { "content": "完了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "check" }], {
+		currentFormation: [],
+		display: function (x) {
+			if (masterAddons.length == 0) {
+				Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
+			} else {
+				let previewAddonNameArea = gebi("cp-preview-addon-name-preview");
+				previewAddonNameArea.innerHTML = "";
+				Dialog.list.couplingPreviewDialog.functions.currentFormation = [];
+				Dialog.list.couplingPreviewDialog.functions.refresh();
+				Dialog.list.couplingPreviewDialog.on();
+			}
+		},
+		refresh: function () {
+			let previewAddonNameArea = gebi("cp-preview-addon-name-preview");
+			previewAddonNameArea.innerHTML = "";
+			let currentArea = gebi("preview-current-formation");
+			currentArea.innerHTML = "";
+			let candidateArea = gebi("preview-current-candidate");
+			candidateArea.innerHTML = "";
+
+			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+
+			formation.forEach((car, i) => {
+				let outer = createOuter(false);
+				outer.dataset.addonName = car.name;
+				setAddonPreviewImage(outer, car);
+				addMouseOverEvent(outer);
+				if (i == formation.length - 1) {
+					outer.addEventListener("click", () => {
+						formation.pop();
+						Dialog.list.couplingPreviewDialog.functions.refresh();
+					});
+				}
+				currentArea.appendChild(outer);
+			});
+			if (formation.length == 0) {
+				//編成エリアのレイアウト崩れ防止用の空車両
+				let dummyOuter = createOuter(true);
+				currentArea.appendChild(dummyOuter);
+
+				masterAddons.forEach((addon) => {
+					if (addon[CONSTRAINT]["prev"].size == 0 || addon[CONSTRAINT]["prev"].size == 1 && [...addon[CONSTRAINT]["prev"].keys()][0] == "none") {
+						addImagePreview(candidateArea, formation, addon);
+					}
+				});
+			} else {
+				masterAddons.forEach((addon) => {
+					if (addon[CONSTRAINT]["prev"].has(formation.at(-1).name)) {
+						addImagePreview(candidateArea, formation, addon);
+					}
+				});
+			}
+		}
+	}, true);
+	function createOuter(isDummy) {
+		let outer = document.createElement("div");
+		outer.classList.add("outer");
+		if (isDummy) {
+			outer.classList.add("dummy");
+		}
+		return outer;
+	}
+	function addImagePreview(area, formation, addon) {
+		let outer = createOuter(false);
+		outer.dataset.addonName = addon.name;
+		setAddonPreviewImage(outer, addon);
+		outer.addEventListener("click", () => {
+			formation.push(addon);
+			Dialog.list.couplingPreviewDialog.functions.refresh();
+		});
+		addMouseOverEvent(outer);
+		area.appendChild(outer);
+	}
+	function addMouseOverEvent(preview) {
+		preview.addEventListener("mouseenter", () => {
+			let previewAddonNameArea = gebi("cp-preview-addon-name-preview");
+			let addonName = preview.dataset.addonName;
+			let addon = searchObjectsByItsName(masterAddons, addonName)[0];
+			previewAddonNameArea.innerHTML = `${addonName}<br>${getJapaneseNameFromAddon(addon)}`;
+			preview.addEventListener("mouseleave", () => {
+				previewAddonNameArea.innerHTML = "";
+			}, { once: true });
+		});
+	}
+
+
 	new Dialog("helpDialog", "Coupling Monster について", `
-		<div class="dialog-preview">
+			< div class="dialog-preview" >
 			<h2>このアプリは何？</h2>
 			<p>フリー輸送シミュレーションゲーム「Simutrans」のアドオン製作を支援するWebアプリケーションです。</p>
 			<p>本アプリでは、Simutransの鉄道車両アドオン製作において最も面倒なことの一つ、<strong>連結設定</strong>を支援します。本アプリで設定した内容をdatとして出力することはもちろんのこと、既存のdatファイルを読み込んで編集することも可能です。</p>
@@ -259,42 +358,6 @@ window.addEventListener("load", function () {
 			<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
 			<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
 			<p style="margin-bottom:2em;">© 2023 M_Kasumi</p>
-		</div>
-		`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);
-
-
-
-	//アラート:alrt
-	new Dialog("alertDialog", "警告", `<img src="./js/img/alert.svg" class="dialog-icon"><div id="alrt-main"></div>`, [{ "content": "OK", "event": `Dialog.list.alertDialog.off()`, "icon": "check" }], {
-		display: function (message) {
-			gebi("alrt-main").innerHTML = message;
-			Dialog.list.alertDialog.on();
-			Dialog.list.alertDialog.buttons.querySelector("button[icon='check']").focus();
-		}
-	}, true);
-
-	//確認:cnfm
-	new Dialog("confirmDialog", "確認", `<img src="./js/img/confirm.svg" class="dialog-icon"><div id="cnfm-main"></div>`, [{ "content": "OK", "event": `Dialog.list.confirmDialog.functions.callback(); Dialog.list.confirmDialog.off()`, "icon": "check" }, { "content": "NO", "event": `Dialog.list.confirmDialog.off(); Dialog.list.confirmDialog.functions.interruption(); `, "icon": "close" }], {
-		display: function (message, callback, interruption) {
-			gebi("cnfm-main").innerHTML = message;
-			Dialog.list.confirmDialog.functions.callback = callback || function () { };
-			Dialog.list.confirmDialog.functions.interruption = interruption || function () { };
-			Dialog.list.confirmDialog.on();
-			Dialog.list.confirmDialog.buttons.querySelector("button[icon='check']").focus();
-		},
-		callback: function () { },
-		interruption: function () { }
-	}, true);
-
-	//情報:info
-	new Dialog("infoDialog", "情報", `<img src="./js/img/info.svg" class="dialog-icon"><div id="info-main"></div>`, [{ "content": "OK", "event": `Dialog.list.infoDialog.off()`, "icon": "close" }], {
-		display: function (message) {
-			gebi("info-main").innerHTML = message;
-			Dialog.list.infoDialog.on();
-			Dialog.list.infoDialog.buttons.querySelector("button[icon='check']").focus();
-		}
-	}, true);
-
-
-
+		</div >
+	`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);
 });

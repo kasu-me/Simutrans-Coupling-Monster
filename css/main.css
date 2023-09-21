@@ -2,6 +2,7 @@
 	--main-padding: 2.0em;
 	--simutrans-transparent: #e7ffff;
 	--simutrans-paktype: 128px;
+	--small-preview-ratio: calc(4/5);
 }
 
 body {
@@ -286,6 +287,86 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 
 #editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer.on {
 	display: block;
+}
+
+#couplingPreviewDialog {
+	width: 100vw;
+}
+
+#couplingPreviewDialog {
+	width: 100vw;
+}
+
+#couplingPreviewDialog div.dialog-main-message {
+	padding: 0 1em;
+	margin: 0 1.8em;
+	border: solid 1px var(--formation-table-main-border);
+	height: calc(100vh - 25em);
+	overflow-y: scroll;
+}
+
+#couplingPreviewDialog div.dialog-main-message>div:not(:last-child) {
+	padding-bottom: 0.5em;
+}
+
+#couplingPreviewDialog div.dialog-main-message>div:first-child {
+	background-color: rgba(255, 255, 255, 0.9);
+	border-bottom: 1px solid #ccc;
+	position: sticky;
+	top: 0;
+	left: 0;
+	padding-top: 1em;
+}
+
+#couplingPreviewDialog div.dialog-main-message>div:first-child>p {
+	margin-top: 0;
+}
+
+
+#couplingPreviewDialog div.dialog-main-message p {
+	margin-bottom: 0;
+}
+
+#couplingPreviewDialog .cars-container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#couplingPreviewDialog #preview-current-formation .outer,
+#couplingPreviewDialog #preview-current-candidate .outer {
+	margin: 10px;
+	overflow: hidden;
+	width: calc(var(--simutrans-paktype) * var(--small-preview-ratio));
+	height: calc(var(--simutrans-paktype) * var(--small-preview-ratio));
+}
+
+#couplingPreviewDialog #preview-current-formation .outer:not(.dummy):last-child,
+#couplingPreviewDialog #preview-current-candidate .outer {
+	cursor: pointer;
+	border: 1px solid #000;
+}
+
+#couplingPreviewDialog #preview-current-formation .outer:last-child:hover,
+#couplingPreviewDialog #preview-current-candidate .outer:hover {
+	border-color: #f00;
+}
+
+#couplingPreviewDialog #preview-current-formation .outer .image-container,
+#couplingPreviewDialog #preview-current-candidate .outer .image-container {
+	transform: scale(var(--small-preview-ratio));
+	transform-origin: left top;
+	border: none;
+}
+
+.status-bar {
+	position: sticky;
+	bottom: 0;
+	left: 0;
+	padding: 0.5em;
+	width: 100%;
+	min-height: 4em;
+	background-color: rgba(255, 255, 255, 0.9);
+	border-top: 1px solid #ccc;
 }
 
 /* ヘルプダイアログ */

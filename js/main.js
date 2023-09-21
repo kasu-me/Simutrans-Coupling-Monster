@@ -71,6 +71,11 @@ function getEditingAddon() {
 	return searchObjectsByItsName(masterAddons, selectBox.value)[0];
 }
 
+//アドオンから日本語名を取得
+function getJapaneseNameFromAddon(addon, unsetString, prefix) {
+	return jatab.has(addon) ? `${prefix != undefined ? prefix : ""}${jatab.get(addon)}` : unsetString != undefined ? unsetString : "";
+}
+
 //アドオン名セレクトボックスに値セット
 function setAddonNamesToSelectBox(selectBox) {
 	selectBox.innerHTML = "";
@@ -308,7 +313,7 @@ function refresh() {
 		}
 	})
 	let jatabInput = gebi("jatabtable-japanese-name");
-	jatabInput.innerHTML = jatab.has(editingAddon) ? jatab.get(editingAddon) : "";
+	jatabInput.innerHTML = getJapaneseNameFromAddon(editingAddon);
 
 	for (let prop in editingAddon) {
 		if (prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
@@ -342,7 +347,7 @@ function setFooterAddonsList() {
 function setAddonPreviewBox(parent, box, addon) {
 	box.classList.add("draggable-object");
 	box.classList.add("mku-balloon");
-	box.setAttribute("mku-balloon-message", `${addon.name}${jatab.has(addon) ? `\n${jatab.get(addon)}` : ""}`);
+	box.setAttribute("mku-balloon-message", `${addon.name}${getJapaneseNameFromAddon(addon, "", "\n")}`);
 	box.dataset.addonName = addon.name;
 	let title = document.createElement("p");
 	title.innerHTML = addon.name;

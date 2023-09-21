@@ -1,9 +1,17 @@
+:root {
+	--message-position-x: -50%;
+}
+
+:root:has(.dialog-area.on) {
+	--message-position-x: calc(-50% - var(--scrollbar-width) / 2);
+}
+
 .message-content {
 	display: none;
 	position: fixed;
 	top: 30px;
 	left: 50%;
-	transform: translate(-50%, 0);
+	transform: translate(var(--message-position-x), 0);
 	visibility: visible;
 	background-color: #fff;
 	padding: 0;
@@ -43,25 +51,25 @@
 @keyframes message-show {
 	from {
 		opacity: 0;
-		transform: translate(-50%, -50%);
+		transform: translate(var(--message-position-x), -50%);
 	}
 
 	to {
 		opacity: 1;
 		visibility: visible;
-		transform: translate(-50%, 0);
+		transform: translate(var(--message-position-x), 0);
 	}
 }
 
 @keyframes message-hide {
 	0% {
 		opacity: 1;
-		transform: translate(-50%, 0);
+		transform: translate(var(--message-position-x), 0);
 	}
 
 	100% {
 		opacity: 0;
 		visibility: hidden;
-		transform: translate(-50%, -50%);
+		transform: translate(var(--message-position-x), -50%);
 	}
 }
