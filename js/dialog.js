@@ -114,6 +114,14 @@ class Dialog {
 		} else {
 			Dialog.displayDialogAreaOverlay();
 			Dialog.open(this.background);
+			//表示順
+			let zIndexes = [];
+			for (let dialogName in Dialog.list) {
+				if (Dialog.list[dialogName].isActive && Dialog.list[dialogName].isOverlay) {
+					zIndexes.push(getComputedStyle(Dialog.list[dialogName].background).zIndex);
+				}
+			}
+			this.background.style.zIndex = Math.max(...zIndexes) + 1;
 		}
 		Dialog.open(this.dialog);
 		if (!isActiveInFirstTime) {
