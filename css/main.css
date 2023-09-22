@@ -380,6 +380,10 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	margin-top: 0;
 }
 
+#formatedAddonsImageDialog p #formated-addons-space {
+	width: 4em;
+}
+
 /* ヘルプダイアログ */
 #helpDialog {
 	max-width: 762px;
