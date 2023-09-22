@@ -241,7 +241,7 @@ window.addEventListener("load", function () {
 		Dialog.list.editImageDialog.functions.refresh();
 	});
 
-	new Dialog("couplingPreviewDialog", "連結設定プレビュー", `
+	new Dialog("couplingPreviewDialog", "連結プレビュー", `
 		<div>
 			<p>編成(<span id="preview-current-formation-count"></span>両)</p>
 			<div id="preview-current-formation" class="cars-container"></div>
