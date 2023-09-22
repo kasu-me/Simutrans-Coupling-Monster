@@ -250,7 +250,7 @@ window.addEventListener("load", function () {
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		`, [{ "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "image" }, { "content": "完了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "check" }], {
+		`, [{ "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "image", "id": "open-formated-image-dialog-button" }, { "content": "完了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "check" }], {
 		currentFormation: [],
 		display: function (x) {
 			if (masterAddons.length == 0) {
@@ -269,6 +269,7 @@ window.addEventListener("load", function () {
 
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			gebi("preview-current-formation-count").innerHTML = formation.length;
+			gebi("open-formated-image-dialog-button").disabled = formation.length == 0;
 
 			formation.forEach((car, i) => {
 				let outer = createOuter(false);
