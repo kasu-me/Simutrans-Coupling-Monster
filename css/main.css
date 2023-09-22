@@ -357,7 +357,6 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 
 #couplingPreviewDialog #preview-current-formation .outer .image-container,
 #couplingPreviewDialog #preview-current-candidate .outer .image-container {
-	transform: scale(var(--small-preview-ratio));
 	transform-origin: left top;
 	border: none;
 }
