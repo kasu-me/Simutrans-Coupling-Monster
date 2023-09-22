@@ -404,8 +404,8 @@ window.addEventListener("load", function () {
 			if (!isTransparent) {
 				top = Math.min(top, row);
 				left = Math.min(left, i % imageData.width);
-				bottom = Math.max(bottom, row);
-				right = Math.max(right, i % imageData.width);
+				bottom = Math.max(bottom, row + 1);
+				right = Math.max(right, i % imageData.width + 1);
 			}
 		}
 		let height = bottom - top;
