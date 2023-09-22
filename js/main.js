@@ -108,7 +108,10 @@ function loadDatFile(file) {
 			dat = dat.replace(/-{3,}/g, "---");
 			let vehicles = dat.split("---").filter(data => data != "");
 			for (let i in vehicles) {
+				//空白行スキップ
 				if (vehicles[i].trim() == "") { continue }
+				//コメント行スキップ
+				if (vehicles[i].trim().startsWith("#")) { continue }
 				masterAddons.push({});
 				masterAddons.at(-1)[CONSTRAINT] = {
 					prev: new Set(),
