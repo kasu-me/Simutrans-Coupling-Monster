@@ -327,10 +327,18 @@ window.addEventListener("load", function () {
 
 	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<p><input type="range" min="0" max="${PAK_TYPE}" value="48" id="formated-addons-space-range" oninput="gebi('formated-addons-space').value=this.value;Dialog.list.formatedAddonsImageDialog.functions.refresh();"><input type="number" min="0" max="${PAK_TYPE}" value="48" id="formated-addons-space" oninput="gebi('formated-addons-space-range').value=this.value;Dialog.list.formatedAddonsImageDialog.functions.refresh();"></p><canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
-			let length = Number(Dialog.list.couplingPreviewDialog.functions.currentFormation[0].length);
+			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+			let length = Number(formation[0].length);
 			let space = 4 * length;
 			gebi("formated-addons-space").value = space;
 			gebi("formated-addons-space-range").value = space;
+
+			for (let car of formation) {
+				if (!imageFiles.has(car[EMPTYIMAGE_DIRECTIONS[0]].split(".")[0])) {
+					Dialog.list.alertDialog.functions.display("画像が指定されていない車両があるため撮影できません。");
+					return;
+				}
+			}
 
 			Dialog.list.formatedAddonsImageDialog.functions.refresh();
 			Dialog.list.formatedAddonsImageDialog.on();
