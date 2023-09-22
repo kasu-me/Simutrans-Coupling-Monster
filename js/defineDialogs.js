@@ -324,8 +324,19 @@ window.addEventListener("load", function () {
 		area.appendChild(outer);
 	}
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<p><input type="range" min="0" max="${PAK_TYPE}" value="48" id="formated-addons-space-range" oninput="gebi('formated-addons-space').value=this.value;Dialog.list.formatedAddonsImageDialog.functions.refresh();"><input type="number" min="0" max="${PAK_TYPE}" value="48" id="formated-addons-space" oninput="gebi('formated-addons-space-range').value=this.value;Dialog.list.formatedAddonsImageDialog.functions.refresh();"></p><canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
+			if (Dialog.list.couplingPreviewDialog.functions.currentFormation[0].length == 12) {
+				gebi("formated-addons-space").value = 48;
+				gebi("formated-addons-space-range").value = 48;
+			} else if (Dialog.list.couplingPreviewDialog.functions.currentFormation[0].length == 11) {
+				gebi("formated-addons-space").value = 44;
+				gebi("formated-addons-space-range").value = 44;
+			}
+			Dialog.list.formatedAddonsImageDialog.functions.refresh();
+			Dialog.list.formatedAddonsImageDialog.on();
+		},
+		refresh: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			let canvas = document.createElement("canvas");
 			canvas.width = PAK_TYPE * 10;
@@ -334,7 +345,7 @@ window.addEventListener("load", function () {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			//車両画像を背景透過して読み込み
-			let imgWidth = 48;
+			let imgWidth = gebi("formated-addons-space").value;
 			let formationCount = formation.length;
 			[...formation].reverse().forEach((car, i) => {
 				let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(car);
@@ -342,7 +353,6 @@ window.addEventListener("load", function () {
 				ctx.drawImage(img, (formationCount - 1 - i) * imgWidth, (i) * Math.floor(imgWidth / 2));
 			});
 			trimCanvas(canvas, gebi("formated-addons-image"));
-			Dialog.list.formatedAddonsImageDialog.on();
 		},
 		copyToClipboard: function () {
 			let canvas = gebi("formated-addons-image");

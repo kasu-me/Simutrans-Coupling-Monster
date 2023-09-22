@@ -376,7 +376,9 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	border-top: 1px solid #ccc;
 }
 
-#formatedAddonsImageDialog canvas#formated-addons-image {}
+#formatedAddonsImageDialog p {
+	margin-top: 0;
+}
 
 /* ヘルプダイアログ */
 #helpDialog {
