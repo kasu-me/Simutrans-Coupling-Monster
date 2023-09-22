@@ -305,10 +305,6 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	overflow-y: scroll;
 }
 
-#couplingPreviewDialog div.dialog-main-message>div:not(:last-child) {
-	padding-bottom: 0.5em;
-}
-
 #couplingPreviewDialog div.dialog-main-message>div:first-child {
 	background-color: rgba(255, 255, 255, 0.9);
 	border-bottom: 1px solid #ccc;
@@ -316,11 +312,19 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	top: 0;
 	left: 0;
 	padding-top: 1em;
+	padding-bottom: 1em;
 }
 
 #couplingPreviewDialog div.dialog-main-message>div:first-child>p {
 	margin-top: 0;
 }
+
+#couplingPreviewDialog div.dialog-main-message>div:first-child>.cars-container {
+	flex-wrap: nowrap;
+	overflow-x: scroll;
+}
+
+#couplingPreviewDialog div.dialog-main-message>div:first-child>.cars-container .outer {}
 
 
 #couplingPreviewDialog div.dialog-main-message p {
@@ -335,9 +339,9 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 #couplingPreviewDialog #preview-current-formation .outer,
 #couplingPreviewDialog #preview-current-candidate .outer {
 	margin: 10px;
-	overflow: hidden;
-	width: calc(var(--simutrans-paktype) * var(--small-preview-ratio));
-	height: calc(var(--simutrans-paktype) * var(--small-preview-ratio));
+	width: calc(var(--simutrans-paktype) * var(--small-preview-ratio) + 2px);
+	height: calc(var(--simutrans-paktype) * var(--small-preview-ratio) + 2px);
+	border: 1px solid var(--simutrans-transparent);
 }
 
 #couplingPreviewDialog #preview-current-formation .outer:not(.dummy):last-child,
