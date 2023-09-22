@@ -363,7 +363,7 @@ function setAddonPreviewBox(parent, box, addon) {
 //アドオンバルーン設定
 function setAddonBalloon(target, addon) {
 	target.classList.add("mku-balloon");
-	target.setAttribute("mku-balloon-message", `${addon.name}${getJapaneseNameFromAddon(addon, "", "\n")}`);
+	target.setAttribute("mku-balloon-message", `<strong>${addon.name}</strong>${getJapaneseNameFromAddon(addon, "", "\n")}`);
 }
 
 //アドオンドラッグアンドドロップイベントをセット

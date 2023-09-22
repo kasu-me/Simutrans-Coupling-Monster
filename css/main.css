@@ -2,7 +2,7 @@
 	--main-padding: 2.0em;
 	--simutrans-transparent: #e7ffff;
 	--simutrans-paktype: 128px;
-	--small-preview-ratio: calc(4/5);
+	--small-preview-ratio: 1;
 }
 
 body {
