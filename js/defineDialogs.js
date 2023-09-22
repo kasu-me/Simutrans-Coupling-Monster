@@ -249,25 +249,18 @@ window.addEventListener("load", function () {
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		<div id="cp-preview-addon-name-preview-container" class="status-bar">
-			<span id="cp-preview-addon-name-preview"></span>
-		</div>
 		`, [{ "content": "撮影", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "image" }, { "content": "完了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "check" }], {
 		currentFormation: [],
 		display: function (x) {
 			if (masterAddons.length == 0) {
 				Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
 			} else {
-				let previewAddonNameArea = gebi("cp-preview-addon-name-preview");
-				previewAddonNameArea.innerHTML = "";
 				Dialog.list.couplingPreviewDialog.functions.currentFormation = [];
 				Dialog.list.couplingPreviewDialog.functions.refresh();
 				Dialog.list.couplingPreviewDialog.on();
 			}
 		},
 		refresh: function () {
-			let previewAddonNameArea = gebi("cp-preview-addon-name-preview");
-			previewAddonNameArea.innerHTML = "";
 			let currentArea = gebi("preview-current-formation");
 			currentArea.innerHTML = "";
 			let candidateArea = gebi("preview-current-candidate");
@@ -279,9 +272,10 @@ window.addEventListener("load", function () {
 				let outer = createOuter(false);
 				outer.dataset.addonName = car.name;
 				setAddonPreviewImage(outer, car);
-				addMouseOverEvent(outer);
+				setAddonBalloon(outer, car);
 				if (i == formation.length - 1) {
 					outer.addEventListener("click", () => {
+						gebi("mku-balloon").classList.remove("on");
 						formation.pop();
 						Dialog.list.couplingPreviewDialog.functions.refresh();
 					});
@@ -320,24 +314,15 @@ window.addEventListener("load", function () {
 		outer.dataset.addonName = addon.name;
 		setAddonPreviewImage(outer, addon);
 		outer.addEventListener("click", () => {
+			gebi("mku-balloon").classList.remove("on");
 			formation.push(addon);
 			Dialog.list.couplingPreviewDialog.functions.refresh();
 		});
-		addMouseOverEvent(outer);
+		setAddonBalloon(outer, addon);
 		area.appendChild(outer);
 	}
-	function addMouseOverEvent(preview) {
-		preview.addEventListener("mouseenter", () => {
-			let previewAddonNameArea = gebi("cp-preview-addon-name-preview");
-			let addonName = preview.dataset.addonName;
-			let addon = searchObjectsByItsName(masterAddons, addonName)[0];
-			previewAddonNameArea.innerHTML = `${addonName}<br>${getJapaneseNameFromAddon(addon)}`;
-			preview.addEventListener("mouseleave", () => {
-				previewAddonNameArea.innerHTML = "";
-			}, { once: true });
-		});
-	}
 
+	new Dialog("formationImageDialog", "編成画像", ``, [], {}, true);
 
 	new Dialog("helpDialog", "Coupling Monster について", `
 			< div class="dialog-preview" >

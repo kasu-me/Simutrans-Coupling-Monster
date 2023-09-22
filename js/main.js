@@ -346,8 +346,7 @@ function setFooterAddonsList() {
 //アドオンプレビューボックス設定
 function setAddonPreviewBox(parent, box, addon) {
 	box.classList.add("draggable-object");
-	box.classList.add("mku-balloon");
-	box.setAttribute("mku-balloon-message", `${addon.name}${getJapaneseNameFromAddon(addon, "", "\n")}`);
+	setAddonBalloon(box, addon);
 	box.dataset.addonName = addon.name;
 	let title = document.createElement("p");
 	title.innerHTML = addon.name;
@@ -359,6 +358,12 @@ function setAddonPreviewBox(parent, box, addon) {
 	}
 	setAddonPreviewImage(box, addon);
 	parent.appendChild(box);
+}
+
+//アドオンバルーン設定
+function setAddonBalloon(target, addon) {
+	target.classList.add("mku-balloon");
+	target.setAttribute("mku-balloon-message", `${addon.name}${getJapaneseNameFromAddon(addon, "", "\n")}`);
 }
 
 //アドオンドラッグアンドドロップイベントをセット
