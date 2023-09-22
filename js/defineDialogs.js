@@ -324,7 +324,7 @@ window.addEventListener("load", function () {
 		area.appendChild(outer);
 	}
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "check" }, { "content": "完了", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "check" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			let canvas = document.createElement("canvas");
