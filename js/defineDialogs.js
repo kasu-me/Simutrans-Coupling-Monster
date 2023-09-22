@@ -334,25 +334,15 @@ window.addEventListener("load", function () {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			//車両画像を背景透過して読み込み
-			let promises = [];
-			[...formation].reverse().forEach((car) => {
-				promises.push(new Promise((resolve) => {
-					let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(car);
-					let img = getTransparentImage(imgName, imgPositionY, imgPositionX);
-					img.onload = () => { resolve(img); };
-				}));
-			});
-
-			//全画像読み込み終了後、貼り付け
-			let formationCount = formation.length;
 			let imgWidth = 48;
-			Promise.all(promises).then((results) => {
-				results.forEach((img, i) => {
-					ctx.drawImage(img, (formationCount - 1 - i) * imgWidth, (i) * Math.floor(imgWidth / 2));
-				});
-				trimCanvas(canvas, gebi("formated-addons-image"));
-				Dialog.list.formatedAddonsImageDialog.on();
+			let formationCount = formation.length;
+			[...formation].reverse().forEach((car, i) => {
+				let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(car);
+				let img = getTransparentImage(imgName, imgPositionY, imgPositionX);
+				ctx.drawImage(img, (formationCount - 1 - i) * imgWidth, (i) * Math.floor(imgWidth / 2));
 			});
+			trimCanvas(canvas, gebi("formated-addons-image"));
+			Dialog.list.formatedAddonsImageDialog.on();
 		}
 	}, true);
 	function getTransparentImage(imgName, imgPositionY, imgPositionX) {
@@ -371,9 +361,7 @@ window.addEventListener("load", function () {
 			}
 		}
 		ctx.putImageData(imageData, 0, 0);
-		let img = new Image();
-		img.src = canvas.toDataURL();
-		return img;
+		return canvas;
 	}
 	function trimCanvas(sourceCanvas, targetCanvas) {
 		let sourceCtx = sourceCanvas.getContext("2d");
