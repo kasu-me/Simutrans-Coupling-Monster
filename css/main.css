@@ -344,13 +344,17 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	border: 1px solid var(--simutrans-transparent);
 }
 
+#couplingPreviewDialog #preview-current-formation .outer.dummy {
+	border-color: transparent;
+}
+
 #couplingPreviewDialog #preview-current-formation .outer:not(.dummy):last-child,
 #couplingPreviewDialog #preview-current-candidate .outer {
 	cursor: pointer;
 	border: 1px solid #000;
 }
 
-#couplingPreviewDialog #preview-current-formation .outer:last-child:hover,
+#couplingPreviewDialog #preview-current-formation .outer:not(.dummy):last-child:hover,
 #couplingPreviewDialog #preview-current-candidate .outer:hover {
 	border-color: #f00;
 }
