@@ -380,6 +380,11 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	margin-top: 0;
 }
 
+#formatedAddonsImageDialog canvas {
+	margin-top: 1.0em;
+	margin-bottom: 1.0em;
+}
+
 #formatedAddonsImageDialog p #formated-addons-space {
 	width: 4em;
 }
