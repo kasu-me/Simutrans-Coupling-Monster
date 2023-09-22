@@ -70,6 +70,7 @@ window.addEventListener("load", function () {
 	DIRECTIONS.forEach((dir) => {
 		directionSelectBox += `<option value="${dir}">${dir}</option>`;
 	})
+
 	new Dialog("editImageDialog", "車両と画像の対応", `
 		<table class="input-area">
 			<tr>
@@ -242,14 +243,14 @@ window.addEventListener("load", function () {
 
 	new Dialog("couplingPreviewDialog", "連結設定プレビュー", `
 		<div>
-			<p>編成</p>
+			<p>編成(<span id="preview-current-formation-count"></span>両)</p>
 			<div id="preview-current-formation" class="cars-container"></div>
 		</div>
 		<div>
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		`, [{ "content": "撮影", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "image" }, { "content": "完了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "check" }], {
+		`, [{ "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "image" }, { "content": "完了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "check" }], {
 		currentFormation: [],
 		display: function (x) {
 			if (masterAddons.length == 0) {
@@ -267,6 +268,7 @@ window.addEventListener("load", function () {
 			candidateArea.innerHTML = "";
 
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+			gebi("preview-current-formation-count").innerHTML = formation.length;
 
 			formation.forEach((car, i) => {
 				let outer = createOuter(false);
@@ -322,7 +324,93 @@ window.addEventListener("load", function () {
 		area.appendChild(outer);
 	}
 
-	new Dialog("formationImageDialog", "編成画像", ``, [], {}, true);
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image" width="762px" height="762px"></canvas>`, [{ "content": "完了", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "check" }], {
+		display: function () {
+			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+			let canvas = document.createElement("canvas");
+			canvas.width = PAK_TYPE * 10;
+			canvas.height = PAK_TYPE * 10;
+			let ctx = canvas.getContext('2d');
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			//車両画像を背景透過して読み込み
+			let promises = [];
+			[...formation].reverse().forEach((car) => {
+				promises.push(new Promise((resolve) => {
+					let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(car);
+					let img = getTransparentImage(imgName, imgPositionY, imgPositionX);
+					img.onload = () => { resolve(img); };
+				}));
+			});
+
+			//全画像読み込み終了後、貼り付け
+			let formationCount = formation.length;
+			let imgWidth = 48;
+			Promise.all(promises).then((results) => {
+				results.forEach((img, i) => {
+					ctx.drawImage(img, (formationCount - 1 - i) * imgWidth, (i) * Math.floor(imgWidth / 2));
+				});
+				trimCanvas(canvas, gebi("formated-addons-image"));
+				Dialog.list.formatedAddonsImageDialog.on();
+			});
+		}
+	}, true);
+	function getTransparentImage(imgName, imgPositionY, imgPositionX) {
+		let canvas = document.createElement("canvas");
+		canvas.width = PAK_TYPE;
+		canvas.height = PAK_TYPE;
+		let ctx = canvas.getContext("2d");
+		ctx.drawImage(imageFiles.get(imgName), PAK_TYPE * imgPositionX, PAK_TYPE * imgPositionY, PAK_TYPE, PAK_TYPE, 0, 0, PAK_TYPE, PAK_TYPE);
+		let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		let [r, g, b] = [231, 255, 255];
+		for (var i = 0; i < (imageData.width * imageData.height); i++) {
+			if ((imageData.data[i * 4] == r) &&
+				(imageData.data[i * 4 + 1] == g) &&
+				(imageData.data[i * 4 + 2] == b)) {
+				imageData.data[i * 4 + 3] = 0;
+			}
+		}
+		ctx.putImageData(imageData, 0, 0);
+		let img = new Image();
+		img.src = canvas.toDataURL();
+		return img;
+	}
+	function trimCanvas(sourceCanvas, targetCanvas) {
+		let sourceCtx = sourceCanvas.getContext("2d");
+		let imageData = sourceCtx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
+		let top = sourceCanvas.height;
+		let left = sourceCanvas.width;
+		let bottom = 0;
+		let right = 0;
+		let isFirstTimeInRow = true;
+		let row = -1;
+		for (var i = 0; i < (imageData.width * imageData.height); i++) {
+			//新しい行の場合
+			if (i % imageData.width == 0) {
+				isFirstTimeInRow = true;
+				row++;
+			}
+			let isTransparent = imageData.data[i * 4 + 3] == 0;
+			//最初の不透明ピクセルの場合
+			if (isFirstTimeInRow && !isTransparent) {
+				isFirstTimeInRow = false;
+			}
+			//不透明ピクセルの場合
+			if (!isTransparent) {
+				top = Math.min(top, row);
+				left = Math.min(left, i % imageData.width);
+				bottom = Math.max(bottom, row);
+				right = Math.max(right, i % imageData.width);
+			}
+		}
+		let height = bottom - top;
+		let width = right - left;
+		targetCanvas.height = height;
+		targetCanvas.width = width;
+		let targetCtx = targetCanvas.getContext("2d");
+		targetCtx.clearRect(0, 0, width, height);
+		targetCtx.drawImage(sourceCanvas, left, top, width, height, 0, 0, width, height);
+	}
 
 	new Dialog("helpDialog", "Coupling Monster について", `
 			< div class="dialog-preview" >

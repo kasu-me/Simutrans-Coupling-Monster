@@ -369,6 +369,8 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	border-top: 1px solid #ccc;
 }
 
+#formatedAddonsImageDialog canvas#formated-addons-image {}
+
 /* ヘルプダイアログ */
 #helpDialog {
 	max-width: 762px;
