@@ -425,8 +425,7 @@ window.addEventListener("load", function () {
 		targetCtx.drawImage(sourceCanvas, left, top, width, height, 0, 0, width, height);
 	}
 
-	new Dialog("helpDialog", "Coupling Monster について", `
-			< div class="dialog-preview" >
+	new Dialog("helpDialog", "Coupling Monster について", `<div class="dialog-preview">
 			<h2>このアプリは何？</h2>
 			<p>フリー輸送シミュレーションゲーム「Simutrans」のアドオン製作を支援するWebアプリケーションです。</p>
 			<p>本アプリでは、Simutransの鉄道車両アドオン製作において最も面倒なことの一つ、<strong>連結設定</strong>を支援します。本アプリで設定した内容をdatとして出力することはもちろんのこと、既存のdatファイルを読み込んで編集することも可能です。</p>
