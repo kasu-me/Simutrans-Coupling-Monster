@@ -291,13 +291,13 @@ window.addEventListener("load", function () {
 				currentArea.appendChild(dummyOuter);
 
 				masterAddons.forEach((addon) => {
-					if (addon[CONSTRAINT]["prev"].size == 0 || addon[CONSTRAINT]["prev"].size == 1 && [...addon[CONSTRAINT]["prev"].keys()][0] == "none") {
+					if (addon[CONSTRAINT]["prev"].size == 0 || (addon[CONSTRAINT]["prev"].size == 1 && [...addon[CONSTRAINT]["prev"].keys()][0] == "none")) {
 						addImagePreview(candidateArea, formation, addon);
 					}
 				});
 			} else {
 				masterAddons.forEach((addon) => {
-					if (addon[CONSTRAINT]["prev"].has(formation.at(-1).name)) {
+					if (addon[CONSTRAINT]["prev"].has(formation.at(-1).name) || (addon[CONSTRAINT]["prev"].size == 0 && formation.at(-1)[CONSTRAINT]["next"].size == 0)) {
 						addImagePreview(candidateArea, formation, addon);
 					}
 				});
