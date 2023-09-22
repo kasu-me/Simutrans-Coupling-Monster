@@ -324,7 +324,7 @@ window.addEventListener("load", function () {
 		area.appendChild(outer);
 	}
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image" width="762px" height="762px"></canvas>`, [{ "content": "完了", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "check" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "check" }, { "content": "完了", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "check" }], {
 		display: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			let canvas = document.createElement("canvas");
@@ -343,6 +343,23 @@ window.addEventListener("load", function () {
 			});
 			trimCanvas(canvas, gebi("formated-addons-image"));
 			Dialog.list.formatedAddonsImageDialog.on();
+		},
+		copyToClipboard: function () {
+			let canvas = gebi("formated-addons-image");
+			canvas.toBlob(async (blob) => {
+				const clipBoardItem = new ClipboardItem({
+					'image/png': blob
+				});
+				await navigator.clipboard.write([clipBoardItem]);
+				new Message("クリップボードにコピーしました。", ["file-saved"], 3000, true, true);
+			});
+		},
+		saveAsFile: function () {
+			let canvas = gebi("formated-addons-image");
+			let link = document.createElement("a");
+			link.href = canvas.toDataURL();
+			link.download = `formated.png`;
+			link.click();
 		}
 	}, true);
 	function getTransparentImage(imgName, imgPositionY, imgPositionX) {
