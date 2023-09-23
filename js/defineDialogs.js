@@ -335,17 +335,21 @@ window.addEventListener("load", function () {
 
 	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
-			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+			loader.start();
+			setTimeout(() => {
+				let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 
-			for (let car of formation) {
-				if (!imageFiles.has(car[EMPTYIMAGE_DIRECTIONS[0]].split(".")[0])) {
-					Dialog.list.alertDialog.functions.display("画像が指定されていない車両があるため撮影できません。");
-					return;
+				for (let car of formation) {
+					if (!imageFiles.has(car[EMPTYIMAGE_DIRECTIONS[0]].split(".")[0])) {
+						Dialog.list.alertDialog.functions.display("画像が指定されていない車両があるため撮影できません。");
+						return;
+					}
 				}
-			}
 
-			Dialog.list.formatedAddonsImageDialog.functions.refresh();
-			Dialog.list.formatedAddonsImageDialog.on();
+				Dialog.list.formatedAddonsImageDialog.functions.refresh();
+				Dialog.list.formatedAddonsImageDialog.on();
+				setTimeout(loader.finish, 150);
+			}, 0);
 		},
 		refresh: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
