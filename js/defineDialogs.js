@@ -303,9 +303,12 @@ window.addEventListener("load", function () {
 						candidateAddonsCount++;
 					}
 				});
-				//候補が1件のみだった場合、その要素をクリックしてしまう
 				if (candidateAddonsCount == 1 && formation.at(-1)[CONSTRAINT]["next"].size != 0 && !Boolean(isFromRemove)) {
+					//ユーザ操作によって追加されたさらにその次の連結候補(next)が1件のみだった場合、その要素をクリックしてしまう
 					candidateArea.querySelector(".image-container").click();
+				} else if (Boolean(isFromRemove) && formation.at(-1)[CONSTRAINT]["next"].size == 1) {
+					//ユーザ操作によって削除されたさらにその前の連結候補(prev)が1件のみだった場合、その要素をクリックしてしまう
+					Array.from(currentArea.querySelectorAll(".image-container")).at(-1).click();
 				}
 			}
 		}
