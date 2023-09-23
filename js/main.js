@@ -623,6 +623,9 @@ function setDragAndDropFileEvents(target, callback) {
 		target.classList.add("drag-target");
 		e.dataTransfer.dropEffect = 'copy';
 	}, false);
+	target.addEventListener('dragleave', function (e) {
+		target.classList.remove("drag-target");
+	}, false);
 	target.addEventListener('drop', function (e) {
 		e.stopPropagation();
 		e.preventDefault();
