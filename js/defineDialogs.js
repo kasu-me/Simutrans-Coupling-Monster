@@ -348,8 +348,8 @@ window.addEventListener("load", function () {
 		refresh: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			let canvas = document.createElement("canvas");
-			canvas.width = PAK_TYPE * 10;
-			canvas.height = PAK_TYPE * 10;
+			canvas.width = PAK_TYPE * 20;
+			canvas.height = PAK_TYPE * 20;
 			let ctx = canvas.getContext('2d');
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -357,15 +357,15 @@ window.addEventListener("load", function () {
 			let formationCount = formation.length;
 			let inverseFormation = [...formation].reverse();
 			let lengths = inverseFormation.map((car) => { return Number(car.length) });
-			let totalHeight = Math.floor(lengths.reduce((sum, val) => { return sum + val; }) / 2) + PAK_TYPE;
+			let totalHeight = Math.floor(lengths.reduce((sum, val) => { return sum + val; }) / 2);
 			inverseFormation.forEach((car, i) => {
 				let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(car);
 				let img = getTransparentImage(imgName, imgPositionY, imgPositionX);
-				let imgWidth = 0;
+				let imgPutPointX = 0;
 				for (let j = formationCount - 1; j > i; j--) {
-					imgWidth += lengths[j];
+					imgPutPointX += lengths[j];
 				}
-				ctx.drawImage(img, calcPixelsFromLength(imgWidth), Math.floor(totalHeight - calcPixelsFromLength(imgWidth / 2)));
+				ctx.drawImage(img, calcPixelsFromLength(imgPutPointX), Math.floor(calcPixelsFromLength(totalHeight - imgPutPointX / 2)) + PAK_TYPE);
 			});
 			trimCanvas(canvas, gebi("formated-addons-image"));
 		},
