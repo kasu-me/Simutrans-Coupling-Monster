@@ -135,6 +135,10 @@ function loadDatFile(file) {
 						masterAddons.at(-1)[prop.toLowerCase()] = val;
 					}
 				}
+				//名前が存在しない場合、または乗り物でない場合、アドオンを追加しない
+				if (masterAddons.at(-1)["name"] == undefined || masterAddons.at(-1)["obj"] == undefined || masterAddons.at(-1)["obj"].toLowerCase() != "vehicle") {
+					masterAddons.pop();
+				}
 			}
 			setAddonNamesToSelectBox(gebi("carsSelectBox"));
 			setImageNamesToSelectBox(gebi("imageSelectBox"));
