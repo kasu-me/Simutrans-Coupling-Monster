@@ -384,12 +384,19 @@ window.addEventListener("load", function () {
 	function calcPixelsFromLength(length) {
 		return length * 4;
 	}
+	function getOffsetValues(position) {
+		if (position.indexOf(",") == -1) {
+			return [Number(position), 0, 0];
+		}
+		return position.split(",").map((x) => { return Number(x) });
+	}
 	function getTransparentImage(imgName, imgPositionY, imgPositionX) {
 		let canvas = document.createElement("canvas");
 		canvas.width = PAK_TYPE;
 		canvas.height = PAK_TYPE;
+		[imgPositionX, imgOffsetX, imgOffsetY] = getOffsetValues(imgPositionX);
 		let ctx = canvas.getContext("2d");
-		ctx.drawImage(imageFiles.get(imgName), PAK_TYPE * imgPositionX, PAK_TYPE * imgPositionY, PAK_TYPE, PAK_TYPE, 0, 0, PAK_TYPE, PAK_TYPE);
+		ctx.drawImage(imageFiles.get(imgName), PAK_TYPE * imgPositionX, PAK_TYPE * imgPositionY, PAK_TYPE, PAK_TYPE, imgOffsetX, imgOffsetY, PAK_TYPE, PAK_TYPE);
 		let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 		let [r, g, b] = [231, 255, 255];
 		for (var i = 0; i < (imageData.width * imageData.height); i++) {
