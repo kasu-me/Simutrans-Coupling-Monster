@@ -365,19 +365,6 @@ function loadAndSetImageFile(files, forceAttachMode) {
 		}
 	});
 }
-//画像をリストに登録
-function appendImageToImagesList(fileName, file) {
-	return new Promise((resolve) => {
-		let image = new Image();
-		image.onload = () => {
-			imageFiles.set(fileName, image);
-			resolve();
-		};
-		const reader = new FileReader();
-		reader.onload = () => image.src = reader.result;
-		reader.readAsDataURL(file);
-	});
-}
 
 //jatab指定
 function loadAndSetJaTabFile(files) {
@@ -405,27 +392,6 @@ function loadAndSetJaTabFile(files) {
 		}
 		updateViewSelectImageDialogPreviewingImage();
 		refresh();
-	});
-}
-//jatabをリストに登録
-function appendJaTab(file) {
-	return new Promise((resolve) => {
-		new Promise((resolve, reject) => {
-			readFile(file, resolve, reject);
-		}).then((tab) => {
-			let count = 0;
-			let tabs = tab.split("\n").map(x => x.trim()).filter(x => x != "");
-			//アドオンに対してマッチするものがあればjatabマスタデータに追加
-			masterAddons.forEach((addon) => {
-				let name = addon.name;
-				let index = tabs.indexOf(name);
-				if (index != -1 && tabs[index + 1].trim() != "") {
-					jatab.set(addon, tabs[index + 1]);
-					count++;
-				}
-			})
-			resolve(count);
-		});
 	});
 }
 
