@@ -95,8 +95,6 @@ function loadDatFile(file) {
 			for (let i in vehicles) {
 				//空白行スキップ
 				if (vehicles[i].trim() == "") { continue }
-				//コメント行スキップ
-				if (vehicles[i].trim().startsWith("#")) { continue }
 				masterAddons.push({});
 				masterAddons.at(-1)[CONSTRAINT] = {
 					prev: new Set(),
@@ -105,7 +103,10 @@ function loadDatFile(file) {
 				let lines = vehicles[i].split("\n");
 				for (let j in lines) {
 					let line = lines[j];
+					//空行スキップ
 					if (line.trim() == "") { continue }
+					//コメント行スキップ
+					if (line.trim().startsWith("#")) { continue }
 					let [prop, val] = line.split("=");
 					let propName = prop.toLowerCase();
 					if (propName.startsWith(EMPTYIMAGE)) {
