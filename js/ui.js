@@ -268,13 +268,17 @@ function loadAndSetDatFile(files) {
 		loader.finish();
 		let message = ``;
 		if (promises.length == 0) {
+			//datファイルが1件もなかった場合
 			message = `DATファイルを選択してください。`;
+		} else if (promises.length > 0 && masterAddons.length == 0) {
+			//datファイルに有効なアドオンがなかった場合
+			message = `読み込まれたDATファイルに有効な車両がありませんでした。`;
 		} else {
-			message = `${promises.length}件のDATファイルを読み込みました。${notDatFilesCount > 0 ? `${notDatFilesCount}件のファイルはDATファイルではないため読み込みませんでした。` : ""}`;
+			message = `${promises.length}件のDATファイルから${masterAddons.length}両を読み込みました。${notDatFilesCount > 0 ? `${notDatFilesCount}件のファイルはDATファイルではないため読み込みませんでした。` : ""}`;
 		}
 		new Message(message, ["dat-file-loaded"], 3000, true, true);
 		//DATを1件以上読み込んだら、画像選択ダイアログに遷移する
-		if (promises.length > 0) {
+		if (promises.length > 0 && masterAddons.length > 0) {
 			//この画面で選択した画像およびjatabを読み込む非同期処理
 			Promise.all(
 				[
@@ -297,7 +301,7 @@ function loadAndSetDatFile(files) {
 							}
 						});
 					}),
-					//DAT読み込み
+					//TAB読み込み
 					new Promise((resolve) => {
 						loadAndSetJaTabFile(droppedJaTabFiles).then(() => {
 							resolve();
