@@ -296,11 +296,17 @@ window.addEventListener("load", function () {
 					}
 				});
 			} else {
+				let candidateAddonsCount = 0;
 				masterAddons.forEach((addon) => {
 					if (addon[CONSTRAINT]["prev"].has(formation.at(-1).name) || (addon[CONSTRAINT]["prev"].size == 0 && formation.at(-1)[CONSTRAINT]["next"].size == 0)) {
 						addImagePreview(candidateArea, formation, addon);
+						candidateAddonsCount++;
 					}
 				});
+				//候補が1件のみだった場合、その要素をクリックしてしまう
+				if (candidateAddonsCount == 1) {
+					candidateArea.querySelector(".image-container").click();
+				}
 			}
 		}
 	}, true);
