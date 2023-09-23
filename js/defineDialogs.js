@@ -325,13 +325,9 @@ window.addEventListener("load", function () {
 		area.appendChild(outer);
 	}
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<p><input type="range" min="0" max="${PAK_TYPE}" value="48" id="formated-addons-space-range" oninput="gebi('formated-addons-space').value=this.value;Dialog.list.formatedAddonsImageDialog.functions.refresh();"><input type="number" min="0" max="${PAK_TYPE}" value="48" id="formated-addons-space" oninput="gebi('formated-addons-space-range').value=this.value;Dialog.list.formatedAddonsImageDialog.functions.refresh();"></p><canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
-			let length = Number(formation[0].length);
-			let space = 4 * length;
-			gebi("formated-addons-space").value = space;
-			gebi("formated-addons-space-range").value = space;
 
 			for (let car of formation) {
 				if (!imageFiles.has(car[EMPTYIMAGE_DIRECTIONS[0]].split(".")[0])) {
@@ -352,12 +348,18 @@ window.addEventListener("load", function () {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			//車両画像を背景透過して読み込み
-			let imgWidth = gebi("formated-addons-space").value;
 			let formationCount = formation.length;
-			[...formation].reverse().forEach((car, i) => {
+			let inverseFormation = [...formation].reverse();
+			let lengths = inverseFormation.map((car) => { return Number(car.length) });
+			let totalHeight = Math.floor(lengths.reduce((sum, val) => { return sum + val; }) / 2) + PAK_TYPE;
+			inverseFormation.forEach((car, i) => {
 				let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(car);
 				let img = getTransparentImage(imgName, imgPositionY, imgPositionX);
-				ctx.drawImage(img, (formationCount - 1 - i) * imgWidth, (i) * Math.floor(imgWidth / 2));
+				let imgWidth = 0;
+				for (let j = formationCount - 1; j > i; j--) {
+					imgWidth += lengths[j];
+				}
+				ctx.drawImage(img, calcPixelsFromLength(imgWidth), Math.floor(totalHeight - calcPixelsFromLength(imgWidth / 2)));
 			});
 			trimCanvas(canvas, gebi("formated-addons-image"));
 		},
@@ -379,6 +381,9 @@ window.addEventListener("load", function () {
 			link.click();
 		}
 	}, true);
+	function calcPixelsFromLength(length) {
+		return length * 4;
+	}
 	function getTransparentImage(imgName, imgPositionY, imgPositionX) {
 		let canvas = document.createElement("canvas");
 		canvas.width = PAK_TYPE;
