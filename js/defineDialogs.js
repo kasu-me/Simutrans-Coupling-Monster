@@ -261,7 +261,7 @@ window.addEventListener("load", function () {
 				Dialog.list.couplingPreviewDialog.on();
 			}
 		},
-		refresh: function () {
+		refresh: function (isFromRemove) {
 			let currentArea = gebi("preview-current-formation");
 			currentArea.innerHTML = "";
 			let candidateArea = gebi("preview-current-candidate");
@@ -280,7 +280,7 @@ window.addEventListener("load", function () {
 					outer.addEventListener("click", () => {
 						gebi("mku-balloon").classList.remove("on");
 						formation.pop();
-						Dialog.list.couplingPreviewDialog.functions.refresh();
+						Dialog.list.couplingPreviewDialog.functions.refresh(true);
 					});
 				}
 				currentArea.appendChild(outer);
@@ -304,7 +304,7 @@ window.addEventListener("load", function () {
 					}
 				});
 				//候補が1件のみだった場合、その要素をクリックしてしまう
-				if (candidateAddonsCount == 1) {
+				if (candidateAddonsCount == 1 && formation.at(-1)[CONSTRAINT]["next"].size != 0 && !Boolean(isFromRemove)) {
 					candidateArea.querySelector(".image-container").click();
 				}
 			}
