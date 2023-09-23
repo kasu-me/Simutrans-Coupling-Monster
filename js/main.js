@@ -23,6 +23,8 @@ function reset() {
 function resetDat() {
 	masterDatFileName = "";
 	masterAddons = [];
+	//連結プレビューダイアログ内の編成を解消
+	Dialog.list.couplingPreviewDialog.functions.currentFormation = [];
 }
 
 //ファイル読み込み

@@ -256,7 +256,6 @@ window.addEventListener("load", function () {
 			if (masterAddons.length == 0) {
 				Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
 			} else {
-				Dialog.list.couplingPreviewDialog.functions.currentFormation = [];
 				Dialog.list.couplingPreviewDialog.functions.refresh();
 				Dialog.list.couplingPreviewDialog.on();
 			}
