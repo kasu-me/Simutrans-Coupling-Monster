@@ -4,8 +4,9 @@ window.addEventListener("load", function () {
 		let selectBox = selectArea.querySelector("select");
 		let decrementButton = this.document.createElement("button");
 		decrementButton.classList.add("fluctuation-button");
+		decrementButton.classList.add("lsf");
 		decrementButton.disabled = selectBox.disabled;
-		decrementButton.innerHTML = "－";
+		decrementButton.innerHTML = "left";
 		decrementButton.addEventListener("click", () => {
 			let i = selectBox.selectedIndex - 1;
 			selectBox.selectedIndex = i < 0 ? selectBox.length - 1 : i;
@@ -13,8 +14,9 @@ window.addEventListener("load", function () {
 		});
 		let incrementButton = this.document.createElement("button");
 		incrementButton.classList.add("fluctuation-button");
+		incrementButton.classList.add("lsf");
 		incrementButton.disabled = selectBox.disabled;
-		incrementButton.innerHTML = "＋";
+		incrementButton.innerHTML = "right";
 		incrementButton.addEventListener("click", () => {
 			let i = selectBox.selectedIndex + 1;
 			selectBox.selectedIndex = i % selectBox.length;
