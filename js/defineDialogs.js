@@ -4,9 +4,15 @@ window.addEventListener("load", function () {
 		<div id="dat-file-drop-area" class="filefield">
 			<p>ここにdatファイルをドラッグ＆ドロップ (複数ファイル可)</p>
 			<p>dat,png,tabファイルをまとめてドラッグ＆ドロップすると全ての読み込みを行います</p>
+			<p id="overwrite-warn">既に読み込まれているデータがある場合、重複する内容は上書きされます</p>
 		</div>
 		`, [{ "content": "キャンセル", "event": `refresh();Dialog.list.openDatFileDialog.off();`, "icon": "close" }], {
 		display: function () {
+			if (masterAddons.length > 0) {
+				gebi("overwrite-warn").style.display = "block";
+			} else {
+				gebi("overwrite-warn").style.display = "none";
+			}
 			Dialog.list.openDatFileDialog.on();
 		}
 	}, true);
