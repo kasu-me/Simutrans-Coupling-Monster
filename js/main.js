@@ -123,13 +123,22 @@ function loadDatFile(file) {
 					if (propName.startsWith(EMPTYIMAGE)) {
 						//画像ファイル指定の場合
 						imageFileNames.add(val.split(".")[0]);
+						//内包表記的なやつの場合
+						if (propName.indexOf(",") != -1) {
+							propName.split("[")[1].split(",").map(x => x.trim().split("]")[0]).forEach((direction, i) => {
+								masterAddons.at(-1)[`${EMPTYIMAGE}[${direction}]`] = val.replace(/<\$0>/g, i);
+							});
+							continue;
+						}
 					}
 					if (propName.startsWith(CONSTRAINT)) {
 						//連結設定の場合
 						let mode = propName.startsWith(`${CONSTRAINT}[prev]`) ? "prev" : "next";
 						masterAddons.at(-1)[CONSTRAINT][mode].add(val);
+						continue;
 					} else {
 						masterAddons.at(-1)[prop.toLowerCase()] = val;
+						continue;
 					}
 				}
 				//全プロパティ読み込み完了後
