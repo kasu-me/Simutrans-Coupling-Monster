@@ -243,14 +243,14 @@ window.addEventListener("load", function () {
 
 	new Dialog("couplingPreviewDialog", "連結プレビュー", `
 		<div>
-			<p>編成(<span id="preview-current-formation-count"></span>両)</p>
+			<p>編成(<span id="preview-current-formation-count"></span>両)<button id="clear-preview-formation-button" onclick="Dialog.list.couplingPreviewDialog.functions.currentFormation=[];Dialog.list.couplingPreviewDialog.functions.refresh();" class="lsf-icon" icon="clear">編成クリア</button></p>
 			<div id="preview-current-formation" class="cars-container"></div>
 		</div>
 		<div>
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		`, [{ "content": "編成クリア", "event": `Dialog.list.couplingPreviewDialog.functions.currentFormation=[];Dialog.list.couplingPreviewDialog.functions.refresh();`, "icon": "clear", "id": "clear-preview-formation-button" }, { "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "image", "id": "open-formated-image-dialog-button" }, { "content": "終了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "close" }], {
+		`, [{ "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "image", "id": "open-formated-image-dialog-button" }, { "content": "終了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "close" }], {
 		currentFormation: [],
 		display: function () {
 			if (masterAddons.length == 0) {

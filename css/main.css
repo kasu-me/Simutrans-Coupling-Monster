@@ -365,6 +365,10 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	border: none;
 }
 
+#couplingPreviewDialog button#clear-preview-formation-button {
+	margin-left: 0.8em;
+}
+
 .status-bar {
 	position: sticky;
 	bottom: 0;
