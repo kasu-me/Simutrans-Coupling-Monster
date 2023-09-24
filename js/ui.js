@@ -284,19 +284,14 @@ function loadAndSetDatFile(files) {
 					//画像読み込み
 					new Promise((resolve) => {
 						loadAndSetImageFile(droppedImageFiles, true).then(() => {
-							if (droppedImageFiles.length > 0) {
-								let notFoundImages = Array.from(imageFileNames).filter(imageFileName => !imageFiles.has(imageFileName));
-								if (notFoundImages.length > 0) {
-									//画像が不足していれば画像読み込み画面に移動し不足している画像を選択状態にする
-									resolve([0, notFoundImages[0]]);
-									//
-								} else {
-									//画像が不足していなければ画像読み込み画面に移動せずメイン画面を表示
-									resolve([-1, -2]);
-								}
+							let notFoundImages = Array.from(imageFileNames).filter(imageFileName => !imageFiles.has(imageFileName));
+							if (notFoundImages.length > 0) {
+								//画像が不足していれば画像読み込み画面に移動し不足している画像を選択状態にする
+								resolve([0, notFoundImages[0]]);
+								//
 							} else {
-								//画像が読み込まれていなければ画像読み込み画面に移動
-								resolve([-1, -1]);
+								//画像が不足していなければ画像読み込み画面に移動せずメイン画面を表示
+								resolve([-1, -2]);
 							}
 						});
 					}),
