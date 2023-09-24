@@ -217,7 +217,7 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	text-align: center;
 	border: 1px solid var(--formation-table-main-border);
 	background-color: var(--simutrans-transparent);
-	width: calc(var(--simutrans-paktype) * 8px + var(--scrollbar-width));
+	width: calc(var(--simutrans-paktype) * 8 + var(--scrollbar-width));
 	height: 50vh;
 	overflow-x: hidden;
 	overflow-y: scroll;
