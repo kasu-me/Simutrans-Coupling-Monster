@@ -250,9 +250,9 @@ window.addEventListener("load", function () {
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		`, [{ "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "image", "id": "open-formated-image-dialog-button" }, { "content": "完了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "check" }], {
+		`, [{ "content": "編成クリア", "event": `Dialog.list.couplingPreviewDialog.functions.currentFormation=[];Dialog.list.couplingPreviewDialog.functions.refresh();`, "icon": "clear", "id": "clear-preview-formation-button" }, { "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "image", "id": "open-formated-image-dialog-button" }, { "content": "終了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "close" }], {
 		currentFormation: [],
-		display: function (x) {
+		display: function () {
 			if (masterAddons.length == 0) {
 				Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
 			} else {
@@ -268,7 +268,10 @@ window.addEventListener("load", function () {
 
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			gebi("preview-current-formation-count").innerHTML = formation.length;
-			gebi("open-formated-image-dialog-button").disabled = formation.length == 0;
+			[
+				gebi("clear-preview-formation-button"),
+				gebi("open-formated-image-dialog-button")
+			].forEach((button) => { button.disabled = formation.length == 0; });
 
 			formation.forEach((car, i) => {
 				let outer = createOuter(false);
