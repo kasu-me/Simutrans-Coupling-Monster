@@ -400,21 +400,6 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	width: 4em;
 }
 
-/* ヘルプダイアログ */
-#helpDialog {
-	max-width: 762px;
-}
-
-#helpDialog div.dialog-main-message {
-	padding: 0 1.0em;
-	margin: 0 1.8em;
-	border: solid 1px var(--formation-table-main-border);
-}
-
-#helpDialog div.dialog-main-message p:first-child {
-	margin-top: 0;
-}
-
 /* メッセージ */
 .message-content.dat-file-loaded {
 	top: calc(40px + 0em);

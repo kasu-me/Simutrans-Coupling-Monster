@@ -1,0 +1,36 @@
+.mku-tab-container {
+	margin: 1em auto;
+}
+
+.mku-tab-container .mku-tab-label-container {
+	display: flex;
+}
+
+.mku-tab-container .mku-tab-label-container label {
+	cursor: pointer;
+	border: 1px solid #000;
+	border-bottom: none;
+	display: block;
+	padding: 0.5em;
+}
+
+.mku-tab-container .mku-tab-label-container label.on {
+	font-weight: bold;
+	pointer-events: none;
+	background: #000;
+	color: #fff;
+}
+
+.mku-tab-container .mku-tab-content {
+	border: 1px solid #000;
+	padding: 0.5em;
+}
+
+.mku-tab-content,
+input[type="radio"].mku-tab-radio {
+	display: none;
+}
+
+input[type="radio"].mku-tab-radio:checked+.mku-tab-content {
+	display: block;
+}
