@@ -73,7 +73,7 @@ window.addEventListener("load", function () {
 	}, true);
 
 	let directionSelectBox = "";
-	DIRECTIONS.forEach((dir) => {
+	DIRECTIONS.forEach((dir, i) => {
 		directionSelectBox += `<option value="${dir}">${dir}</option>`;
 	})
 
@@ -195,7 +195,9 @@ window.addEventListener("load", function () {
 			//その方角に指定されている画像プレビューをセット
 			let addonImageArea = gebi("addon-image-preview");
 			addonImageArea.innerHTML = "";
-			setAddonPreviewImageByDirection(addonImageArea, Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
+			let preview = setAddonPreviewImageByDirection(addonImageArea, Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
+			//方向別矢印をセット
+			preview.innerHTML = DIRECTION_ARROWS[selectBox.selectedIndex];
 
 			//全体内での位置表示用の全体画像
 			gebi("open-select-image-dialog-button").onclick = () => {

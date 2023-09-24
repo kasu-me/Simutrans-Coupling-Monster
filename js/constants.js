@@ -20,6 +20,7 @@ NOIMAGE.classList.add("noimage");
 const CONSTRAINT = "constraint";
 const EMPTYIMAGE = "emptyimage";
 const DIRECTIONS = ["s", "e", "se", "sw", "n", "w", "nw", "ne"];
+const DIRECTION_ARROWS = ["↙", "↘", "↓", "←", "↗", "↖", "↑", "→"];
 const EMPTYIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${EMPTYIMAGE}[${x}]`);
 //pakタイプ
 const PAK_TYPE = 128;

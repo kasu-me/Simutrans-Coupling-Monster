@@ -260,6 +260,11 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	text-align: center;
 }
 
+#editImageDialog #addon-image-preview .image-container {
+	text-align: left;
+	padding: 0.5em;
+}
+
 #editImageDialog #addon-image-whole-preview {
 	width: 600px;
 	position: relative;
