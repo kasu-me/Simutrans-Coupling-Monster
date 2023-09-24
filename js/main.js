@@ -95,7 +95,7 @@ function loadDatFile(file) {
 			dat = dat.replace(/-{3,}/g, "---");
 			let vehicles = dat.split("---").filter(data => data != "");
 			for (let i in vehicles) {
-				//空白行スキップ
+				//空白アドオンスキップ
 				if (vehicles[i].trim() == "") { continue }
 				masterAddons.push({});
 				masterAddons.at(-1)[CONSTRAINT] = {
@@ -103,6 +103,8 @@ function loadDatFile(file) {
 					next: new Set()
 				};
 				let lines = vehicles[i].split("\n");
+				let isJatabExists = false;
+				let oldAddon = {};
 				for (let j in lines) {
 					let line = lines[j];
 					//空行スキップ
@@ -111,6 +113,13 @@ function loadDatFile(file) {
 					if (line.trim().startsWith("#")) { continue }
 					let [prop, val] = line.split("=");
 					let propName = prop.toLowerCase();
+					if (propName == "name" && getObjectsByItsName(masterAddons, val).length > 0) {
+						//jatabにレタッチしなおすため、オブジェクトを記録
+						isJatabExists = true;
+						oldAddon = getObjectByItsName(masterAddons, val);
+						//名称指定の場合かつ、同名の車両が既に存在する場合、上書きするため、既存のアドオンを削除する
+						masterAddons = masterAddons.filter(x => x.name != val);
+					}
 					if (propName.startsWith(EMPTYIMAGE)) {
 						//画像ファイル指定の場合
 						imageFileNames.add(val.split(".")[0]);
@@ -123,9 +132,15 @@ function loadDatFile(file) {
 						masterAddons.at(-1)[prop.toLowerCase()] = val;
 					}
 				}
+				//全プロパティ読み込み完了後
 				//名前が存在しない場合、または乗り物でない場合、lengthが指定されていない場合、アドオンを追加しない
 				if (masterAddons.at(-1)["name"] == undefined || masterAddons.at(-1)["obj"] == undefined || masterAddons.at(-1)["obj"].toLowerCase() != "vehicle" || masterAddons.at(-1)["length"] == undefined) {
 					masterAddons.pop();
+				}
+				//jatabの読み込みなおし
+				if (isJatabExists && jatab.has(oldAddon)) {
+					jatab.set(masterAddons.at(-1), jatab.get(oldAddon));
+					jatab.delete(oldAddon);
 				}
 			}
 			setAddonNamesToSelectBox(gebi("carsSelectBox"));

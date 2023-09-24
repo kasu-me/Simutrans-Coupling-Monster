@@ -244,7 +244,6 @@ function updateViewSelectImageDialogPreviewingImage() {
 
 //DAT指定
 function loadAndSetDatFile(files) {
-	resetDat();
 	let promises = [];
 	let droppedImageFiles = [];
 	let droppedJaTabFiles = [];
