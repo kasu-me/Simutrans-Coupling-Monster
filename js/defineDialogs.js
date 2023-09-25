@@ -480,8 +480,6 @@ window.addEventListener("load", function () {
 				<h2>ご注意･免責事項</h2>
 				<p>本アプリはサーバとの通信は一切行っておらず、本アプリで製作したデータは皆さんのPC内で完結しています。バックアップ等はご自身の責任において行っていただくようお願いいたします。</p>
 				<p>本アプリを利用して出力されるdatファイルは、読み込んだdatファイルの内容のうち、有効な車両についての部分のみとなります。たとえば、車両と建物が同じファイルに記載されていた場合、本アプリでは建物の記述は完全に無視され、出力されるdatファイルには車両のみが記述されます。この他、読み込み中に何らかのエラーが発生した場合も、その部分が正しく出力されない可能性があります。元のdatファイルを本アプリで生成したdatファイルで上書きしてしまうことはせず、元ファイルのバックアップを取っておくことを強くおすすめいたします。</p>
-				<h2>推奨環境</h2>
-				<p>PCの最新版GoogleChromeでのご利用を推奨します。スマートフォン等のタッチデバイスでの動作の保証はいたしかねます。</p>
 				<h2>謝辞</h2>
 				<ul>
 				<li>ボタン等の各種アイコンに「<a href="https://kudakurage.com/ligature_symbols/" target="_blank">Ligature Symbols</a>」を利用させていただきました。</li>
@@ -491,6 +489,29 @@ window.addEventListener("load", function () {
 				<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
 				<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
 				<p>© 2023 M_Kasumi</p>
+			</div>
+			<div class="mku-tab-content" tab-title="推奨環境">
+				<h2>推奨環境</h2>
+				<table class="input-area">
+					<tr>
+						<td>
+							ブラウザ
+						</td>
+						<td>
+							<p>Google Chrome (最新版推奨)</p>
+							PCでのご利用を推奨します。スマートフォン等のタッチデバイスでの動作の保証はいたしかねます。
+						</td>
+					</tr>
+					<tr>
+						<td>
+							画面
+						</td>
+						<td>
+							<p>FHD(1920×1080)以上推奨</p>
+							これより小さい画面でご利用の場合、操作がしづらくなる場合があります。そのような場合、ブラウザの拡大率を縮小していただくことで操作がしやすくなります。
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 	`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);

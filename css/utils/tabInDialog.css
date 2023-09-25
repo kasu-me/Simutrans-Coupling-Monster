@@ -22,6 +22,15 @@
 	margin-bottom: 0;
 }
 
+#helpDialog table.input-area td:first-child {
+	width: 7em;
+}
+
+#helpDialog table.input-area td:last-child p {
+	font-size: 120%;
+	margin-bottom: 0.5em;
+}
+
 .mku-tab-container .mku-tab-label-container {
 	transform: translateY(1px);
 }
