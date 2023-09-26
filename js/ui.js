@@ -163,17 +163,25 @@ function setFooterAddonsList() {
 //アドオンプレビューボックス設定
 function setAddonPreviewBox(parent, box, addon) {
 	box.classList.add("draggable-object");
-	setAddonBalloon(box, addon);
-	box.dataset.addonName = addon.name;
-	let title = document.createElement("p");
-	title.innerHTML = addon.name;
-	box.appendChild(title);
-	if (jatab.has(addon)) {
-		let titleJa = document.createElement("p");
-		titleJa.innerHTML = jatab.get(addon);
-		box.appendChild(titleJa);
+	if (addon != undefined) {
+		setAddonBalloon(box, addon);
+		box.dataset.addonName = addon.name;
+		let title = document.createElement("p");
+		title.innerHTML = addon.name;
+		box.appendChild(title);
+		if (jatab.has(addon)) {
+			let titleJa = document.createElement("p");
+			titleJa.innerHTML = jatab.get(addon);
+			box.appendChild(titleJa);
+		}
+		setAddonPreviewImage(box, addon);
+	} else {
+		box.classList.add("no-drag");
+		let error = document.createElement("div");
+		error.classList.add("image-container");
+		error.innerHTML = "存在しない車両への参照です"
+		box.appendChild(error);
 	}
-	setAddonPreviewImage(box, addon);
 	parent.appendChild(box);
 }
 
@@ -213,7 +221,7 @@ function setDragAndDropAddonEvents() {
 	});
 
 	let deleteDropArea = document.querySelectorAll("#addons-list");
-	Drag.setElements(document.querySelectorAll(".constraint-view .draggable-object"), deleteDropArea, (dragResult, i) => {
+	Drag.setElements(document.querySelectorAll(".constraint-view .draggable-object:not(.no-drag)"), deleteDropArea, (dragResult, i) => {
 		if (dragResult.to >= 0) {
 			let targetAddon = getEditingAddon();
 			let targetName = targetAddon.name;

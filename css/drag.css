@@ -20,6 +20,10 @@
 	user-select: none;
 }
 
+.draggable-object.no-drag {
+	cursor: auto;
+}
+
 .draggable-object>p {
 	margin-top: 0;
 	margin-bottom: 0;
