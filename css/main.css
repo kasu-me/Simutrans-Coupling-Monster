@@ -88,12 +88,12 @@ header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-cont
 	width: 1.0em;
 }
 
-header>div.button-group header div.button-outer .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:disabled) .mku-drop-parent-button,
-header>div.button-group header div.button-outer .mku-drop-menu-container .mku-drop-container button:disabled {
-	pointer-events: none;
-	background-color: #ddd;
+header>div.button-group div.button-outer .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:disabled) .mku-drop-parent-button,
+header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button:disabled {
+	pointer-events: none !important;
+	background-color: #ddd !important;
 	border-color: #ccc;
-	color: #777;
+	color: #777 !important;
 }
 
 /* メイン画面 */

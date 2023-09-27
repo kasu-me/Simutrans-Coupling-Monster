@@ -68,7 +68,7 @@ function setAddonPreviewImageByDirection(target, addon, direction) {
 function refresh() {
 	let hasNoAddon = masterAddons.length == 0;
 
-	document.querySelectorAll("header .button-group button").forEach((button, i) => {
+	document.querySelectorAll("header .mku-drop-container button").forEach((button, i) => {
 		if (i != 0 && button.innerHTML != "このアプリについて") {
 			button.disabled = hasNoAddon;
 		}
