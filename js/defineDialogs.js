@@ -487,10 +487,6 @@ window.addEventListener("load", function () {
 				<li>ボタン等の各種アイコンに「<a href="https://kudakurage.com/ligature_symbols/" target="_blank">Ligature Symbols</a>」を利用させていただきました。</li>
 				</ul>
 				<p>御礼申し上げます。</p>
-				<h2>お問い合わせ</h2>
-				<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
-				<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
-				<p>© 2023 M_Kasumi</p>
 			</div>
 			<div class="mku-tab-content" tab-title="推奨環境">
 				<h2>推奨環境</h2>
@@ -514,6 +510,12 @@ window.addEventListener("load", function () {
 						</td>
 					</tr>
 				</table>
+			</div>
+			<div class="mku-tab-content" tab-title="お問い合わせ">
+				<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
+				<p>なお、バグ報告の際は、症状とともに「読み込んだファイル」「ご利用のOS･ブラウザ」をお伝えいただくと、解決がスムーズになります。お手数ですが、ご協力をお願いいたします。</p>
+				<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
+				<p>© 2023 M_Kasumi</p>
 			</div>
 		</div>
 	`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);
