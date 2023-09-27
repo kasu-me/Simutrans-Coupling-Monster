@@ -1,6 +1,6 @@
 window.addEventListener("load", function () {
 
-	new Dialog("openDatFileDialog", "DATファイルを開く", `
+	new Dialog("openDatFileDialog", "DATファイルを読み込み", `
 		<div id="dat-file-drop-area" class="filefield">
 			<p>ここにdatファイルをドラッグ＆ドロップ (複数ファイル可)</p>
 			<p>dat,png,tabファイルをまとめてドラッグ＆ドロップすると全ての読み込みを行います</p>
@@ -17,7 +17,7 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 
-	new Dialog("selectImageDialog", "画像ファイル指定", `
+	new Dialog("selectImageDialog", "画像ファイルを読み込み", `
 		<p>
 		<span class="selectbox-fluctuation-button" style="margin-right:1.5em;">
 		<select id="imageSelectBox">
@@ -45,7 +45,7 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 
-	new Dialog("openJaTabFileDialog", "日本語化ファイル指定", `
+	new Dialog("openJaTabFileDialog", "日本語化ファイルを読み込み", `
 		<div id="jatab-file-drop-area" class="filefield">
 			<p>ここにja.tabファイルをドラッグ＆ドロップ (複数ファイル可)</p>
 		</div>
