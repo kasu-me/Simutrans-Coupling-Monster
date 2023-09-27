@@ -269,6 +269,10 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	display: none;
 }
 
+#selectImageDialog .drag-target>img {
+	opacity: 50%;
+}
+
 /* 車両に画像指定ダイアログ */
 #editImageDialog div.dialog-main-message {
 	padding: 1.0em;
@@ -283,6 +287,7 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	top: 0;
 	left: 0;
 	background: rgba(255, 255, 255, 0.9);
+	z-index: 2;
 }
 
 #editImageDialog .input-area td:first-child {
