@@ -68,10 +68,13 @@ function setAddonPreviewImageByDirection(target, addon, direction) {
 function refresh() {
 	let hasNoAddon = masterAddons.length == 0;
 
-	document.querySelectorAll(".button-group button").forEach((button, i) => {
+	document.querySelectorAll("header .button-group button").forEach((button, i) => {
 		if (i != 0 && button.innerHTML != "このアプリについて") {
 			button.disabled = hasNoAddon;
 		}
+	});
+	document.querySelectorAll("header .mku-drop-menu-container").forEach((menuContainer, i) => {
+		menuContainer.querySelector("input.mku-drop-menu-checkbox").disabled = menuContainer.querySelectorAll("button:not(:disabled)").length == 0;
 	});
 
 	if (hasNoAddon) {

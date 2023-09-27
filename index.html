@@ -19,6 +19,8 @@
 	<script src="js/fluctuation.js"></script>
 	<script src="js/drag.js"></script>
 	<link rel="stylesheet" href="css/drag.css">
+	<script src="js/utils/dropdown.js"></script>
+	<link rel="stylesheet" href="css/utils/dropdown.css">
 	<script src="js/constants.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/ui.js"></script>
@@ -35,35 +37,64 @@
 <body>
 	<header>
 		<div class="button-group">
-			<div class="button-group-title">dat</div>
-			<button class="lsf-icon" icon="file" onclick="Dialog.list.openDatFileDialog.functions.display()">開く</button>
-			<button class="lsf-icon" icon="view" onclick="viewDat()">プレビュー</button>
-			<button class="lsf-icon" icon="download" onclick="saveFile('dat')">保存</button>
+			<div class="mku-drop-menu-container mouseover">
+				<div class="button-group-title mku-drop-parent-button lsf-icon" icon="files">dat</div>
+				<div class="mku-drop-container">
+					<button class="lsf-icon" icon="files"
+						onclick="Dialog.list.openDatFileDialog.functions.display()">開く</button>
+					<button class="lsf-icon" icon="view" onclick="viewDat()">プレビュー</button>
+					<button class="lsf-icon" icon="download" onclick="saveFile('dat')">保存</button>
+				</div>
+			</div>
 		</div>
 		<div class="button-group">
-			<div class="button-group-title">画像</div>
-			<button class="lsf-icon" icon="image"
-				onclick="Dialog.list.selectImageDialog.functions.display()">ファイル指定</button>
+			<div class="mku-drop-menu-container mouseover">
+				<div class="button-group-title mku-drop-parent-button lsf-icon" icon="image">画像</div>
+				<div class="mku-drop-container">
+					<button class="lsf-icon" icon="image"
+						onclick="Dialog.list.selectImageDialog.functions.display()">ファイル指定</button>
+				</div>
+			</div>
 		</div>
 		<div class="button-group">
-			<div class="button-group-title">日本語化ファイル</div>
-			<button class="lsf-icon" icon="file"
-				onclick="Dialog.list.openJaTabFileDialog.functions.display()">開く</button>
-			<button class="lsf-icon" icon="view" onclick="viewJaTab()">プレビュー</button>
-			<button class="lsf-icon" icon="download" onclick="saveFile('ja.tab')">保存</button>
+			<div class="mku-drop-menu-container mouseover">
+				<div class="button-group-title mku-drop-parent-button lsf-icon" icon="files">日本語化ファイル</div>
+				<div class="mku-drop-container">
+					<button class="lsf-icon" icon="file"
+						onclick="Dialog.list.openJaTabFileDialog.functions.display()">開く</button>
+					<button class="lsf-icon" icon="view" onclick="viewJaTab()">プレビュー</button>
+					<button class="lsf-icon" icon="download" onclick="saveFile('ja.tab')">保存</button>
+				</div>
+			</div>
 		</div>
 		<div class="button-group">
-			<div class="button-group-title">プレビュー</div>
-			<button class="lsf-icon" icon="chain"
-				onclick="Dialog.list.couplingPreviewDialog.functions.display()">連結プレビュー</button>
+			<div class="mku-drop-menu-container mouseover">
+				<div class="button-group-title mku-drop-parent-button lsf-icon" icon="chain">連結</div>
+				<div class="mku-drop-container">
+					<button class="lsf-icon" icon="chain"
+						onclick="Dialog.list.couplingPreviewDialog.functions.display()">連結プレビュー</button>
+				</div>
+			</div>
 		</div>
 		<div class="button-group">
-			<div class="button-group-title">ファイル</div>
-			<button class="lsf-icon" icon="download" onclick="saveFile('dat');saveFile('ja.tab')">dat,tab保存</button>
+			<div class="mku-drop-menu-container mouseover">
+				<div class="button-group-title mku-drop-parent-button lsf-icon" icon="download">保存</div>
+				<div class="mku-drop-container">
+					<button class="lsf-icon" icon="download" onclick="saveFile('dat')">dat保存</button>
+					<button class="lsf-icon" icon="download" onclick="saveFile('ja.tab')">tab保存</button>
+					<button class="lsf-icon" icon="download"
+						onclick="saveFile('dat');saveFile('ja.tab')">dat,tab保存</button>
+				</div>
+			</div>
 		</div>
 		<div class="button-group">
-			<div class="button-group-title">ヘルプ</div>
-			<button class="lsf-icon" icon="help" onclick="Dialog.list.helpDialog.functions.display()">このアプリについて</button>
+			<div class="mku-drop-menu-container mouseover">
+				<div class="button-group-title mku-drop-parent-button lsf-icon" icon="help">ヘルプ</div>
+				<div class="mku-drop-container">
+					<button class="lsf-icon" icon="info"
+						onclick="Dialog.list.helpDialog.functions.display()">このアプリについて</button>
+				</div>
+			</div>
 		</div>
 	</header>
 	<div id="constraint-container">

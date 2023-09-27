@@ -31,18 +31,54 @@ header {
 
 header div.button-group {
 	margin-right: 1.0em;
-	padding-right: 1.0em;
 }
 
-header div.button-group:not(:last-child) {
-	border-right: 1px solid #bbb;
+header div.button-group .mku-drop-menu-container .mku-drop-parent-button {
+	padding: 4px 6px;
+	background-color: var(--button-face);
+	border: 1px solid var(--button-face);
 }
 
-header div.button-group div.button-group-title {
-	font-weight: bold;
-	margin-bottom: 0.1em;
+header div.button-group .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:checked) .mku-drop-parent-button {
+	color: var(--button-face);
 }
 
+header div.button-group .mku-drop-menu-container .mku-drop-container {
+	border: 1px solid #333;
+}
+
+header div.button-group .mku-drop-menu-container .mku-drop-container button:not(:last-child) {
+	border-bottom: 1px solid #777 !important;
+}
+
+header div.button-group .mku-drop-menu-container .mku-drop-container button {
+	font-size: 11pt;
+	background-color: #fff;
+	color: var(--button-face);
+	display: block;
+	width: 100%;
+	border: none;
+	border-radius: 0;
+	padding: 3px 6px;
+	text-align: left;
+}
+
+header div.button-group .mku-drop-menu-container .mku-drop-container button:hover {
+	background-color: var(--table-alternate-color-2);
+}
+
+header div.button-group .mku-drop-menu-container .mku-drop-container button::before {
+	display: inline-block;
+	width: 1.0em;
+}
+
+header div.button-group .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:disabled) .mku-drop-parent-button,
+header div.button-group .mku-drop-menu-container .mku-drop-container button:disabled {
+	pointer-events: none;
+	background-color: #ddd;
+	border-color: #ccc;
+	color: #777;
+}
 
 /* メイン画面 */
 select#carsSelectBox {
