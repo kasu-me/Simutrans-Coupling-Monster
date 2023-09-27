@@ -59,7 +59,7 @@ header div.button-group .mku-drop-menu-container .mku-drop-container button {
 	width: 100%;
 	border: none;
 	border-radius: 0;
-	padding: 3px 6px;
+	padding: 4px 6px;
 	text-align: left;
 }
 
@@ -223,6 +223,11 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 }
 
 /* ダイアログ */
+
+
+.dialog-area .dialog-content>div.dialog-main-message>p:first-child {
+	margin-top: 0;
+}
 
 #infoDialog,
 #alertDialog,
