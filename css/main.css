@@ -39,6 +39,10 @@ header div.button-group .mku-drop-menu-container .mku-drop-parent-button {
 	border: 1px solid var(--button-face);
 }
 
+header div.button-group .mku-drop-menu-container .mku-drop-parent-button:hover {
+	background-color: var(--button-face-hover);
+}
+
 header div.button-group .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:checked) .mku-drop-parent-button {
 	color: var(--button-face);
 }
@@ -97,7 +101,7 @@ select#carsSelectBox {
 	page-break-inside: avoid;
 	break-inside: avoid;
 	break-before: column;
-	height: calc(100vh - 20.5em - var(--simutrans-paktype));
+	height: calc(100vh - 18.5em - var(--simutrans-paktype));
 	border: 1px solid var(--formation-table-main-border);
 	padding: 1.0em;
 	background-color: #fff;
@@ -147,7 +151,7 @@ select#carsSelectBox {
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container {
-	height: calc((100vh - 20.5em - var(--simutrans-paktype)) - var(--simutrans-paktype) - 7.5em);
+	height: calc((100vh - 18.5em - var(--simutrans-paktype)) - var(--simutrans-paktype) - 7.5em);
 	overflow-y: scroll;
 	border: 1px solid var(--formation-table-main-border);
 	margin-top: 1em;
