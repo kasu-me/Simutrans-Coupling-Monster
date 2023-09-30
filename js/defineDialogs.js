@@ -33,7 +33,7 @@ window.addEventListener("load", function () {
 				<td>
 					<div><select id="new-car-img-file-name-existing"></select></div>
 					<div class="or">または</div>
-					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">画像を指定する</button><span id="new-car-img-file-name-preview">ファイルを選択してください</span></div>
+					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">ファイルを選択する</button><span id="new-car-img-file-name-preview">ファイルを選択してください</span></div>
 				</td>
 			</tr>
 			<tr>
@@ -102,11 +102,11 @@ window.addEventListener("load", function () {
 
 	new Dialog("selectImageDialog", "画像ファイルを読み込み", `
 		<p>
-		<span class="selectbox-fluctuation-button" style="margin-right:1.5em;">
+		<span class="selectbox-fluctuation-button" style="margin-right:0.75em;">
 		<select id="imageSelectBox">
 		</select>
 		</span>
-		<button class="lsf-icon" icon="image" onclick="gebi('image-file-input').click()">画像を指定する</button>
+		<button class="lsf-icon" icon="image" onclick="gebi('image-file-input').click()">ファイルを選択する</button>
 		</p>
 		<p>以下に複数ファイルをドラッグ＆ドロップで一括投入(datファイルに記述されている画像ファイル名と同じ名前のファイルである必要があります)</p>
 		<div id="selected-image-preview">
