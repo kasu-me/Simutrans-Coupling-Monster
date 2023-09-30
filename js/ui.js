@@ -68,8 +68,9 @@ function setAddonPreviewImageByDirection(target, addon, direction) {
 function refresh() {
 	let hasNoAddon = masterAddons.length == 0;
 
+	//ボタンの活性制御
 	document.querySelectorAll("header .mku-drop-container button").forEach((button, i) => {
-		if (i != 0 && button.innerHTML != "このアプリについて") {
+		if (i != 0 && button.innerHTML != "新規車両追加" && button.innerHTML != "このアプリについて") {
 			button.disabled = hasNoAddon;
 		}
 	});
@@ -77,9 +78,13 @@ function refresh() {
 		menuContainer.querySelector("input.mku-drop-menu-checkbox").disabled = menuContainer.querySelectorAll("button:not(:disabled)").length == 0;
 	});
 
+	//車両がなければ以下の処理は行わない
 	if (hasNoAddon) {
 		return;
 	}
+
+	setAddonNamesToSelectBox(gebi("carsSelectBox"));
+	setImageNamesToSelectBox(gebi("imageSelectBox"));
 
 	let editingAddon = getEditingAddon();
 	if (editingAddon == undefined) { return }
@@ -289,6 +294,7 @@ function loadAndSetDatFile(files) {
 		new Message(message, ["dat-file-loaded"], 3000, true, true);
 		//DATを1件以上読み込んだら、画像選択ダイアログに遷移する
 		if (promises.length > 0 && masterAddons.length > 0) {
+			Dialog.list.helloDialog.off();
 			//この画面で選択した画像およびjatabを読み込む非同期処理
 			Promise.all(
 				[
@@ -464,6 +470,6 @@ window.addEventListener("load", () => {
 		loadAndSetImageFile(e.target.files);
 	});
 
-	//dat選択画面を開く
-	Dialog.list.openDatFileDialog.functions.display();
+	//初期画面を開く
+	Dialog.list.helloDialog.functions.display();
 });

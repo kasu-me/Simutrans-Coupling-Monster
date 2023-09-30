@@ -39,11 +39,11 @@
 		<div class="button-group">
 			<div class="button-outer">
 				<div class="mku-drop-menu-container mouseover">
-					<div class="button-group-title mku-drop-parent-button lsf-icon" icon="files">dat</div>
+					<div class="button-group-title mku-drop-parent-button lsf-icon" icon="files">アドオン</div>
 					<div class="mku-drop-container">
 						<button class="lsf-icon" icon="file"
-							onclick="Dialog.list.openDatFileDialog.functions.display()">読み込み</button>
-						<button class="lsf-icon" icon="view" onclick="viewDat()">プレビュー</button>
+							onclick="Dialog.list.openDatFileDialog.functions.display()">総合読み込み</button>
+						<button class="lsf-icon" icon="view" onclick="viewDat()">datプレビュー</button>
 						<button class="lsf-icon" icon="download" onclick="saveFile('dat')">保存</button>
 					</div>
 				</div>
@@ -54,6 +54,8 @@
 					<div class="mku-drop-container">
 						<button class="lsf-icon" icon="image"
 							onclick="Dialog.list.selectImageDialog.functions.display()">画像ファイルを読み込み</button>
+						<button class="lsf-icon" icon="list"
+							onclick="Dialog.list.selectImageDialog.functions.display()">画像ファイルリスト</button>
 					</div>
 				</div>
 			</div>
@@ -62,14 +64,25 @@
 					<div class="button-group-title mku-drop-parent-button lsf-icon" icon="files">日本語化ファイル</div>
 					<div class="mku-drop-container">
 						<button class="lsf-icon" icon="file"
-							onclick="Dialog.list.openJaTabFileDialog.functions.display()">読み込み</button>
-						<button class="lsf-icon" icon="view" onclick="viewJaTab()">プレビュー</button>
+							onclick="Dialog.list.openJaTabFileDialog.functions.display()">日本語化ファイル(ja.tab)読み込み</button>
+						<button class="lsf-icon" icon="view" onclick="viewJaTab()">ja.tabプレビュー</button>
 						<button class="lsf-icon" icon="download" onclick="saveFile('ja.tab')">保存</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="button-group">
+			<div class="button-outer">
+				<div class="mku-drop-menu-container mouseover">
+					<div class="button-group-title mku-drop-parent-button lsf-icon" icon="bus">車両</div>
+					<div class="mku-drop-container">
+						<button class="lsf-icon" icon="add"
+							onclick="Dialog.list.couplingPreviewDialog.functions.display()">新規車両追加</button>
+						<button class="lsf-icon" icon="list"
+							onclick="Dialog.list.couplingPreviewDialog.functions.display()">車両リスト</button>
+					</div>
+				</div>
+			</div>
 			<div class="button-outer">
 				<div class="mku-drop-menu-container mouseover">
 					<div class="button-group-title mku-drop-parent-button lsf-icon" icon="chain">連結</div>

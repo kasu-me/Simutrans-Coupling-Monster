@@ -1,9 +1,25 @@
 window.addEventListener("load", function () {
 
-	new Dialog("openDatFileDialog", "DATファイルを読み込み", `
+	new Dialog("helloDialog", "おはよう", `
+			<div id="hello-menu">
+				<div class="hello-menu-container" onclick="Dialog.list.openDatFileDialog.functions.display()">
+					<div><img src="img/button_open.png"></div>
+					<p class="title">既存のファイルを開く</p>
+					<p>PC上のdat･png･ja.tabを読み込んで編集します</p>
+				</div>
+				<div class="hello-menu-container" onclick="Dialog.list.helloDialog.off()">
+					<div><img src="img/button_new.png"></div>
+					<p class="title">新規アドオン作成</p>
+					<p>ブラウザ上でアドオンを製作します</p>
+				</div>
+			</div>
+		`, [], {}, true);
+
+
+	new Dialog("openDatFileDialog", "総合読み込み", `
 		<div id="dat-file-drop-area" class="filefield">
-			<p>ここにdatファイルをドラッグ＆ドロップ (複数ファイル可)</p>
 			<p>dat,png,tabファイルをまとめてドラッグ＆ドロップすると全ての読み込みを行います</p>
+			<p>最低でも1件のdatファイルと1件の有効な車両が含まれている必要があります</p>
 			<p id="overwrite-warn">既に読み込まれているデータがある場合、重複する内容は上書きされます</p>
 		</div>
 		`, [{ "content": "キャンセル", "event": `refresh();Dialog.list.openDatFileDialog.off();`, "icon": "close" }], {

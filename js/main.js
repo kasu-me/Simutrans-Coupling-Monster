@@ -85,7 +85,41 @@ function getImageNameAndPositionsFromAddonByDirection(addon, direction) {
 	return addon[`${EMPTYIMAGE}[${direction}]`].split(".");
 }
 
-//datファイル読み込み
+
+//マスタアドオンに空の車両を追加
+function addEmptyCarToAddon(master) {
+	master.push({});
+	master.at(-1)[CONSTRAINT] = {
+		prev: new Set(),
+		next: new Set()
+	};
+}
+
+function addImageFileNameToMasterFromDat(propName, val) {
+	imageFileNames.add(val.split(".")[0]);
+	//内包表記的なやつの場合
+	if (propName.indexOf(",") != -1) {
+		propName.split("[")[1].split(",").map(x => x.trim().split("]")[0]).forEach((direction, i) => {
+			masterAddons.at(-1)[`${EMPTYIMAGE}[${direction}]`] = val.replace(/<\$0>/g, i);
+		});
+		return false;
+	}
+	return true;
+}
+
+//マスタアドオンに新規車両を追加
+function addCarToMaster() {
+	addEmptyCarToAddon(masterAddons);
+	addImageFileNameToMasterFromDat("", "image");
+	EMPTYIMAGE_DIRECTIONS.forEach((direction, i) => {
+		masterAddons.at(-1)[direction] = `image.0.${i}`;
+	});
+	masterAddons.at(-1).name = ("新しい車両");
+	masterAddons.at(-1).obj = "vehicle";
+	masterAddons.at(-1).length = "12";
+}
+
+//datファイルからマスタアドオンに読み込み
 function loadDatFile(file) {
 	return new Promise((resolve) => {
 		masterDatFileName = file.name;
@@ -97,11 +131,7 @@ function loadDatFile(file) {
 			for (let i in vehicles) {
 				//空白アドオンスキップ
 				if (vehicles[i].trim() == "") { continue }
-				masterAddons.push({});
-				masterAddons.at(-1)[CONSTRAINT] = {
-					prev: new Set(),
-					next: new Set()
-				};
+				addEmptyCarToAddon(masterAddons);
 				let lines = vehicles[i].split("\n");
 				let isJatabExists = false;
 				let oldAddon = {};
@@ -122,12 +152,7 @@ function loadDatFile(file) {
 					}
 					if (propName.startsWith(EMPTYIMAGE)) {
 						//画像ファイル指定の場合
-						imageFileNames.add(val.split(".")[0]);
-						//内包表記的なやつの場合
-						if (propName.indexOf(",") != -1) {
-							propName.split("[")[1].split(",").map(x => x.trim().split("]")[0]).forEach((direction, i) => {
-								masterAddons.at(-1)[`${EMPTYIMAGE}[${direction}]`] = val.replace(/<\$0>/g, i);
-							});
+						if (!addImageFileNameToMasterFromDat(propName, val)) {
 							continue;
 						}
 					}
@@ -152,8 +177,6 @@ function loadDatFile(file) {
 					jatab.delete(oldAddon);
 				}
 			}
-			setAddonNamesToSelectBox(gebi("carsSelectBox"));
-			setImageNamesToSelectBox(gebi("imageSelectBox"));
 			resolve();
 		});
 	});
