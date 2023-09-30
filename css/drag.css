@@ -1,6 +1,6 @@
 #drag-container {
 	position: absolute;
-	border: 1px solid #000;
+	border: 2px solid #888;
 	background-color: #fff;
 	cursor: grabbing;
 	z-index: 9999999;

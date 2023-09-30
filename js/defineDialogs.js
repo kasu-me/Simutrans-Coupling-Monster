@@ -33,7 +33,7 @@ window.addEventListener("load", function () {
 				<td>
 					<div><select id="new-car-img-file-name-existing"></select></div>
 					<div>または</div>
-					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">画像を指定する</button></div>
+					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">画像を指定する</button><span id="new-car-img-file-name-preview">ファイルを選択してください</span></div>
 				</td>
 			</tr>
 			<tr>
@@ -49,19 +49,20 @@ window.addEventListener("load", function () {
 	`, [{ "content": "作成", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `refresh();Dialog.list.addCarDialog.off();`, "icon": "close" }], {
 		display: function () {
 			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
+			gebi("new-car-img-file-name-preview").innerText = "ファイルを選択してください";
 			setImageNamesToSelectBox(gebi("new-car-img-file-name-existing"));
 			Dialog.list.addCarDialog.on();
 		},
 		addCar: function () {
-			if (gebi("new-car-name").value == "" || gebi("new-car-img-file").value == "") {
+			if (gebi("new-car-name").value == "" || gebi("new-car-length").value == "") {
 				Dialog.list.alertDialog.functions.display("入力されていない項目があります。");
 			} else {
 				loader.start();
 				let isFileSelected = gebi("new-car-img-file").files.length > 0;
-				let fileName = isFileSelected ? gebi("new-car-img-file").files[0].name : gebi("new-car-img-file-name-existing").value;
+				let fileName = isFileSelected ? removeExtention(gebi("new-car-img-file").files[0].name) : gebi("new-car-img-file-name-existing").value;
 				let promises = [];
 				if (isFileSelected) {
-					promises.push(appendImageToImagesList(removeExtention(gebi("new-car-img-file").files[0].name), gebi("new-car-img-file").files[0]));
+					promises.push(appendImageToImagesList(fileName, gebi("new-car-img-file").files[0]));
 				}
 				Promise.all(promises).then(() => {
 					addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value);
@@ -72,6 +73,15 @@ window.addEventListener("load", function () {
 			}
 		}
 	}, true);
+	gebi("new-car-img-file").addEventListener("change", () => {
+		if (gebi("new-car-img-file").files.length > 0) {
+			gebi("new-car-img-file-name-preview").innerText = gebi("new-car-img-file").files[0].name;
+			gebi("new-car-img-file-name-existing").disabled = true;
+		} else {
+			gebi("new-car-img-file-name-preview").innerText = "ファイルを選択してください";
+			gebi("new-car-img-file-name-existing").disabled = false;
+		}
+	});
 
 	new Dialog("openDatFileDialog", "総合読み込み", `
 		<div id="dat-file-drop-area" class="filefield">
