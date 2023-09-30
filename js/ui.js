@@ -74,6 +74,7 @@ function refresh() {
 			button.disabled = hasNoAddon;
 		}
 	});
+	gebi("adding-property-button").disabled = hasNoAddon;
 	document.querySelectorAll("header .mku-drop-menu-container").forEach((menuContainer, i) => {
 		menuContainer.querySelector("input.mku-drop-menu-checkbox").disabled = menuContainer.querySelectorAll("button:not(:disabled)").length == 0;
 	});

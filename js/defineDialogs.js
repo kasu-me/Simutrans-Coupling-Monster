@@ -32,7 +32,7 @@ window.addEventListener("load", function () {
 				</td>
 				<td>
 					<div><select id="new-car-img-file-name-existing"></select></div>
-					<div>または</div>
+					<div class="or">または</div>
 					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">画像を指定する</button><span id="new-car-img-file-name-preview">ファイルを選択してください</span></div>
 				</td>
 			</tr>
