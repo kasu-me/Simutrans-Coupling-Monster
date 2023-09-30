@@ -108,15 +108,15 @@ function addImageFileNameToMasterFromDat(propName, val) {
 }
 
 //マスタアドオンに新規車両を追加
-function addCarToMaster() {
+function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
 	addEmptyCarToAddon(masterAddons);
-	addImageFileNameToMasterFromDat("", "image");
+	addImageFileNameToMasterFromDat("", imgFileName);
 	EMPTYIMAGE_DIRECTIONS.forEach((direction, i) => {
-		masterAddons.at(-1)[direction] = `image.0.${i}`;
+		masterAddons.at(-1)[direction] = `${imgFileName}.${imgFilePositionY}.${i}`;
 	});
-	masterAddons.at(-1).name = ("新しい車両");
+	masterAddons.at(-1).name = name;
 	masterAddons.at(-1).obj = "vehicle";
-	masterAddons.at(-1).length = "12";
+	masterAddons.at(-1).length = length;
 }
 
 //datファイルからマスタアドオンに読み込み
