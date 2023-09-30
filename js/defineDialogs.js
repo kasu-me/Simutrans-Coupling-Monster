@@ -1,20 +1,77 @@
 window.addEventListener("load", function () {
 
 	new Dialog("helloDialog", "おはよう", `
-			<div id="hello-menu">
-				<div class="hello-menu-container" onclick="Dialog.list.openDatFileDialog.functions.display()">
-					<div><img src="img/button_open.png"></div>
-					<p class="title">既存のファイルを開く</p>
-					<p>PC上のdat･png･ja.tabを読み込んで編集します</p>
-				</div>
-				<div class="hello-menu-container" onclick="Dialog.list.helloDialog.off()">
-					<div><img src="img/button_new.png"></div>
-					<p class="title">新規アドオン作成</p>
-					<p>ブラウザ上でアドオンを製作します</p>
-				</div>
+		<div id="hello-menu">
+			<div class="hello-menu-container" onclick="Dialog.list.openDatFileDialog.functions.display()">
+				<div><img src="img/button_open.png"></div>
+				<p class="title">既存のファイルを開く</p>
+				<p>PC上のdat･png･ja.tabを読み込んで編集します</p>
 			</div>
-		`, [], {}, true);
+			<div class="hello-menu-container" onclick="Dialog.list.helloDialog.off();Dialog.list.addCarDialog.functions.display()">
+				<div><img src="img/button_new.png"></div>
+				<p class="title">新規アドオン作成</p>
+				<p>ブラウザ上でアドオンを製作します</p>
+			</div>
+		</div>
+	`, [], {}, true);
 
+
+	new Dialog("addCarDialog", "車両を追加", `
+		<table class="input-area">
+			<tr>
+				<td>
+					名前
+				</td>
+				<td>
+					<input id="new-car-name">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					画像ファイル名
+				</td>
+				<td>
+					<div><select id="new-car-img-file-name-existing"></select></div>
+					<div>または</div>
+					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">画像を指定する</button></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					車両長
+				</td>
+				<td>
+					<input id="new-car-length" type="number" min="1" value="12">
+				</td>
+			</tr>
+		</table>
+		<input id="new-car-img-file" type="file" accept=".png">
+	`, [{ "content": "作成", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `refresh();Dialog.list.addCarDialog.off();`, "icon": "close" }], {
+		display: function () {
+			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
+			setImageNamesToSelectBox(gebi("new-car-img-file-name-existing"));
+			Dialog.list.addCarDialog.on();
+		},
+		addCar: function () {
+			if (gebi("new-car-name").value == "" || gebi("new-car-img-file").value == "") {
+				Dialog.list.alertDialog.functions.display("入力されていない項目があります。");
+			} else {
+				loader.start();
+				let isFileSelected = gebi("new-car-img-file").files.length > 0;
+				let fileName = isFileSelected ? gebi("new-car-img-file").files[0].name : gebi("new-car-img-file-name-existing").value;
+				let promises = [];
+				if (isFileSelected) {
+					promises.push(appendImageToImagesList(removeExtention(gebi("new-car-img-file").files[0].name), gebi("new-car-img-file").files[0]));
+				}
+				Promise.all(promises).then(() => {
+					addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value);
+					refresh();
+					Dialog.list.addCarDialog.off();
+					loader.finish();
+				});
+			}
+		}
+	}, true);
 
 	new Dialog("openDatFileDialog", "総合読み込み", `
 		<div id="dat-file-drop-area" class="filefield">
@@ -44,7 +101,7 @@ window.addEventListener("load", function () {
 		<p>以下に複数ファイルをドラッグ＆ドロップで一括投入(datファイルに記述されている画像ファイル名と同じ名前のファイルである必要があります)</p>
 		<div id="selected-image-preview">
 		</div>
-		<input type="file" id="image-file-input" accept="image/*">
+		<input type="file" id="image-file-input" accept=".png">
 		`, [{ "content": "完了", "event": `Dialog.list.selectImageDialog.off();`, "icon": "check" }], {
 		display: function (x) {
 			if (masterAddons.length == 0) {

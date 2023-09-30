@@ -110,13 +110,16 @@ function addImageFileNameToMasterFromDat(propName, val) {
 //マスタアドオンに新規車両を追加
 function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
 	addEmptyCarToAddon(masterAddons);
+	masterAddons.at(-1).name = name;
+	masterAddons.at(-1).obj = "vehicle";
+	masterAddons.at(-1).length = length;
 	addImageFileNameToMasterFromDat("", imgFileName);
 	EMPTYIMAGE_DIRECTIONS.forEach((direction, i) => {
 		masterAddons.at(-1)[direction] = `${imgFileName}.${imgFilePositionY}.${i}`;
 	});
-	masterAddons.at(-1).name = name;
-	masterAddons.at(-1).obj = "vehicle";
-	masterAddons.at(-1).length = length;
+
+	setAddonNamesToSelectBox(gebi("carsSelectBox"));
+	setImageNamesToSelectBox(gebi("imageSelectBox"));
 }
 
 //datファイルからマスタアドオンに読み込み
@@ -177,6 +180,9 @@ function loadDatFile(file) {
 					jatab.delete(oldAddon);
 				}
 			}
+
+			setAddonNamesToSelectBox(gebi("carsSelectBox"));
+			setImageNamesToSelectBox(gebi("imageSelectBox"));
 			resolve();
 		});
 	});

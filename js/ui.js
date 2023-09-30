@@ -83,9 +83,7 @@ function refresh() {
 		return;
 	}
 
-	setAddonNamesToSelectBox(gebi("carsSelectBox"));
-	setImageNamesToSelectBox(gebi("imageSelectBox"));
-
+	//編集中のアドオンの取得に失敗した場合終了
 	let editingAddon = getEditingAddon();
 	if (editingAddon == undefined) { return }
 
