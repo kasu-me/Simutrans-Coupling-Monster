@@ -156,6 +156,11 @@ function refresh() {
 		tdVal.appendChild(valInput);
 		propTable.appendChild(tr);
 	}
+
+	//ダイアログを開いている場合の処理
+	if (Dialog.list.carListDialog.isActive) {
+		Dialog.list.carListDialog.functions.display();
+	}
 }
 
 //フッタのアドオンリストを表示
