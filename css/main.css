@@ -569,6 +569,9 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	color: #fff;
 }
 
+#addCarPropertyDialog .warning {
+	margin-bottom: 0;
+}
 
 /* メッセージ */
 .message-content.dat-file-loaded {

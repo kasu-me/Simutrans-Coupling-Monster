@@ -202,7 +202,7 @@ window.addEventListener("load", function () {
 				</td>
 				<td>
 					<input id="new-property-property-name">
-					<div id="new-property-property-suggestion" class="suggestion-box">
+					<div id="new-property-property-name-suggestion" class="suggestion-box">
 					</div>
 				</td>
 			</tr>
@@ -217,14 +217,16 @@ window.addEventListener("load", function () {
 				</td>
 			</tr>
 		</table>
-	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
+	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
 		addon: null,
 		display: function () {
 			Dialog.list.addCarPropertyDialog.functions.addon = getEditingAddon();
 			document.querySelectorAll("#addCarPropertyDialog input").forEach(input => input.value = "");
 			gebi("adding-new-property-target").innerText = Dialog.list.addCarPropertyDialog.functions.addon.name;
-			Dialog.list.addCarPropertyDialog.on();
 			valueSuggestionBox.classList.add("unavailable");
+			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両にプロパティを追加";
+			gebi("new-property-confirm").innerHTML = `追加`;
+			Dialog.list.addCarPropertyDialog.on();
 		},
 		addProperty: function () {
 			if (gebi("new-property-property-name").value == "" || gebi("new-property-property-value").value == "") {
@@ -317,7 +319,7 @@ window.addEventListener("load", function () {
 		}
 	}
 
-	let propertySuggestionBox = gebi("new-property-property-suggestion");
+	let propertySuggestionBox = gebi("new-property-property-name-suggestion");
 	let valueSuggestionBox = gebi("new-property-value-suggestion");
 
 	setSuggestionBox(gebi("new-property-property-name"), propertySuggestionBox, suggestions);
@@ -328,9 +330,17 @@ window.addEventListener("load", function () {
 		let addon = Dialog.list.addCarPropertyDialog.functions.addon;
 		let value = gebi("new-property-property-name").value;
 
-		//存在するプロパティの場合は値を入力
+		//既に当該車両に存在するプロパティの場合
 		if (addon[value] != undefined) {
+			//値を投入
 			gebi("new-property-property-value").value = addon[value];
+
+			//警告を表示
+			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両のプロパティを上書き";
+			gebi("new-property-confirm").innerHTML = `上書き`;
+		} else {
+			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両にプロパティを追加";
+			gebi("new-property-confirm").innerHTML = `追加`;
 		}
 
 		//サジェストが存在する場合はサジェストをセット
