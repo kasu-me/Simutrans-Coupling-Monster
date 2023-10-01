@@ -109,6 +109,7 @@ function addImageFileNameToMasterFromDat(propName, val) {
 
 //マスタアドオンに新規車両を追加
 function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
+	//todo:nameの重複チェック
 	addEmptyCarToAddon(masterAddons);
 	masterAddons.at(-1).name = name;
 	masterAddons.at(-1).obj = "vehicle";

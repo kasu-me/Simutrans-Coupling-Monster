@@ -46,7 +46,7 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<input id="new-car-img-file" type="file" accept=".png">
-	`, [{ "content": "作成", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `refresh();Dialog.list.addCarDialog.off();`, "icon": "close" }], {
+	`, [{ "content": "作成", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarDialog.off();`, "icon": "close" }], {
 		display: function () {
 			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
 			gebi("new-car-img-file-name-preview").innerText = "ファイルを選択してください";
@@ -163,10 +163,9 @@ window.addEventListener("load", function () {
 		directionSelectBox += `<option value="${dir}">${dir}</option>`;
 	})
 
-
 	new Dialog("carListDialog", "車両リスト", `
 		<div id="car-list-table-container"></div>
-	`, [{ "content": "車両追加", "event": `Dialog.list.addCarDialog.functions.display();`, "icon": "add" }, { "content": "一括操作", "event": `Dialog.list.carListDialog.functions.addCar();`, "icon": "pen", "id": "car-list-ikkatsu-sousa" }, { "content": "閉じる", "event": `Dialog.list.carListDialog.off();`, "icon": "close" }], {
+	`, [{ "content": "車両追加", "event": `Dialog.list.addCarDialog.functions.display();`, "icon": "add" }, { "content": "一括操作", "event": `Dialog.list.carListDialog.functions.ikkatsuSousa();`, "icon": "pen", "id": "car-list-ikkatsu-sousa" }, { "content": "閉じる", "event": `Dialog.list.carListDialog.off();`, "icon": "close" }], {
 		display: function () {
 			let tableContainer = gebi("car-list-table-container");
 			tableContainer.innerHTML = "";
@@ -179,7 +178,7 @@ window.addEventListener("load", function () {
 			table.addCell("操作");
 			masterAddons.forEach((addon) => {
 				table.addRow();
-				table.addCell(`<input type='checkbox'>`);
+				table.addCell(`<input type="checkbox" class="row-selector" value="${addon.name}">`);
 				table.addCell(...reduceText(addon.name, 40));
 				table.addCell(...reduceText(jatab.has(addon) ? jatab.get(addon) : "-", 35));
 				table.addCell(`<button class="lsf">search</button><button class="lsf">delete</button>`);
@@ -188,6 +187,9 @@ window.addEventListener("load", function () {
 			setTableCheckboxEvents(tableContainer, [gebi("car-list-ikkatsu-sousa")]);
 			TableSort.addSortButtonToTable(tableContainer);
 			Dialog.list.carListDialog.on();
+		},
+		ikkatsuSousa: function () {
+			Dialog.list.ikkatsuSousaDialog.functions.display(Array.from(gebi("car-list-table-container").querySelectorAll(".row-selector:checked")).map(checkbox => getObjectByItsName(masterAddons, checkbox.value)));
 		}
 	}, true);
 	function reduceText(text, maxChar) {
@@ -271,6 +273,34 @@ window.addEventListener("load", function () {
 		};
 		switchElementsByCheckedStatus();
 	}
+
+	new Dialog("ikkatsuSousaDialog", "<span id='ikkatsu-car-count'></span>両の車両に一括操作", `
+		<ul class="dialog-buttons-list">
+			<li><button onclick="" class="lsf-icon dialog-main-button" icon="pen">プロパティ投入</button></li>
+			<li><button onclick="" class="lsf-icon dialog-main-button" icon="sync">プロパティ置換</button></li>
+			<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.delete()" class="lsf-icon dialog-main-button" icon="delete">削除</button></li>
+		</ul>
+	`, [{ "content": "閉じる", "event": `Dialog.list.ikkatsuSousaDialog.off();`, "icon": "close" }], {
+		addons: [],
+		display: function (x) {
+			gebi("ikkatsu-car-count").innerText = x.length;
+			Dialog.list.ikkatsuSousaDialog.functions.addons = x;
+			Dialog.list.ikkatsuSousaDialog.on();
+		},
+		delete: function () {
+			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
+			addons.forEach((addon) => {
+				for (let i in masterAddons) {
+					if (addon.name == masterAddons[i].name) {
+						masterAddons.splice(i, 1);
+						break;
+					}
+				}
+			});
+			refresh();
+			Dialog.list.ikkatsuSousaDialog.off();
+		}
+	}, true);
 
 
 	new Dialog("addCarPropertyDialog", "車両にプロパティを追加", `

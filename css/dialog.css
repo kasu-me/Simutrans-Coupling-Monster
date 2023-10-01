@@ -168,3 +168,20 @@ button.dialog-main-button {
 		width: 90%;
 	}
 }
+
+.dialog-content ul.dialog-buttons-list {
+	list-style: none;
+	padding-left: 0;
+}
+
+.dialog-content ul.dialog-buttons-list li {
+	margin: 1em 0;
+}
+
+.dialog-content ul.dialog-buttons-list li button {
+	width: 100%;
+}
+
+.dialog-content ul.dialog-buttons-list li button.lsf-icon::before {
+	margin-right: 0.3em;
+}

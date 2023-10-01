@@ -79,6 +79,7 @@ function refresh() {
 		menuContainer.querySelector("input.mku-drop-menu-checkbox").disabled = menuContainer.querySelectorAll("button:not(:disabled)").length == 0;
 	});
 
+	//todo:アドオンが存在しない場合の処理を考える
 	//車両がなければ以下の処理は行わない
 	if (hasNoAddon) {
 		return;
@@ -86,7 +87,14 @@ function refresh() {
 
 	//編集中のアドオンの取得に失敗した場合終了
 	let editingAddon = getEditingAddon();
-	if (editingAddon == undefined) { return }
+	if (editingAddon == undefined) {
+		if (hasNoAddon) {
+			//todo:アドオンが存在しない場合の処理を考える
+			editingAddon = null;
+		} else {
+			editingAddon = masterAddons[0];
+		}
+	}
 
 	//編集中アドオンの画像設定
 	let mainImageContainer = gebi("main-image-container");
