@@ -68,6 +68,9 @@ window.addEventListener("load", function () {
 					addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value);
 					refresh();
 					Dialog.list.addCarDialog.off();
+					let selectBox = gebi("carsSelectBox")
+					selectBox.selectedIndex = selectBox.length - 1;
+					selectBox.dispatchEvent(new Event("change"));
 					loader.finish();
 				});
 			}
