@@ -160,6 +160,189 @@ window.addEventListener("load", function () {
 		directionSelectBox += `<option value="${dir}">${dir}</option>`;
 	})
 
+
+	new Dialog("carPropertyDialog", "車両のプロパティを編集", `
+		<table class="input-area">
+		</table>
+	`, [{ "content": "作成", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarDialog.off();`, "icon": "close" }], {
+		display: function () {
+			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
+			gebi("new-car-img-file-name-preview").innerText = "ファイルを選択してください";
+			setImageNamesToSelectBox(gebi("new-car-img-file-name-existing"));
+			Dialog.list.addCarDialog.on();
+		},
+		addCar: function () {
+			if (gebi("new-car-name").value == "" || gebi("new-car-length").value == "") {
+				Dialog.list.alertDialog.functions.display("入力されていない項目があります。");
+			} else {
+				loader.start();
+				let isFileSelected = gebi("new-car-img-file").files.length > 0;
+				let fileName = isFileSelected ? removeExtention(gebi("new-car-img-file").files[0].name) : gebi("new-car-img-file-name-existing").value;
+				let promises = [];
+				if (isFileSelected) {
+					promises.push(appendImageToImagesList(fileName, gebi("new-car-img-file").files[0]));
+				}
+				Promise.all(promises).then(() => {
+					addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value);
+					refresh();
+					Dialog.list.addCarDialog.off();
+					loader.finish();
+				});
+			}
+		}
+	}, true);
+
+
+	new Dialog("addCarPropertyDialog", "車両にプロパティを追加", `
+		<p>追加対象：<span id="adding-new-property-target"></span></p>
+		<table class="input-area">
+			<tr>
+				<td>
+					プロパティ名
+				</td>
+				<td>
+					<input id="new-property-property-name">
+					<div id="new-property-property-suggestion" class="suggestion-box">
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					値
+				</td>
+				<td>
+					<input id="new-property-property-value">
+					<div id="new-property-value-suggestion" class="suggestion-box">
+					</div>
+				</td>
+			</tr>
+		</table>
+	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
+		addon: null,
+		display: function () {
+			Dialog.list.addCarPropertyDialog.functions.addon = getEditingAddon();
+			document.querySelectorAll("#addCarPropertyDialog input").forEach(input => input.value = "");
+			gebi("adding-new-property-target").innerText = Dialog.list.addCarPropertyDialog.functions.addon.name;
+			Dialog.list.addCarPropertyDialog.on();
+			valueSuggestionBox.classList.add("unavailable");
+		},
+		addProperty: function () {
+			if (gebi("new-property-property-name").value == "" || gebi("new-property-property-value").value == "") {
+				Dialog.list.alertDialog.functions.display("入力されていない項目があります。");
+			} else {
+				Dialog.list.addCarPropertyDialog.functions.addon[gebi("new-property-property-name").value] = gebi("new-property-property-value").value;
+				refresh();
+				Dialog.list.addCarPropertyDialog.off();
+			}
+		}
+	}, true);
+	let suggestions = {
+		copyright: "作者",
+		intro_year: "導入年",
+		intro_month: "導入月",
+		retire_year: "引退年",
+		retire_month: "引退月",
+		waytype: "乗り物の走行する環境の種類",
+		engine_type: "動力種別",
+		freight: "貨物",
+		runningcost: "運行費",
+		cost: "購入費",
+		speed: "最高速度",
+		payload: "最大積載量",
+		weight: "自重",
+		gear: "ギア比",
+		power: "出力",
+		smoke: "煙",
+		sound: "音",
+		loading_time: "積載時間",
+	};
+	let formulaicPhraseForDat = {
+		waytype: {
+			road: "自動車",
+			track: "鉄道",
+			tram_track: "路面電車",
+			air: "航空機",
+			water: "船舶",
+			monorail_track: "モノレール",
+			maglev_track: "リニア",
+			narrowgauge_track: "ナローゲージ",
+		},
+		engine_type: {
+			steam: "蒸気機関",
+			diesel: "ディーゼル",
+			electric: "電気(架線給電)",
+			bio: "動物",
+			sail: "帆走",
+			fuel_cell: "燃料電池",
+			hydrogene: "水素燃料",
+			battery: "蓄電池",
+		},
+		freight: {
+			Passagiere: "二等旅客",
+			Post: "一等旅客",
+		},
+	};
+	function setSuggestionBox(input, dropdown, dataset) {
+		setDatasetToSuggestionBox(input, dropdown, dataset);
+		input.addEventListener("focusin", () => {
+			dropdown.classList.add("on");
+		});
+		input.addEventListener("focusout", () => {
+			if (dropdown.querySelectorAll("div:hover").length == 0) {
+				dropdown.classList.remove("on");
+			}
+		});
+		input.addEventListener("input", () => {
+			dropdown.querySelectorAll("div").forEach((button) => {
+				if (button.dataset.dataName.toUpperCase() == input.value.toUpperCase()) {
+					button.classList.add("selected");
+				} else {
+					button.classList.remove("selected");
+				}
+			});
+		});
+	}
+	function setDatasetToSuggestionBox(input, dropdown, dataset) {
+		dropdown.innerHTML = "";
+		for (let dataName in dataset) {
+			let button = document.createElement("div");
+			button.innerText = `${dataset[dataName]} (${dataName})`;
+			button.dataset.dataName = dataName;
+			button.addEventListener("click", () => {
+				input.value = dataName;
+				input.dispatchEvent(new Event("input"));
+				dropdown.classList.remove("on");
+			});
+			dropdown.appendChild(button);
+		}
+	}
+
+	let propertySuggestionBox = gebi("new-property-property-suggestion");
+	let valueSuggestionBox = gebi("new-property-value-suggestion");
+
+	setSuggestionBox(gebi("new-property-property-name"), propertySuggestionBox, suggestions);
+	setSuggestionBox(gebi("new-property-property-value"), valueSuggestionBox, {});
+	valueSuggestionBox.classList.add("unavailable");
+
+	gebi("new-property-property-name").addEventListener("input", () => {
+		let addon = Dialog.list.addCarPropertyDialog.functions.addon;
+		let value = gebi("new-property-property-name").value;
+
+		//存在するプロパティの場合は値を入力
+		if (addon[value] != undefined) {
+			gebi("new-property-property-value").value = addon[value];
+		}
+
+		//サジェストが存在する場合はサジェストをセット
+		if (formulaicPhraseForDat.hasOwnProperty(value)) {
+			setDatasetToSuggestionBox(gebi("new-property-property-value"), valueSuggestionBox, formulaicPhraseForDat[value]);
+			valueSuggestionBox.classList.remove("unavailable");
+		} else {
+			valueSuggestionBox.classList.add("unavailable");
+		}
+	});
+
+
 	new Dialog("editImageDialog", "車両と画像の対応", `
 		<table class="input-area">
 			<tr>

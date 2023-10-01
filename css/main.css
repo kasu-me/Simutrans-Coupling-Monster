@@ -533,6 +533,39 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	margin-left: 0.7em;
 }
 
+#addCarPropertyDialog .suggestion-box {
+	position: fixed;
+	transform-origin: top center;
+	transform: scaleY(0);
+	transition: 300ms ease all 0s;
+	height: 15em;
+	overflow-y: scroll;
+	background-color: #fff;
+	border: 1px solid #333;
+	min-width: 20em;
+}
+
+#addCarPropertyDialog .suggestion-box:not(.unavailable).on {
+	transform: scaleY(1);
+}
+
+#addCarPropertyDialog .suggestion-box>div {
+	cursor: pointer;
+	padding: 0.25em;
+	user-select: none;
+}
+
+#addCarPropertyDialog .suggestion-box>div:hover {
+	background-color: var(--selection-hover-highlight);
+}
+
+#addCarPropertyDialog .suggestion-box>div.selected {
+	background-color: var(--selection-highlight);
+	pointer-events: none;
+	color: #fff;
+}
+
+
 /* メッセージ */
 .message-content.dat-file-loaded {
 	top: calc(40px + 0em);

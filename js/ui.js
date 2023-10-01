@@ -147,7 +147,7 @@ function refresh() {
 		let valInput = document.createElement("input");
 		tdProp.innerHTML = prop;
 		valInput.value = editingAddon[prop];
-		valInput.disabled = prop == "name";
+		valInput.disabled = prop == "name" || prop == "obj";
 		valInput.addEventListener("input", () => {
 			editingAddon[prop] = valInput.value;
 		});
