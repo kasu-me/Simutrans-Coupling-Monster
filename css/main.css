@@ -601,8 +601,20 @@ table.row-hover-hilight tr:hover {
 	width: 20em;
 }
 
+#carListDialog #car-list-table-container table tr td:nth-child(3).text-center {
+	text-align: center;
+}
+
 #carListDialog #car-list-table-container table tr td:last-child {
 	width: 5em;
+}
+
+#carListDialog #car-list-table-container table tr td:last-child button {
+	font-size: 11pt;
+}
+
+#carListDialog #car-list-table-container table tr td:last-child button:not(:last-child) {
+	margin-right: 0.5em;
 }
 
 #carListDialog #car-list-table-container table tr:nth-child(1) td {
