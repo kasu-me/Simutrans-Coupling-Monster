@@ -298,7 +298,10 @@ window.addEventListener("load", function () {
 		addon: null,
 		display: function () {
 			Dialog.list.addCarPropertyDialog.functions.addon = getEditingAddon();
-			document.querySelectorAll("#addCarPropertyDialog input").forEach(input => input.value = "");
+			document.querySelectorAll("#addCarPropertyDialog input").forEach(input => {
+				input.value = "";
+				input.dispatchEvent(new Event("input"));
+			});
 			gebi("adding-new-property-target").innerText = Dialog.list.addCarPropertyDialog.functions.addon.name;
 			valueSuggestionBox.classList.add("unavailable");
 			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両にプロパティを追加";
