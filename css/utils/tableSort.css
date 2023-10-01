@@ -1,0 +1,45 @@
+.tablesort-sort-button {
+	cursor: pointer;
+	user-select: none;
+}
+
+.tablesort-sort-button:hover {
+	background-color: var(--button-face-hover);
+}
+
+.tablesort-sort-button::after {
+	content: "sort";
+	margin-left: 0.3em;
+	font-size: 130%;
+	font-family: 'LigatureSymbols';
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	-ms-text-rendering: optimizeLegibility;
+	-o-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-ms-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+	-webkit-font-feature-settings: "liga" 1, "dlig" 1;
+	-moz-font-feature-settings: "liga=1, dlig=1";
+	-ms-font-feature-settings: "liga" 1, "dlig" 1;
+	-o-font-feature-settings: "liga" 1, "dlig" 1;
+	font-feature-settings: "liga" 1, "dlig" 1;
+	font-weight: 100;
+}
+
+.tablesort-sorted-column {
+	background-color: var(--selection-hover-highlight) !important;
+	color: #000 !important;
+}
+
+.tablesort-sorted-column::after {
+	display: inline-block;
+	content: "dropdown";
+}
+
+.tablesort-desc::after {
+	transform: rotate(180deg);
+}

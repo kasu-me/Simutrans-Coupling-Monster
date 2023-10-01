@@ -527,6 +527,107 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	width: 4em;
 }
 
+#carListDialog #car-list-table-container {
+	border: 2px solid var(--formation-table-main-border);
+	height: 50vh;
+	overflow-y: scroll;
+}
+
+.generated-table-container:has(#carListDialog #car-list-table-container table) {
+	height: 50vh;
+	overflow-y: scroll;
+}
+
+#carListDialog #car-list-table-container table {
+	border: none;
+	border-collapse: separate;
+	border-spacing: 0;
+	min-width: 820px;
+}
+
+#carListDialog #car-list-table-container table tr:nth-child(1) {
+	text-align: center;
+	font-weight: bold;
+	background-color: var(--formation-table-main-border) !important;
+	position: sticky;
+	top: 0;
+	left: 0;
+}
+
+#carListDialog #car-list-table-container table tr:nth-child(1) td {
+	border-bottom: var(--formation-table-main-border) 2px solid;
+}
+
+table.horizontal-stripes tr:nth-child(2n) {
+	background-color: var(--table-alternate-color-1);
+}
+
+table.horizontal-stripes tr:nth-child(2n+1) {
+	background-color: var(--table-alternate-color-2);
+}
+
+table.row-hover-hilight tr:hover {
+	background-color: var(--selection-hover-highlight) !important;
+}
+
+#carListDialog #car-list-table-container table tr td:first-child {
+	padding: 0;
+	width: 1.5em;
+}
+
+#carListDialog #car-list-table-container table tr td:last-child {
+	width: 13.1em;
+}
+
+#carListDialog #car-list-table-container table tr td:last-child {
+	border-right: none;
+}
+
+#carListDialog #car-list-table-container table input,
+#carListDialog #car-list-table-container table tr:not(:nth-child(1)) {
+	cursor: pointer;
+}
+
+#carListDialog #car-list-table-container table tr td:first-child,
+#carListDialog #car-list-table-container table tr td:last-child {
+	cursor: auto;
+}
+
+#carListDialog #car-list-table-container table tr td:nth-child(2) {
+	width: 20em;
+}
+
+#carListDialog #car-list-table-container table tr td:nth-child(3) {
+	width: 20em;
+}
+
+#carListDialog #car-list-table-container table tr td:last-child {
+	width: 5em;
+}
+
+#carListDialog #car-list-table-container table tr:nth-child(1) td {
+	color: #fff;
+}
+
+#carListDialog #car-list-table-container table tr:not(:nth-child(1)) td:last-child {
+	text-align: center;
+}
+
+#carListDialog #car-list-table-container table tr:not(:nth-child(1)) td {
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+
+#carListDialog #car-list-table-container table tr:not(:nth-child(1)):has(input:checked) {
+	background-color: var(--selection-highlight) !important;
+}
+
+#carListDialog #car-list-table-container table tr:has(input:checked) td {
+	color: #fff;
+}
+
 #addCarDialog div.or {
 	font-size: 80%;
 	margin: 0.5em 0;
