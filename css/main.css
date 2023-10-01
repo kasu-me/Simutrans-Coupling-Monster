@@ -80,13 +80,17 @@ header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-cont
 
 header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button:hover {
 	background-color: var(--table-alternate-color-2);
-
 }
 
 header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button::before {
 	display: inline-block;
 	width: 1.0em;
 }
+
+header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button:focus {
+	outline: none;
+}
+
 
 header>div.button-group div.button-outer .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:disabled) .mku-drop-parent-button,
 header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button:disabled {

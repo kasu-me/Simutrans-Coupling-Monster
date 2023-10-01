@@ -405,6 +405,19 @@ function loadAndSetJaTabFile(files) {
 	});
 }
 
+async function scanFiles(entry, tmpObject) {
+	if (entry.isDirectory) {
+		const entryReader = entry.createReader();
+		const entries = await new Promise(resolve => {
+			entryReader.readEntries(entries => resolve(entries));
+		});
+		await Promise.all(entries.map(entry => scanFiles(entry, tmpObject)));
+	}
+	if (entry.isFile) {
+		tmpObject.push(entry);
+	}
+}
+
 //ファイルドラッグアンドドロップイベントをセット
 function setDragAndDropFileEvents(target, callback) {
 	target.addEventListener('dragover', function (e) {
@@ -416,11 +429,19 @@ function setDragAndDropFileEvents(target, callback) {
 	target.addEventListener('dragleave', function (e) {
 		target.classList.remove("drag-target");
 	}, false);
-	target.addEventListener('drop', function (e) {
-		e.stopPropagation();
+	target.addEventListener('drop', async function (e) {
 		e.preventDefault();
-		target.classList.remove("drag-target");
-		var files = e.dataTransfer.files;
+		const items = e.dataTransfer.items;
+		const results = [];
+		const promise = [];
+		for (const item of items) {
+			const entry = item.webkitGetAsEntry();
+			promise.push(scanFiles(entry, results)); // ScanFiles関数は後述
+		}
+		await Promise.all(promise);
+
+
+		console.log(results); //テスト表示
 		callback(files);
 	}, false);
 }
