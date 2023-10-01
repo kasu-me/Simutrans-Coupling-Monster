@@ -642,7 +642,7 @@ table.row-hover-hilight tr:hover {
 	position: fixed;
 	transform-origin: top center;
 	transform: scaleY(0);
-	transition: 300ms ease all 0s;
+	transition: 150ms ease all 0s;
 	height: 15em;
 	overflow-y: scroll;
 	background-color: #fff;
