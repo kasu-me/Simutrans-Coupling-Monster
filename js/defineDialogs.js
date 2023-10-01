@@ -188,7 +188,7 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 	function reduceText(text, maxChar) {
-		let result = [text.substr(0, maxChar)];
+		let result = [text.substr(0, maxChar), { "class": "text-center" }];
 		if (text.length > maxChar) {
 			result[0] += "…"
 			result.push({ "class": "mku-balloon", "mku-balloon-message": text })
@@ -841,6 +841,7 @@ window.addEventListener("load", function () {
 				<h2>謝辞</h2>
 				<ul>
 				<li>ボタン等の各種アイコンに「<a href="https://kudakurage.com/ligature_symbols/" target="_blank">Ligature Symbols</a>」を利用させていただきました。</li>
+				<li>ソートに「<a href="https://github.com/bubkoo/natsort" target="_blank">natsort</a>」を利用させていただきました。</li>
 				</ul>
 				<p>御礼申し上げます。</p>
 			</div>
