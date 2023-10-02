@@ -289,8 +289,8 @@ window.addEventListener("load", function () {
 
 	new Dialog("ikkatsuSousaDialog", "<span id='ikkatsu-car-count'></span>両の車両に一括操作", `
 		<ul class="dialog-buttons-list">
-			<li><button onclick="" class="lsf-icon dialog-main-button" icon="pen">プロパティ投入</button></li>
-			<li><button onclick="" class="lsf-icon dialog-main-button" icon="sync">プロパティ置換</button></li>
+			<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.editProp()" class="lsf-icon dialog-main-button" icon="pen">プロパティ投入</button></li>
+			<!--<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.editProp()" class="lsf-icon dialog-main-button" icon="sync">プロパティ置換</button></li>-->
 			<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.delete()" class="lsf-icon dialog-main-button" icon="delete">削除</button></li>
 		</ul>
 	`, [{ "content": "閉じる", "event": `Dialog.list.ikkatsuSousaDialog.off();`, "icon": "close" }], {
@@ -299,6 +299,9 @@ window.addEventListener("load", function () {
 			gebi("ikkatsu-car-count").innerText = x.length;
 			Dialog.list.ikkatsuSousaDialog.functions.addons = x;
 			Dialog.list.ikkatsuSousaDialog.on();
+		},
+		editProp: function () {
+			Dialog.list.addCarPropertyDialog.functions.display(Dialog.list.ikkatsuSousaDialog.functions.addons);
 		},
 		delete: function () {
 			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
@@ -337,14 +340,22 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
+		addons: [],
 		addon: null,
-		display: function (propName) {
-			Dialog.list.addCarPropertyDialog.functions.addon = getEditingAddon();
+		display: function (targetAddons, propName) {
+			if (targetAddons != undefined) {
+				Dialog.list.addCarPropertyDialog.functions.addons = targetAddons;
+				Dialog.list.addCarPropertyDialog.functions.addon = targetAddons[0];
+				gebi("adding-new-property-target").innerText = `${Dialog.list.addCarPropertyDialog.functions.addon.name}を含む${targetAddons.length}両の車両`;
+			} else {
+				Dialog.list.addCarPropertyDialog.functions.addon = getEditingAddon();
+				Dialog.list.addCarPropertyDialog.functions.addons = [Dialog.list.addCarPropertyDialog.functions.addon];
+				gebi("adding-new-property-target").innerText = Dialog.list.addCarPropertyDialog.functions.addon.name;
+			}
 			document.querySelectorAll("#addCarPropertyDialog input").forEach(input => {
 				input.value = "";
 				input.dispatchEvent(new Event("input"));
 			});
-			gebi("adding-new-property-target").innerText = Dialog.list.addCarPropertyDialog.functions.addon.name;
 			valueSuggestionBox.classList.add("unavailable");
 			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両にプロパティを追加";
 			gebi("new-property-confirm").innerHTML = `追加`;
@@ -355,10 +366,14 @@ window.addEventListener("load", function () {
 			Dialog.list.addCarPropertyDialog.on();
 		},
 		addProperty: function () {
-			if (gebi("new-property-property-name").value == "" || gebi("new-property-property-value").value == "") {
+			let propName = gebi("new-property-property-name").value;
+			let propValue = gebi("new-property-property-value").value;
+			if (propName == "" || propValue == "") {
 				Dialog.list.alertDialog.functions.display("入力されていない項目があります。");
 			} else {
-				Dialog.list.addCarPropertyDialog.functions.addon[gebi("new-property-property-name").value] = gebi("new-property-property-value").value;
+				for (let addon of Dialog.list.addCarPropertyDialog.functions.addons) {
+					addon[propName] = propValue;
+				}
 				refresh();
 				Dialog.list.addCarPropertyDialog.off();
 			}
