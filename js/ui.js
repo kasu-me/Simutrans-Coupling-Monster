@@ -79,39 +79,50 @@ function refresh() {
 		menuContainer.querySelector("input.mku-drop-menu-checkbox").disabled = menuContainer.querySelectorAll("button:not(:disabled)").length == 0;
 	});
 
-	//todo:アドオンが存在しない場合の処理を考える
-	//車両がなければ以下の処理は行わない
-	if (hasNoAddon) {
-		return;
-	}
-
-	//編集中のアドオンの取得に失敗した場合終了
-	let editingAddon = getEditingAddon();
-	if (editingAddon == undefined) {
-		if (hasNoAddon) {
-			//todo:アドオンが存在しない場合の処理を考える
-			editingAddon = null;
-		} else {
-			editingAddon = masterAddons[0];
-		}
-	}
-
-	//編集中アドオンの画像設定
+	//各種エリアの初期化
 	let mainImageContainer = gebi("main-image-container");
 	mainImageContainer.innerHTML = "";
-	let imageContainer = setAddonPreviewImage(mainImageContainer, editingAddon);
-	imageContainer.addEventListener("click", () => {
-		Dialog.list.editImageDialog.functions.display();
-	});
-
-	//前後の連結設定を表示
 	let areas = {
 		prev: gebi("constraint-prev"),
 		next: gebi("constraint-next"),
 	}
 	areas.prev.innerHTML = "";
 	areas.next.innerHTML = "";
+	let propTable = gebi("main-proptable");
+	propTable.querySelectorAll("tr").forEach((tr, i) => {
+		if (i != 0) {
+			propTable.removeChild(tr);
+		}
+	})
+	let jatabInput = gebi("jatabtable-japanese-name");
+	jatabInput.innerHTML = "";
+	setFooterAddonsList();
 
+	//ダイアログを開いている場合の処理
+	if (Dialog.list.carListDialog.isActive) {
+		Dialog.list.carListDialog.functions.display();
+	}
+
+	//車両がなければ以下の処理は行わない
+	if (hasNoAddon) {
+		gebi("carsSelectBox").innerHTML = "";
+		return;
+	}
+	//車両がなければ以下の処理は行わない
+
+	//編集中のアドオンの取得
+	let editingAddon = getEditingAddon();
+	if (editingAddon == undefined) {
+		editingAddon = masterAddons[0];
+	}
+
+	//編集中アドオンの画像設定
+	let imageContainer = setAddonPreviewImage(mainImageContainer, editingAddon);
+	imageContainer.addEventListener("click", () => {
+		Dialog.list.editImageDialog.functions.display();
+	});
+
+	//前後の連結設定を表示
 	let constraints = editingAddon[CONSTRAINT];
 
 	function setArea(mode) {
@@ -125,7 +136,6 @@ function refresh() {
 	}
 	setArea("prev");
 	setArea("next");
-	setFooterAddonsList();
 	setDragAndDropAddonEvents();
 
 	//選択中のアドオンをハイライト
@@ -138,13 +148,6 @@ function refresh() {
 	});
 
 	//選択中のアドオンのプロパティを表示
-	let propTable = gebi("main-proptable");
-	propTable.querySelectorAll("tr").forEach((tr, i) => {
-		if (i != 0) {
-			propTable.removeChild(tr);
-		}
-	})
-	let jatabInput = gebi("jatabtable-japanese-name");
 	jatabInput.innerHTML = getJapaneseNameFromAddon(editingAddon);
 
 	for (let prop in editingAddon) {
@@ -163,11 +166,6 @@ function refresh() {
 		tr.appendChild(tdVal);
 		tdVal.appendChild(valInput);
 		propTable.appendChild(tr);
-	}
-
-	//ダイアログを開いている場合の処理
-	if (Dialog.list.carListDialog.isActive) {
-		Dialog.list.carListDialog.functions.display();
 	}
 }
 

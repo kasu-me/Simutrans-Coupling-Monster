@@ -430,6 +430,7 @@ window.addEventListener("load", function () {
 			});
 			dropdown.appendChild(button);
 		}
+		input.dispatchEvent(new Event("input"));
 	}
 
 	let propertySuggestionBox = gebi("new-property-property-name-suggestion");
