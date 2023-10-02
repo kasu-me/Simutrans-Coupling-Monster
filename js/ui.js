@@ -155,18 +155,40 @@ function refresh() {
 		let tr = document.createElement("tr");
 		let tdProp = document.createElement("td");
 		let tdVal = document.createElement("td");
+		let tdController = document.createElement("td");
 		let valInput = document.createElement("input");
+		tr.appendChild(tdProp);
+		tr.appendChild(tdVal);
+		tr.appendChild(tdController);
+		tdVal.appendChild(valInput);
+		propTable.appendChild(tr);
 		tdProp.innerHTML = prop;
 		valInput.value = editingAddon[prop];
-		valInput.disabled = prop == "name" || prop == "obj";
+		let isDisabled = prop == "name" || prop == "obj";
+		let isRequiredProperty = prop == "name" || prop == "obj" || prop == "length";
+		valInput.disabled = isDisabled;
+		if (isRequiredProperty) {
+			tdController.innerHTML = "※必須";
+		} else {
+			tdController.innerHTML = `<button class="lsf mku-balloon" mku-balloon-message="プロパティを削除" onclick="deleteProperty('${prop}',this)">delete</button>`;
+		}
 		valInput.addEventListener("input", () => {
 			editingAddon[prop] = valInput.value;
 		});
-		tr.appendChild(tdProp);
-		tr.appendChild(tdVal);
-		tdVal.appendChild(valInput);
-		propTable.appendChild(tr);
 	}
+}
+
+function deleteProperty(propName, evtTargetButton) {
+	let addon = getEditingAddon();
+	Dialog.list.confirmDialog.functions.display(`車両からプロパティ「${propName}」を削除してもよろしいですか？`, () => {
+		delete addon[propName];
+		if (evtTargetButton != undefined) {
+			let tr = evtTargetButton.parentNode.parentNode;
+			let table = tr.parentNode;
+			table.removeChild(tr);
+		}
+		new Message(`プロパティを削除しました。`, ["file-saved"], 3000, true, true);
+	});
 }
 
 //フッタのアドオンリストを表示

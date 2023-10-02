@@ -187,13 +187,28 @@ select#carsSelectBox {
 #constraint-container>div:nth-child(2) #main-proptable-container table td:first-child {
 	text-align: right;
 	font-weight: bold;
+}
+
+#constraint-container>div:nth-child(2) #main-proptable-container table td:first-child,
+#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
 	width: max-content;
 	text-wrap: nowrap;
 }
 
-#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
+#constraint-container>div:nth-child(2) #main-proptable-container table td:nth-child(2) {
 	text-align: left;
 	width: 100%;
+	text-wrap: wrap;
+}
+
+#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
+	color: #f00;
+	font-size: 75%;
+}
+
+#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child button {
+	font-size: 12pt;
+	padding: 1px 8px;
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container table th,

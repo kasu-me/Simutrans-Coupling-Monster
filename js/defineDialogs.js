@@ -338,7 +338,7 @@ window.addEventListener("load", function () {
 		</table>
 	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
 		addon: null,
-		display: function () {
+		display: function (propName) {
 			Dialog.list.addCarPropertyDialog.functions.addon = getEditingAddon();
 			document.querySelectorAll("#addCarPropertyDialog input").forEach(input => {
 				input.value = "";
@@ -348,6 +348,10 @@ window.addEventListener("load", function () {
 			valueSuggestionBox.classList.add("unavailable");
 			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両にプロパティを追加";
 			gebi("new-property-confirm").innerHTML = `追加`;
+			if (propName != undefined) {
+				gebi("new-property-property-name").value = propName;
+				gebi("new-property-property-name").dispatchEvent(new Event("input"));
+			}
 			Dialog.list.addCarPropertyDialog.on();
 		},
 		addProperty: function () {
