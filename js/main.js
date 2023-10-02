@@ -141,6 +141,8 @@ function deleteCarFromMasterByName(addonName) {
 }
 function deleteCarFromMasterById(id) {
 	masterAddons.splice(id, 1);
+	//削除した際、連結プレビューの連結も解除する
+	Dialog.list.couplingPreviewDialog.functions.currentFormation = [];
 }
 
 //datファイルからマスタアドオンに読み込み
