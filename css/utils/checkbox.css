@@ -1,0 +1,57 @@
+:root {
+	--mku-checkbox-height: 1.5em;
+	--mku-checkbox-width: calc(var(--mku-checkbox-height) * 1.625);
+	--mku-checkbox-button-padding: 2px;
+	--mku-checkbox-button-width: calc(var(--mku-checkbox-height) - var(--mku-checkbox-button-padding) * 2);
+}
+
+.mku-checkbox-container {
+	display: inline-block;
+	position: relative;
+	width: var(--mku-checkbox-width);
+	height: var(--mku-checkbox-height);
+	border-radius: calc(var(--mku-checkbox-height) / 2);
+	overflow: hidden;
+	cursor: pointer;
+	background: #c4c4c4;
+	transition: 100ms ease-out 0s all;
+	vertical-align: bottom;
+	margin-right: 0.25em;
+}
+
+.mku-checkbox-container input[type="checkbox"] {
+	display: none;
+}
+
+.mku-checkbox-container:after {
+	content: "";
+	position: absolute;
+	top: var(--mku-checkbox-button-padding);
+	left: var(--mku-checkbox-button-padding);
+	width: var(--mku-checkbox-button-width);
+	height: var(--mku-checkbox-button-width);
+	display: block;
+	border-radius: 100%;
+	background: #fff;
+	transition: 100ms ease-out 0s all;
+}
+
+.mku-checkbox-container:has(input[type="checkbox"]:checked) {
+	background: #00cd33;
+}
+
+.mku-checkbox-container:has(input[type="checkbox"]:checked):after {
+	transform: translateX(calc(var(--mku-checkbox-width) - var(--mku-checkbox-button-padding) * 2 - var(--mku-checkbox-button-width)));
+}
+
+.mku-checkbox-container:has(input[type="checkbox"]:disabled) {
+	pointer-events: none;
+}
+
+.mku-checkbox-container:has(input[type="checkbox"]:disabled:checked) {
+	background: #92c69f;
+}
+
+.mku-checkbox-container:has(input[type="checkbox"]:disabled):after {
+	opacity: 0.5;
+}

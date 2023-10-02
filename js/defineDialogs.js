@@ -16,7 +16,7 @@ window.addEventListener("load", function () {
 	`, [], {}, true);
 
 
-	new Dialog("addCarDialog", "車両を追加", `
+	new Dialog("addCarDialog", "車両を追加：基本情報の入力", `
 		<table class="input-area">
 			<tr>
 				<td>
@@ -46,7 +46,7 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<input id="new-car-img-file" type="file" accept=".png">
-	`, [{ "content": "作成", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarDialog.off();`, "icon": "close" }], {
+	`, [{ "content": "プロパティ入力へ進む", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarDialog.off();`, "icon": "close" }], {
 		display: function () {
 			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
 			gebi("new-car-img-file-name-preview").innerText = "ファイルを選択してください";
@@ -68,6 +68,7 @@ window.addEventListener("load", function () {
 					addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value);
 					refresh();
 					Dialog.list.addCarDialog.off();
+					Dialog.list.addCarPropertyDialog.functions.display();
 					let selectBox = gebi("carsSelectBox")
 					selectBox.selectedIndex = selectBox.length - 1;
 					selectBox.dispatchEvent(new Event("change"));
@@ -340,6 +341,7 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<div style="font-size:75%;color: #777;margin-top:0.5em;">※既に存在するプロパティは上書きされます</div>
+		<div style="margin-top:0.5em;"><label for="continuously-add-property" class="mku-checkbox-container"><input id="continuously-add-property" type="checkbox" checked="" onchange=""></label><label for="continuously-add-property">連続でプロパティを追加</label></div>
 	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
 		addons: [],
 		addon: null,
@@ -374,7 +376,11 @@ window.addEventListener("load", function () {
 					addon[propName] = propValue;
 				}
 				refresh();
-				Dialog.list.addCarPropertyDialog.off();
+				if (gebi("continuously-add-property").checked) {
+					Dialog.list.addCarPropertyDialog.functions.display(Dialog.list.addCarPropertyDialog.functions.addons);
+				} else {
+					Dialog.list.addCarPropertyDialog.off();
+				}
 			}
 		}
 	}, true);
