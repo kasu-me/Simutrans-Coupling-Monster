@@ -85,16 +85,6 @@ function getImageNameAndPositionsFromAddonByDirection(addon, direction) {
 	return addon[`${EMPTYIMAGE}[${direction}]`].split(".");
 }
 
-
-//マスタアドオンに空の車両を追加
-function addEmptyCarToAddon(master) {
-	master.push({});
-	master.at(-1)[CONSTRAINT] = {
-		prev: new Set(),
-		next: new Set()
-	};
-}
-
 function addImageFileNameToMasterFromDat(propName, val) {
 	imageFileNames.add(val.split(".")[0]);
 	//内包表記的なやつの場合
@@ -105,6 +95,15 @@ function addImageFileNameToMasterFromDat(propName, val) {
 		return false;
 	}
 	return true;
+}
+
+//マスタアドオンに空の車両を追加
+function addEmptyCarToAddon(master) {
+	master.push({});
+	master.at(-1)[CONSTRAINT] = {
+		prev: new Set(),
+		next: new Set()
+	};
 }
 
 //マスタアドオンに新規車両を追加
@@ -121,6 +120,27 @@ function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
 
 	setAddonNamesToSelectBox(gebi("carsSelectBox"));
 	setImageNamesToSelectBox(gebi("imageSelectBox"));
+}
+
+//マスタアドオンから車両を削除
+function deleteCarFromMaster(addon) {
+	for (let i in masterAddons) {
+		if (addon.name == masterAddons[i].name) {
+			deleteCarFromMasterById(i);
+			break;
+		}
+	}
+}
+function deleteCarFromMasterByName(addonName) {
+	for (let i in masterAddons) {
+		if (addonName == masterAddons[i].name) {
+			deleteCarFromMasterById(i);
+			break;
+		}
+	}
+}
+function deleteCarFromMasterById(id) {
+	masterAddons.splice(id, 1);
 }
 
 //datファイルからマスタアドオンに読み込み

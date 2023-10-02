@@ -176,12 +176,12 @@ window.addEventListener("load", function () {
 			table.addCell("車両名");
 			table.addCell("日本語名");
 			table.addCell("操作");
-			masterAddons.forEach((addon) => {
+			masterAddons.forEach((addon, i) => {
 				table.addRow();
 				table.addCell(`<input type="checkbox" class="row-selector" value="${addon.name}">`);
 				table.addCell(...reduceText(addon.name, 40));
-				table.addCell(...reduceText(jatab.has(addon) ? jatab.get(addon) : "-", 35));
-				table.addCell(`<button class="lsf">search</button><button class="lsf">delete</button>`);
+				table.addCell(...reduceText(getJapaneseNameFromAddon(addon, "-"), 35));
+				table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="車両を開く" onclick="Dialog.list.carListDialog.functions.open(${i})">search</button><button class="lsf mku-balloon" mku-balloon-message="車両を削除" onclick="Dialog.list.carListDialog.functions.delete(${i})">delete</button>`);
 			});
 			tableContainer.innerHTML = table.generateTable();
 			setTableCheckboxEvents(tableContainer, [gebi("car-list-ikkatsu-sousa")]);
@@ -190,6 +190,18 @@ window.addEventListener("load", function () {
 		},
 		ikkatsuSousa: function () {
 			Dialog.list.ikkatsuSousaDialog.functions.display(Array.from(gebi("car-list-table-container").querySelectorAll(".row-selector:checked")).map(checkbox => getObjectByItsName(masterAddons, checkbox.value)));
+		},
+		open: function (id) {
+			gebi("carsSelectBox").selectedIndex = id;
+			gebi("carsSelectBox").dispatchEvent(new Event("change"));
+			Dialog.list.carListDialog.off();
+		},
+		delete: function (id) {
+			Dialog.list.confirmDialog.functions.display(`車両を削除してもよろしいですか？`, () => {
+				deleteCarFromMasterById(id);
+				refresh();
+				new Message(`車両を削除しました。`, ["file-saved"], 3000, true, true);
+			});
 		}
 	}, true);
 	function reduceText(text, maxChar) {
@@ -291,14 +303,7 @@ window.addEventListener("load", function () {
 		delete: function () {
 			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
 			Dialog.list.confirmDialog.functions.display(`${addons.length}件の車両を削除してもよろしいですか？`, () => {
-				addons.forEach((addon) => {
-					for (let i in masterAddons) {
-						if (addon.name == masterAddons[i].name) {
-							masterAddons.splice(i, 1);
-							break;
-						}
-					}
-				});
+				addons.forEach(deleteCarFromMaster);
 				refresh();
 				Dialog.list.ikkatsuSousaDialog.off();
 				new Message(`${addons.length}件の車両を削除しました。`, ["file-saved"], 3000, true, true);

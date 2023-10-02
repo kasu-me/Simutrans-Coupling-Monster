@@ -34,6 +34,7 @@ window.addEventListener("load", () => {
 		elem.addEventListener("mouseleave", removeBalloon);
 	}
 	document.querySelectorAll(".mku-balloon").forEach(showBalloon);
+	window.addEventListener("click", removeBalloon);
 	window.addEventListener("wheel", removeBalloon);
 	window.addEventListener("scroll", removeBalloon);
 
