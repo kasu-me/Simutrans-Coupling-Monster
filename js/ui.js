@@ -96,6 +96,8 @@ function refresh() {
 	})
 	let jatabInput = gebi("jatabtable-japanese-name");
 	jatabInput.innerHTML = "";
+	jatabInput.removeAttribute("disabled");
+	jatabInput.setAttribute("contenteditable", "plaintext-only");
 	setFooterAddonsList();
 
 	//ダイアログを開いている場合の処理
@@ -105,6 +107,8 @@ function refresh() {
 
 	//車両がない場合の処理
 	if (hasNoAddon) {
+		jatabInput.setAttribute("disabled", "disabled");
+		jatabInput.removeAttribute("contenteditable");
 		gebi("carsSelectBox").innerHTML = "";
 		return;
 	}

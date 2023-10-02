@@ -139,7 +139,7 @@ button:focus,
 button:disabled,
 .button:disabled,
 input:disabled,
-.input-textbox:disabled,
+.input-textbox[disabled],
 select:disabled,
 textarea:disabled {
 	pointer-events: none;
@@ -149,7 +149,7 @@ textarea:disabled {
 }
 
 input:disabled,
-.input-textbox:disabled,
+.input-textbox[disabled],
 select:disabled,
 textarea:disabled {
 	background-color: #e4e4e4;
