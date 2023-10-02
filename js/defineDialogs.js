@@ -290,16 +290,19 @@ window.addEventListener("load", function () {
 		},
 		delete: function () {
 			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
-			addons.forEach((addon) => {
-				for (let i in masterAddons) {
-					if (addon.name == masterAddons[i].name) {
-						masterAddons.splice(i, 1);
-						break;
+			Dialog.list.confirmDialog.functions.display(`${addons.length}件の車両を削除してもよろしいですか？`, () => {
+				addons.forEach((addon) => {
+					for (let i in masterAddons) {
+						if (addon.name == masterAddons[i].name) {
+							masterAddons.splice(i, 1);
+							break;
+						}
 					}
-				}
+				});
+				refresh();
+				Dialog.list.ikkatsuSousaDialog.off();
+				new Message(`${addons.length}件の車両を削除しました。`, ["file-saved"], 3000, true, true);
 			});
-			refresh();
-			Dialog.list.ikkatsuSousaDialog.off();
 		}
 	}, true);
 
