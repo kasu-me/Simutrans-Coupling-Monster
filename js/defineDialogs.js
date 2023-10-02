@@ -317,7 +317,6 @@ window.addEventListener("load", function () {
 
 	new Dialog("addCarPropertyDialog", "車両にプロパティを追加", `
 		<p>対象車両：<span id="adding-new-property-target"></span></p>
-		<p>※既に存在するプロパティは上書きされます</p>
 		<table class="input-area">
 			<tr>
 				<td>
@@ -340,6 +339,7 @@ window.addEventListener("load", function () {
 				</td>
 			</tr>
 		</table>
+		<div style="font-size:75%;color: #777;margin-top:0.5em;">※既に存在するプロパティは上書きされます</div>
 	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
 		addons: [],
 		addon: null,
