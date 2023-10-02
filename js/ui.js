@@ -103,7 +103,7 @@ function refresh() {
 		Dialog.list.carListDialog.functions.display();
 	}
 
-	//車両がなければ以下の処理は行わない
+	//車両がない場合の処理
 	if (hasNoAddon) {
 		gebi("carsSelectBox").innerHTML = "";
 		return;

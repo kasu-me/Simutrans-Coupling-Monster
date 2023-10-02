@@ -193,7 +193,8 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 	function reduceText(text, maxChar) {
-		let result = [text.substr(0, maxChar), { "class": "text-center" }];
+		let result = [text.substr(0, maxChar)];
+		if (text == "-") { result.push({ "class": "text-center" }); }
 		if (text.length > maxChar) {
 			result[0] += "…"
 			result.push({ "class": "mku-balloon", "mku-balloon-message": text })
