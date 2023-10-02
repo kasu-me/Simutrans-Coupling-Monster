@@ -306,11 +306,11 @@ window.addEventListener("load", function () {
 		},
 		delete: function () {
 			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
-			Dialog.list.confirmDialog.functions.display(`${addons.length}件の車両を削除してもよろしいですか？`, () => {
+			Dialog.list.confirmDialog.functions.display(`${addons.length}両の車両を削除してもよろしいですか？`, () => {
 				addons.forEach(deleteCarFromMaster);
 				refresh();
 				Dialog.list.ikkatsuSousaDialog.off();
-				new Message(`${addons.length}件の車両を削除しました。`, ["file-saved"], 3000, true, true);
+				new Message(`${addons.length}両の車両を削除しました。`, ["file-saved"], 3000, true, true);
 			});
 		}
 	}, true);
@@ -375,6 +375,7 @@ window.addEventListener("load", function () {
 				for (let addon of Dialog.list.addCarPropertyDialog.functions.addons) {
 					addon[propName] = propValue;
 				}
+				new Message(`${Dialog.list.addCarPropertyDialog.functions.addons.length}両の車両にプロパティを適用しました。`, ["file-saved"], 3000, true, true);
 				refresh();
 				if (gebi("continuously-add-property").checked) {
 					Dialog.list.addCarPropertyDialog.functions.display(Dialog.list.addCarPropertyDialog.functions.addons);

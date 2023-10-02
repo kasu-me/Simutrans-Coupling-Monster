@@ -431,7 +431,7 @@ function loadAndSetJaTabFile(files) {
 		loader.finish();
 		let message = ``;
 		if (count.length != 0) {
-			message = `${count.reduce((sum, val) => sum + val)}件の車両に日本語名を適用しました。${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
+			message = `${count.reduce((sum, val) => sum + val)}両の車両に日本語名を適用しました。${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
 			new Message(message, ["tab-file-loaded"], 3000, true, true);
 		} else if (notTabFilesCount > 0) {
 			message = `${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
