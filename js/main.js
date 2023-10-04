@@ -129,6 +129,8 @@ function deleteCarFromMaster(addon) {
 			deleteCarFromMasterById(i);
 			break;
 		}
+		masterAddons[i][CONSTRAINT]["prev"].delete(addon);
+		masterAddons[i][CONSTRAINT]["next"].delete(addon);
 	}
 }
 function deleteCarFromMasterByName(addonName) {
