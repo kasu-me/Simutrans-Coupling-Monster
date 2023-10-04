@@ -200,6 +200,8 @@ window.addEventListener("load", function () {
 		delete: function (id) {
 			Dialog.list.confirmDialog.functions.display(`車両を削除してもよろしいですか？`, () => {
 				deleteCarFromMasterById(id);
+				setAddonNamesToSelectBox(gebi("carsSelectBox"));
+				setImageNamesToSelectBox(gebi("imageSelectBox"));
 				refresh();
 				new Message(`車両を削除しました。`, ["file-saved"], 3000, true, true);
 			});
@@ -308,6 +310,8 @@ window.addEventListener("load", function () {
 			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
 			Dialog.list.confirmDialog.functions.display(`${addons.length}両の車両を削除してもよろしいですか？`, () => {
 				addons.forEach(deleteCarFromMaster);
+				setAddonNamesToSelectBox(gebi("carsSelectBox"));
+				setImageNamesToSelectBox(gebi("imageSelectBox"));
 				refresh();
 				Dialog.list.ikkatsuSousaDialog.off();
 				new Message(`${addons.length}両の車両を削除しました。`, ["file-saved"], 3000, true, true);

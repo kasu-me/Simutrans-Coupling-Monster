@@ -127,11 +127,11 @@ function deleteCarFromMaster(addon) {
 	for (let i in masterAddons) {
 		if (addon.name == masterAddons[i].name) {
 			deleteCarFromMasterById(i);
-			break;
 		}
 		masterAddons[i][CONSTRAINT]["prev"].delete(addon);
 		masterAddons[i][CONSTRAINT]["next"].delete(addon);
 	}
+	jatab.delete(addon);
 }
 function deleteCarFromMasterByName(addonName) {
 	for (let i in masterAddons) {
