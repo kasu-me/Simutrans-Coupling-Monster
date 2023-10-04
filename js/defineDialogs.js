@@ -345,7 +345,7 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<div style="font-size:75%;color: #777;margin-top:0.5em;">※既に存在するプロパティは上書きされます</div>
-		<div style="margin-top:0.5em;"><label for="continuously-add-property" class="mku-checkbox-container"><input id="continuously-add-property" type="checkbox" checked="" onchange=""></label><label for="continuously-add-property">連続でプロパティを追加</label></div>
+		<div style="margin-top:0.5em;"><label for="continuously-add-property" class="mku-checkbox-container"><input id="continuously-add-property" type="checkbox" checked="" onchange=""></label><label for="continuously-add-property">連続編集</label></div>
 	`, [{ "content": "追加", "event": `Dialog.list.addCarPropertyDialog.functions.addProperty();`, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": `Dialog.list.addCarPropertyDialog.off();`, "icon": "close" }], {
 		addons: [],
 		addon: null,
