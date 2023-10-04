@@ -182,8 +182,8 @@ function refresh() {
 				let inputValue = valInput.value;
 
 				//アドオン名称重複チェック
-				console.log(getObjectsByItsName(masterAddons, inputValue))
-				if (getObjectsByItsName(masterAddons, inputValue).length > 0) {
+				let duplicatNamedObjects = getObjectsByItsName(masterAddons, inputValue);
+				if (duplicatNamedObjects.length > 1 || (duplicatNamedObjects.length == 1 && duplicatNamedObjects[0] != editingAddon)) {
 					new Message(`重複した名称は登録できません。`, ["file-saved"], 3000, true, true);
 					valInput.classList.add("validation-error");
 					return
