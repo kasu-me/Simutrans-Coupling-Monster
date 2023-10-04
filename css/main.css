@@ -626,7 +626,7 @@ table.row-hover-hilight tr:hover {
 }
 
 #carListDialog #car-list-table-container table tr td:nth-child(3).text-center {
-	text-align: center;
+	text-align: center !important;
 }
 
 #carListDialog #car-list-table-container table tr td:last-child {
@@ -649,7 +649,11 @@ table.row-hover-hilight tr:hover {
 	text-align: center;
 }
 
-#carListDialog #car-list-table-container table tr:not(:nth-child(1)) td {
+#carListDialog #car-list-table-container table tr td:first-child {
+	text-align: center;
+}
+
+#carListDialog #car-list-table-container table tr:not(:nth-child(1)) td:not(:first-child) {
 	text-align: left;
 	white-space: nowrap;
 	overflow: hidden;
