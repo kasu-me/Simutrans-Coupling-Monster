@@ -47,3 +47,57 @@
 	border: 2px solid var(--formation-table-main-border);
 	background-color: #fff !important;
 }
+
+#addons-list.drag-target-candidate {
+	background-color: #ffebeb !important;
+}
+
+#addons-list.drag-target-candidate>* {
+	opacity: 0.3;
+}
+
+#addons-list.drag-target-candidate::before {
+	display: block;
+	position: absolute;
+	top: calc(50% + 58px);
+	left: 50%;
+	color: #f00;
+	transform: translate(-50%, 0);
+	content: 'ここにドロップして連結設定を削除';
+	font-size: 18px;
+	font-weight: bold;
+	opacity: 1;
+	z-index: 2;
+}
+
+#addons-list.drag-target-candidate::after {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	color: #f00;
+	transform: translate(-50%, -50%);
+	content: 'delete';
+	font-size: 128px;
+	font-family: 'LigatureSymbols';
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	-ms-text-rendering: optimizeLegibility;
+	-o-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	-ms-font-smoothing: antialiased;
+	-o-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+	-webkit-font-feature-settings: "liga" 1, "dlig" 1;
+	-moz-font-feature-settings: "liga=1, dlig=1";
+	-ms-font-feature-settings: "liga" 1, "dlig" 1;
+	-o-font-feature-settings: "liga" 1, "dlig" 1;
+	font-feature-settings: "liga" 1, "dlig" 1;
+	font-weight: 100;
+}
+
+#addons-list.drag-target-candidate.drag-target {
+	background-color: #ffacac !important;
+}

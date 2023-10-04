@@ -21,6 +21,9 @@ class Drag {
 				Drag.dragContainer.innerHTML = elem.innerHTML;
 
 				document.body.appendChild(Drag.dragContainer);
+				observedElements.forEach((elem) => {
+					elem.classList.add("drag-target-candidate");
+				});
 
 				let moveMouse = (e) => {
 					let x = e.clientX - offsetX;
@@ -30,6 +33,7 @@ class Drag {
 
 					dragResult.to = -1;
 					observedElements.forEach((elem, i) => {
+						elem.classList.add("drag-target-candidate");
 						elem.classList.remove("drag-target");
 						let elemL = elem.getBoundingClientRect().left;
 						let elemR = elemL + elem.clientWidth;
@@ -50,6 +54,7 @@ class Drag {
 					});
 					observedElements.forEach((elem) => {
 						elem.classList.remove("drag-target");
+						elem.classList.remove("drag-target-candidate");
 					});
 					if (e.clientX == startX && e.clientY == startY) {
 						dragResult.to = -2;
