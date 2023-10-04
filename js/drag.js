@@ -21,9 +21,6 @@ class Drag {
 				Drag.dragContainer.innerHTML = elem.innerHTML;
 
 				document.body.appendChild(Drag.dragContainer);
-				observedElements.forEach((elem) => {
-					elem.classList.add("drag-target-candidate");
-				});
 
 				let moveMouse = (e) => {
 					let x = e.clientX - offsetX;
