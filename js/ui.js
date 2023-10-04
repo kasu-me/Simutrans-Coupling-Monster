@@ -330,9 +330,18 @@ function loadAndSetDatFile(files) {
 		});
 
 		//全車両読み込み完了後、一時的に名前で格納していた連結設定をオブジェクトに変更する
+		let convertConstraintsToObject = (addon, mode) => {
+			addon[CONSTRAINT][mode] = new Set(Array.from(addon[CONSTRAINT][mode]).map(constraint => {
+				if (typeof constraint == "string") {
+					return getObjectByItsName(masterAddons, constraint);
+				} else {
+					return constraint;
+				}
+			}));
+		}
 		masterAddons.forEach((addon) => {
-			addon[CONSTRAINT].prev = new Set(Array.from(addon[CONSTRAINT].prev).map(name => getObjectByItsName(masterAddons, name)));
-			addon[CONSTRAINT].next = new Set(Array.from(addon[CONSTRAINT].next).map(name => getObjectByItsName(masterAddons, name)));
+			convertConstraintsToObject(addon, "prev");
+			convertConstraintsToObject(addon, "next");
 		});
 		setAddonNamesToSelectBox(gebi("carsSelectBox"));
 		setImageNamesToSelectBox(gebi("imageSelectBox"));

@@ -153,18 +153,14 @@ function loadDatFile(file) {
 			readFile(file, resolve, reject);
 		}).then((dat) => {
 			let tmpAddons = [];
-			let tmpConstraints = {};
 			dat = dat.replace(/-{3,}/g, "---");
 			let vehicles = dat.split("---").filter(data => data != "");
 			for (let i in vehicles) {
-				//連結設定 あとでオブジェクトに変換するが、現時点では名前を格納する
-				let tmpConstraint = { next: new Set(), prev: new Set() };
-
 				//空白アドオンスキップ
 				if (vehicles[i].trim() == "") { continue }
 				addEmptyCarToAddon(tmpAddons);
 				let lines = vehicles[i].split("\n");
-				let isJatabExists = false;
+				let isAddonExists = false;
 				let oldAddon = {};
 				for (let j in lines) {
 					let line = lines[j];
@@ -177,12 +173,12 @@ function loadDatFile(file) {
 					let [prop, val] = line.split("=");
 					let propName = prop.toLowerCase();
 
-					//あとで使うためのデータ処理
+					//名称指定の場合かつ、同名の車両が既に存在する場合、あとで使うためのデータ処理
 					if (propName == "name" && getObjectsByItsName(masterAddons, val).length > 0) {
-						//jatabにレタッチしなおすため、オブジェクトを記録
-						isJatabExists = true;
+						//jatabおよび連結設定をレタッチしなおすため、オブジェクトを記録
+						isAddonExists = true;
 						oldAddon = getObjectByItsName(masterAddons, val);
-						//名称指定の場合かつ、同名の車両が既に存在する場合、上書きするため、既存のアドオンを削除する
+						//上書きするため、既存のアドオンを削除する
 						masterAddons = masterAddons.filter(x => x.name != val);
 					}
 					if (propName.startsWith(EMPTYIMAGE)) {
@@ -208,13 +204,24 @@ function loadDatFile(file) {
 				//名前が存在しない場合、または乗り物でない場合、lengthが指定されていない場合、アドオンを追加しない
 				if (tmpAddons.at(-1)["name"] == undefined || tmpAddons.at(-1)["obj"] == undefined || tmpAddons.at(-1)["obj"].toLowerCase() != "vehicle" || tmpAddons.at(-1)["length"] == undefined) {
 					tmpAddons.pop();
-				} else {
-					tmpConstraints[tmpAddons.at(-1)["name"]] = tmpConstraint;
 				}
 				//jatabの読み込みなおし
-				if (isJatabExists && jatab.has(oldAddon)) {
+				if (isAddonExists && jatab.has(oldAddon)) {
 					jatab.set(tmpAddons.at(-1), jatab.get(oldAddon));
 					jatab.delete(oldAddon);
+				}
+				//連結設定のやりなおし
+				if (isAddonExists) {
+					let checkAddon = (addon, mode) => {
+						if (addon[CONSTRAINT][mode].has(oldAddon)) {
+							addon[CONSTRAINT][mode].delete(oldAddon);
+							addon[CONSTRAINT][mode].add(tmpAddons.at(-1));
+						}
+					}
+					masterAddons.forEach((addon) => {
+						checkAddon(addon, "prev");
+						checkAddon(addon, "next");
+					});
 				}
 
 			}
