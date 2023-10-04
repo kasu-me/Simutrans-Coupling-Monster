@@ -133,7 +133,7 @@ function refresh() {
 		if (constraints[mode] != undefined) {
 			constraints[mode].forEach((constraint) => {
 				if (constraint != "none") {
-					setAddonPreviewBox(areas[mode], document.createElement("li"), getObjectByItsName(masterAddons, constraint));
+					setAddonPreviewBox(areas[mode], document.createElement("li"), constraint);
 				}
 			});
 		}
@@ -252,8 +252,8 @@ function setDragAndDropAddonEvents() {
 			let fromAddon = getObjectByItsName(masterAddons, fromName);
 			if (constraintViews[dragResult.to].classList.contains("constraint-view")) {
 				//prevまたはnextにドロップされた場合、連結設定に追加
-				targetAddon[CONSTRAINT][constraintViews[dragResult.to].id == "constraint-prev-container" ? "prev" : "next"].add(fromName);
-				fromAddon[CONSTRAINT][constraintViews[dragResult.to].id != "constraint-prev-container" ? "prev" : "next"].add(targetName);
+				targetAddon[CONSTRAINT][constraintViews[dragResult.to].id == "constraint-prev-container" ? "prev" : "next"].add(fromAddon);
+				fromAddon[CONSTRAINT][constraintViews[dragResult.to].id != "constraint-prev-container" ? "prev" : "next"].add(targetAddon);
 			} else {
 				//真ん中にドロップされた場合、選択を切り替え
 				changeSelect(dragResult.me.dataset.addonName);
@@ -271,8 +271,8 @@ function setDragAndDropAddonEvents() {
 			let targetName = targetAddon.name;
 			let fromName = dragResult.me.dataset.addonName;
 			let fromAddon = getObjectByItsName(masterAddons, fromName);
-			targetAddon[CONSTRAINT][dragResult.me.parentNode.parentNode.id == "constraint-prev-container" ? "prev" : "next"].delete(fromName);
-			fromAddon[CONSTRAINT][dragResult.me.parentNode.parentNode.id != "constraint-prev-container" ? "prev" : "next"].delete(targetName);
+			targetAddon[CONSTRAINT][dragResult.me.parentNode.parentNode.id == "constraint-prev-container" ? "prev" : "next"].delete(fromAddon);
+			fromAddon[CONSTRAINT][dragResult.me.parentNode.parentNode.id != "constraint-prev-container" ? "prev" : "next"].delete(targetAddon);
 			refresh();
 		} else if (dragResult.to == -2) {
 			changeSelect(dragResult.me.dataset.addonName);
@@ -315,8 +315,22 @@ function loadAndSetDatFile(files) {
 	}
 	loader.start();
 	//全DAT読み込み完了後
-	Promise.all(promises).then(() => {
+	Promise.all(promises).then((results) => {
 		loader.finish();
+
+		//読み込み結果のマスタ投入
+		results.forEach((result) => {
+			masterAddons.push(...result);
+		});
+
+		//全車両読み込み完了後、一時的に名前で格納していた連結設定をオブジェクトに変更する
+		masterAddons.forEach((addon) => {
+			addon[CONSTRAINT].prev = new Set(Array.from(addon[CONSTRAINT].prev).map(name => getObjectByItsName(masterAddons, name)));
+			addon[CONSTRAINT].next = new Set(Array.from(addon[CONSTRAINT].next).map(name => getObjectByItsName(masterAddons, name)));
+		});
+		setAddonNamesToSelectBox(gebi("carsSelectBox"));
+		setImageNamesToSelectBox(gebi("imageSelectBox"));
+	}).then(() => {
 		let message = ``;
 		if (promises.length == 0) {
 			//datファイルが1件もなかった場合

@@ -740,7 +740,7 @@ window.addEventListener("load", function () {
 			} else {
 				let candidateAddonsCount = 0;
 				masterAddons.forEach((addon) => {
-					if (addon[CONSTRAINT]["prev"].has(formation.at(-1).name) || (addon[CONSTRAINT]["prev"].size == 0 && formation.at(-1)[CONSTRAINT]["next"].size == 0)) {
+					if (addon[CONSTRAINT]["prev"].has(formation.at(-1)) || (addon[CONSTRAINT]["prev"].size == 0 && formation.at(-1)[CONSTRAINT]["next"].size == 0)) {
 						addImagePreview(candidateArea, formation, addon);
 						candidateAddonsCount++;
 					}

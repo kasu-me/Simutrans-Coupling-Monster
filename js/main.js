@@ -152,12 +152,17 @@ function loadDatFile(file) {
 		new Promise((resolve, reject) => {
 			readFile(file, resolve, reject);
 		}).then((dat) => {
+			let tmpAddons = [];
+			let tmpConstraints = {};
 			dat = dat.replace(/-{3,}/g, "---");
 			let vehicles = dat.split("---").filter(data => data != "");
 			for (let i in vehicles) {
+				//連結設定 あとでオブジェクトに変換するが、現時点では名前を格納する
+				let tmpConstraint = { next: new Set(), prev: new Set() };
+
 				//空白アドオンスキップ
 				if (vehicles[i].trim() == "") { continue }
-				addEmptyCarToAddon(masterAddons);
+				addEmptyCarToAddon(tmpAddons);
 				let lines = vehicles[i].split("\n");
 				let isJatabExists = false;
 				let oldAddon = {};
@@ -167,8 +172,12 @@ function loadDatFile(file) {
 					if (line.trim() == "") { continue }
 					//コメント行スキップ
 					if (line.trim().startsWith("#")) { continue }
+
+					//プロパティ整形
 					let [prop, val] = line.split("=");
 					let propName = prop.toLowerCase();
+
+					//あとで使うためのデータ処理
 					if (propName == "name" && getObjectsByItsName(masterAddons, val).length > 0) {
 						//jatabにレタッチしなおすため、オブジェクトを記録
 						isJatabExists = true;
@@ -182,31 +191,35 @@ function loadDatFile(file) {
 							continue;
 						}
 					}
+
+					//プロパティ投入
 					if (propName.startsWith(CONSTRAINT)) {
 						//連結設定の場合
 						let mode = propName.startsWith(`${CONSTRAINT}[prev]`) ? "prev" : "next";
-						masterAddons.at(-1)[CONSTRAINT][mode].add(val);
+						tmpAddons.at(-1)[CONSTRAINT][mode].add(val);
 						continue;
 					} else {
-						masterAddons.at(-1)[prop.toLowerCase()] = val;
+						//連結設定以外の場合
+						tmpAddons.at(-1)[prop.toLowerCase()] = val;
 						continue;
 					}
 				}
 				//全プロパティ読み込み完了後
 				//名前が存在しない場合、または乗り物でない場合、lengthが指定されていない場合、アドオンを追加しない
-				if (masterAddons.at(-1)["name"] == undefined || masterAddons.at(-1)["obj"] == undefined || masterAddons.at(-1)["obj"].toLowerCase() != "vehicle" || masterAddons.at(-1)["length"] == undefined) {
-					masterAddons.pop();
+				if (tmpAddons.at(-1)["name"] == undefined || tmpAddons.at(-1)["obj"] == undefined || tmpAddons.at(-1)["obj"].toLowerCase() != "vehicle" || tmpAddons.at(-1)["length"] == undefined) {
+					tmpAddons.pop();
+				} else {
+					tmpConstraints[tmpAddons.at(-1)["name"]] = tmpConstraint;
 				}
 				//jatabの読み込みなおし
 				if (isJatabExists && jatab.has(oldAddon)) {
-					jatab.set(masterAddons.at(-1), jatab.get(oldAddon));
+					jatab.set(tmpAddons.at(-1), jatab.get(oldAddon));
 					jatab.delete(oldAddon);
 				}
+
 			}
 
-			setAddonNamesToSelectBox(gebi("carsSelectBox"));
-			setImageNamesToSelectBox(gebi("imageSelectBox"));
-			resolve();
+			resolve(tmpAddons);
 		});
 	});
 }
@@ -255,7 +268,7 @@ function writeDat() {
 				for (let mode in addon[prop]) {
 					let constraints = Array.from(addon[prop][mode]);
 					constraints.forEach((constraint, i) => {
-						datConstraints += `${prop}[${mode}][${i}]=${constraint}\n`;
+						datConstraints += `${prop}[${mode}][${i}]=${constraint.name}\n`;
 					})
 				}
 			} else {
