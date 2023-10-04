@@ -343,6 +343,8 @@ function loadAndSetDatFile(files) {
 			convertConstraintsToObject(addon, "prev");
 			convertConstraintsToObject(addon, "next");
 		});
+
+		//セレクトボックス更新
 		setAddonNamesToSelectBox(gebi("carsSelectBox"));
 		setImageNamesToSelectBox(gebi("imageSelectBox"));
 	}).then(() => {
@@ -370,7 +372,6 @@ function loadAndSetDatFile(files) {
 							if (notFoundImages.length > 0) {
 								//画像が不足していれば画像読み込み画面に移動し不足している画像を選択状態にする
 								resolve([0, notFoundImages[0]]);
-								//
 							} else {
 								//画像が不足していなければ画像読み込み画面に移動せずメイン画面を表示
 								resolve([-1, -2]);
