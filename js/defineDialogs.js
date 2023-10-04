@@ -737,7 +737,7 @@ window.addEventListener("load", function () {
 				currentArea.appendChild(dummyOuter);
 
 				masterAddons.forEach((addon) => {
-					if (addon[CONSTRAINT]["prev"].size == 0 || (addon[CONSTRAINT]["prev"].size == 1 && [...addon[CONSTRAINT]["prev"].keys()][0] == "none")) {
+					if (addon[CONSTRAINT]["prev"].size == 0 || (addon[CONSTRAINT]["prev"].size == 1 && [...addon[CONSTRAINT]["prev"].keys()][0] == ADDON_NONE)) {
 						addImagePreview(candidateArea, formation, addon);
 					}
 				});
