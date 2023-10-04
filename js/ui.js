@@ -168,7 +168,7 @@ function refresh() {
 		propTable.appendChild(tr);
 		tdProp.innerHTML = prop;
 		valInput.value = editingAddon[prop];
-		let isDisabled = prop == "name" || prop == "obj";
+		let isDisabled = prop == "obj";
 		let isRequiredProperty = prop == "name" || prop == "obj" || prop == "length";
 		valInput.disabled = isDisabled;
 		if (isRequiredProperty) {
@@ -178,6 +178,12 @@ function refresh() {
 		}
 		valInput.addEventListener("input", () => {
 			editingAddon[prop] = valInput.value;
+			if (prop == "name") {
+				let selectBox = gebi("carsSelectBox");
+				let selectedIndex = selectBox.selectedIndex;
+				setAddonNamesToSelectBox(selectBox);
+				selectBox.selectedIndex = selectedIndex;
+			}
 		});
 	}
 }
