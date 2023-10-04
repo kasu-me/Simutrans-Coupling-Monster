@@ -176,15 +176,33 @@ function refresh() {
 		} else {
 			tdController.innerHTML = `<button class="lsf mku-balloon" mku-balloon-message="プロパティを削除" onclick="deleteProperty('${prop}',this)">delete</button>`;
 		}
-		valInput.addEventListener("input", () => {
-			editingAddon[prop] = valInput.value;
-			if (prop == "name") {
+		//name属性の変更の場合
+		if (prop == "name") {
+			valInput.addEventListener("input", () => {
+				let inputValue = valInput.value;
+
+				//アドオン名称重複チェック
+				console.log(getObjectsByItsName(masterAddons, inputValue))
+				if (getObjectsByItsName(masterAddons, inputValue).length > 0) {
+					new Message(`重複した名称は登録できません。`, ["file-saved"], 3000, true, true);
+					valInput.classList.add("validation-error");
+					return
+				}
+				valInput.classList.remove("validation-error");
+				editingAddon[prop] = inputValue;
+
+				//セレクトボックスを設定し直す
 				let selectBox = gebi("carsSelectBox");
 				let selectedIndex = selectBox.selectedIndex;
 				setAddonNamesToSelectBox(selectBox);
 				selectBox.selectedIndex = selectedIndex;
-			}
-		});
+			});
+		} else {
+			valInput.addEventListener("input", () => {
+				let inputValue = valInput.value;
+				editingAddon[prop] = inputValue;
+			});
+		}
 	}
 }
 
