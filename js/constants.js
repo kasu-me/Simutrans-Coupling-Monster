@@ -16,6 +16,8 @@ const NOIMAGE_IMGFILEPATH = "./img/noimage.png";
 const NOIMAGE = new Image();
 NOIMAGE.src = NOIMAGE_IMGFILEPATH;
 NOIMAGE.classList.add("noimage");
+//空のアドオン
+const ADDON_NONE = { name: "none" };
 //datファイル定型句
 const CONSTRAINT = "constraint";
 const EMPTYIMAGE = "emptyimage";

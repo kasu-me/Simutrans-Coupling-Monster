@@ -132,7 +132,7 @@ function refresh() {
 	function setArea(mode) {
 		if (constraints[mode] != undefined) {
 			constraints[mode].forEach((constraint) => {
-				if (constraint != "none") {
+				if (constraint.name != "none") {
 					setAddonPreviewBox(areas[mode], document.createElement("li"), constraint);
 				}
 			});
@@ -351,7 +351,11 @@ function loadAndSetDatFile(files) {
 		let convertConstraintsToObject = (addon, mode) => {
 			addon[CONSTRAINT][mode] = new Set(Array.from(addon[CONSTRAINT][mode]).map(constraint => {
 				if (typeof constraint == "string") {
-					return getObjectByItsName(masterAddons, constraint);
+					if (constraint == "none") {
+						return ADDON_NONE;
+					} else {
+						return getObjectByItsName(masterAddons, constraint);
+					}
 				} else {
 					return constraint;
 				}
