@@ -382,6 +382,7 @@ window.addEventListener("load", function () {
 				checkbox.setAttribute("type", "checkbox");
 				checkbox.checked = true;
 				checkbox.id = `copy-prop-chkbox-${prop}`;
+				checkbox.value = prop;
 				checkbox.disabled = prop == "name" || prop == "obj";
 				let span = document.createElement("span");
 				span.innerHTML = prop;
@@ -399,7 +400,7 @@ window.addEventListener("load", function () {
 
 			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
 
-			convertRegExp(inputs);
+			generateRegExp(inputs);
 
 			let ul = gebi("copy-preview-addon-names-list");
 			ul.innerHTML = "";
@@ -414,11 +415,12 @@ window.addEventListener("load", function () {
 			let addons = Array.from(Dialog.list.ikkatsuSousaDialog.functions.addons);
 
 			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
-
-			convertRegExp(inputs);
+			generateRegExp(inputs);
 
 			let tmpAddons = [];
 			let failueCount = 0;
+
+			let copyProperties = Array.from(document.querySelectorAll("#copy-taishou-properties input:checked")).map(input => input.value);
 
 			//連結設定を名前のSetに設定しなおす関数
 			let setCopiedAddonToConstraint = (addon, newAddon, mode) => {
@@ -442,7 +444,9 @@ window.addEventListener("load", function () {
 							setCopiedAddonToConstraint(addon, newAddon, "prev");
 							setCopiedAddonToConstraint(addon, newAddon, "next");
 						} else {
-							newAddon[prop] = addon[prop];
+							if (copyProperties.indexOf(prop) != -1) {
+								newAddon[prop] = addon[prop];
+							}
 						}
 					}
 					newAddon.name = newName;
@@ -481,7 +485,7 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 	//正規表現を解釈し、解釈の成否によって挙動を調整する
-	function convertRegExp(patInputs) {
+	function generateRegExp(patInputs) {
 		if (patInputs[0] != "") {
 			//正規表現を解釈
 			try {
