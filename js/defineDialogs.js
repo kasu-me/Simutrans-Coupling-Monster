@@ -436,8 +436,8 @@ window.addEventListener("load", function () {
 
 			addons.forEach((addon) => {
 				let newName = addon.name.replace(...inputs);
-				//名称重複チェック
-				if (getObjectsByItsName(masterAddons, newName).length == 0) {
+				//名称重複および空文字チェック
+				if (getObjectsByItsName(masterAddons, newName).length == 0 && newName.trim() != "") {
 					//複製を実施
 					let newAddon = {};
 					for (let prop in addon) {
