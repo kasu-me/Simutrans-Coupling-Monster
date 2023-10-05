@@ -693,33 +693,49 @@ window.addEventListener("load", function () {
 	gebi("new-property-property-name").addEventListener("input", () => {
 		let addon = Dialog.list.addCarPropertyDialog.functions.addon;
 		let addons = Dialog.list.addCarPropertyDialog.functions.addons;
-		let value = gebi("new-property-property-name").value;
+		let propInput = gebi("new-property-property-name");
+		let propInputValue = propInput.value.toLowerCase();
 
-		//既に当該車両に存在するプロパティの場合
-		if (addons.length == 1) {
-			if (addon[value] != undefined) {
-				//値を投入
-				gebi("new-property-property-value").value = addon[value];
+		let confirmButton = gebi("new-property-confirm");
+		let valueInput = gebi("new-property-property-value");
 
-				//警告を表示
-				gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両のプロパティを上書き";
-				gebi("new-property-confirm").innerHTML = `上書き`;
-			} else {
-				gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両にプロパティを追加";
-				gebi("new-property-confirm").innerHTML = `追加`;
-			}
+		//name,obj,constraint,emptyimageは書き込み禁止
+		let isDisabled = (propInputValue == "name" || propInputValue == "obj" || propInputValue.startsWith(EMPTYIMAGE) || propInputValue == CONSTRAINT);
+		confirmButton.disabled = isDisabled;
+		valueInput.disabled = isDisabled;
+		if (isDisabled) {
+			propInput.classList.add("validation-error");
+			//警告を表示
+			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = `${propInputValue}は変更できません`;
 		} else {
-			gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = `車両にプロパティを一括投入`;
-			gebi("new-property-confirm").innerHTML = `投入`;
+			propInput.classList.remove("validation-error");
+			//既に当該車両に存在するプロパティの場合
+			if (addons.length == 1) {
+				if (addon[propInputValue] != undefined) {
+					//値を投入
+					valueInput.value = addon[propInputValue];
+
+					//警告を表示
+					gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両のプロパティを上書き";
+					confirmButton.innerHTML = `上書き`;
+				} else {
+					gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = "車両にプロパティを追加";
+					confirmButton.innerHTML = `追加`;
+				}
+			} else {
+				gebi("addCarPropertyDialog").querySelector(".dialog-title").innerHTML = `車両にプロパティを一括投入`;
+				confirmButton.innerHTML = `投入`;
+			}
 		}
 
 		//サジェストが存在する場合はサジェストをセット
-		if (formulaicPhraseForDat.hasOwnProperty(value)) {
-			setDatasetToSuggestionBox(gebi("new-property-property-value"), valueSuggestionBox, formulaicPhraseForDat[value]);
+		if (formulaicPhraseForDat.hasOwnProperty(propInputValue)) {
+			setDatasetToSuggestionBox(valueInput, valueSuggestionBox, formulaicPhraseForDat[propInputValue]);
 			valueSuggestionBox.classList.remove("unavailable");
 		} else {
 			valueSuggestionBox.classList.add("unavailable");
 		}
+
 	});
 
 

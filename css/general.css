@@ -105,6 +105,16 @@ select:focus {
 	box-shadow: 0 0 5px var(--input-focus);
 }
 
+input.validation-error,
+input.validation-error:not([type="range"]):not([type="checkbox"]):focus {
+	background-color: #ffebeb;
+	border-color: #f00 !important;
+}
+
+input.validation-error:focus {
+	box-shadow: 0 0 5px #ffacac !important;
+}
+
 /* セレクトボックス */
 select {
 	cursor: pointer;
