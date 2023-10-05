@@ -293,6 +293,7 @@ window.addEventListener("load", function () {
 	new Dialog("ikkatsuSousaDialog", "<span id='ikkatsu-car-count'></span>両の車両に一括操作", `
 		<ul class="dialog-buttons-list">
 			<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.editProp()" class="lsf-icon dialog-main-button" icon="pen">プロパティ投入</button></li>
+			<li><button onclick="Dialog.list.copyCarDialog.functions.display()" class="lsf-icon dialog-main-button" icon="tabs">車両コピー</button></li>
 			<!--<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.editProp()" class="lsf-icon dialog-main-button" icon="sync">プロパティ置換</button></li>-->
 			<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.delete()" class="lsf-icon dialog-main-button" icon="delete">削除</button></li>
 		</ul>
@@ -318,6 +319,188 @@ window.addEventListener("load", function () {
 			});
 		}
 	}, true);
+
+	new Dialog("copyCarDialog", "<span id='ikkatsu-copy-car-count'></span>両の車両をコピー", `
+
+	<div class="properties-container">
+		<div>
+			対象プロパティ
+		</div>
+		<div id="copy-taishou-properties">
+		</div>
+	</div>
+	<div class="list-container">
+		<div>
+			<input id="copy-replace-pattern" placeholder="検索(正規表現可)">
+		</div>
+		<div>
+			→
+		</div>
+		<div>
+			<input id="copy-replace-replacement" placeholder="置換">
+		</div>
+	</div>
+	<div class="list-container" id="copy-addon-names-list-container">
+		<div id="copy-origin-addon-names">
+			<ul id="copy-origin-addon-names-list"></ul>
+		</div>
+		<div>
+			→
+		</div>
+		<div id="copy-preview-addon-names">
+			<ul id="copy-preview-addon-names-list"></ul>
+		</div>
+	</div>
+
+	`, [{ "content": "コピー", "event": `Dialog.list.copyCarDialog.functions.copy();`, "icon": "tabs" }, { "content": "閉じる", "event": `Dialog.list.copyCarDialog.off();`, "icon": "close" }], {
+		display: function () {
+			//対象アドオン
+			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
+
+			//対象プロパティ
+			let properties = new Set();
+
+			let ul = gebi("copy-origin-addon-names-list");
+			ul.innerHTML = "";
+			addons.forEach((addon) => {
+				let li = document.createElement("li");
+				li.innerText = addon.name;
+				ul.appendChild(li);
+				for (let prop in addon) {
+					if (prop != CONSTRAINT) {
+						properties.add(prop);
+					}
+				}
+			});
+
+			let propCheckboxArea = gebi("copy-taishou-properties");
+			propCheckboxArea.innerHTML = "";
+			properties.forEach((prop) => {
+				let label = document.createElement("label");
+				label.setAttribute("for", `copy-prop-chkbox-${prop}`);
+				let checkbox = document.createElement("input");
+				checkbox.setAttribute("type", "checkbox");
+				checkbox.checked = true;
+				checkbox.id = `copy-prop-chkbox-${prop}`;
+				checkbox.disabled = prop == "name" || prop == "obj";
+				let span = document.createElement("span");
+				span.innerHTML = prop;
+				label.appendChild(checkbox);
+				label.appendChild(span);
+				propCheckboxArea.appendChild(label);
+			});
+			gebi("ikkatsu-copy-car-count").innerText = addons.length;
+
+			Dialog.list.copyCarDialog.functions.refresh();
+			Dialog.list.copyCarDialog.on();
+		},
+		refresh: function () {
+			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
+
+			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
+
+			let pattern = getRegExp(inputs);
+
+			let ul = gebi("copy-preview-addon-names-list");
+			ul.innerHTML = "";
+			addons.forEach((addon) => {
+				let li = document.createElement("li");
+				li.innerText = addon.name.replace(pattern, inputs[1]);
+				ul.appendChild(li);
+			});
+		},
+		copy: function () {
+			let addons = Array.from(Dialog.list.ikkatsuSousaDialog.functions.addons);
+
+			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
+
+			let pattern = getRegExp(inputs);
+
+			let tmpAddons = [];
+			let failueCount = 0;
+
+			let setCopiedAddonToConstraint = (addon, newAddon, mode) => {
+				let constraints = addon[CONSTRAINT][mode];
+
+				newAddon[CONSTRAINT][mode] = new Set();
+				constraints.forEach((constraint) => {
+					newAddon[CONSTRAINT][mode].add(constraint.name);
+				});
+			}
+
+			addons.forEach((addon) => {
+				let newName = addon.name.replace(pattern, inputs[1]);
+				//名称重複チェック
+				if (getObjectsByItsName(masterAddons, newName).length == 0) {
+					//複製を実施
+					let newAddon = {};
+					for (let prop in addon) {
+						//連結設定を設定しなおし
+						if (prop == CONSTRAINT) {
+							newAddon[CONSTRAINT] = {};
+							setCopiedAddonToConstraint(addon, newAddon, "prev");
+							setCopiedAddonToConstraint(addon, newAddon, "next");
+						} else {
+							newAddon[prop] = addon[prop];
+						}
+					}
+					newAddon.name = newName;
+					tmpAddons.push(newAddon);
+					//候補リストから削除
+					let addonIndex = Dialog.list.ikkatsuSousaDialog.functions.addons.indexOf(addon);
+					Dialog.list.ikkatsuSousaDialog.functions.addons.splice(addonIndex, 1);
+				} else {
+					failueCount++;
+				}
+			});
+
+			masterAddons.push(...tmpAddons);
+
+			masterAddons.forEach((addon) => {
+				convertConstraintsToObject(addon, "prev", [pattern, inputs[1]]);
+				convertConstraintsToObject(addon, "next", [pattern, inputs[1]]);
+			});
+
+			setAddonNamesToSelectBox(gebi("carsSelectBox"));
+			refresh();
+
+			if (failueCount == 0) {
+				Dialog.list.ikkatsuSousaDialog.off();
+				Dialog.list.copyCarDialog.off();
+			} else {
+				gebi("ikkatsu-car-count").innerText = Dialog.list.ikkatsuSousaDialog.functions.addons.length;
+				Dialog.list.copyCarDialog.functions.display();
+			}
+
+			new Message(`${addons.length - failueCount}両の車両をコピーしました。${failueCount > 0 ? `${failueCount}両の車両はコピーできませんでした。` : ""}`, ["file-saved"], 3000, true, true);
+		}
+	}, true);
+	function getRegExp(patInputs) {
+		if (patInputs[0] != "") {
+			//正規表現を解釈
+			try {
+				return new RegExp(patInputs[0], "g");
+			} catch (e) {
+				//正規表現の解釈に失敗したら文字列をそのまま返す
+				return patInputs[0];
+			}
+		} else {
+			//検索文字列が指定されていない場合は最後尾に_copyをつける
+			patInputs[1] = patInputs[1] == "" ? "_copy" : patInputs[1];
+			return new RegExp("$");
+		}
+	}
+	[gebi("copy-replace-pattern"), gebi("copy-replace-replacement")].forEach((input) => {
+		input.addEventListener("input", () => {
+			Dialog.list.copyCarDialog.functions.refresh();
+		});
+	});
+	gebi("copy-origin-addon-names").addEventListener("scroll", () => {
+		gebi("copy-preview-addon-names").scrollTop = gebi("copy-origin-addon-names").scrollTop;
+	});
+	gebi("copy-preview-addon-names").addEventListener("scroll", () => {
+		gebi("copy-origin-addon-names").scrollTop = gebi("copy-preview-addon-names").scrollTop;
+	});
 
 
 	new Dialog("addCarPropertyDialog", "車両にプロパティを追加", `

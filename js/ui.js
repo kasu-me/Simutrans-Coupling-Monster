@@ -318,6 +318,32 @@ function updateViewSelectImageDialogPreviewingImage() {
 	}
 }
 
+//名前で指定されている連結設定をオブジェクトに変換
+let convertConstraintsToObject = (addon, mode, regExp) => {
+	addon[CONSTRAINT][mode] = new Set(Array.from(addon[CONSTRAINT][mode]).map(constraint => {
+		if (typeof constraint == "string") {
+			if (constraint == "none") {
+				return ADDON_NONE;
+			} else {
+				let name = constraint;
+				if (regExp != undefined) {
+					name = name.replace(...regExp);
+					let obj = getObjectsByItsName(masterAddons, name);
+					if (obj.length == 0) {
+						return getObjectByItsName(masterAddons, constraint);
+					} else {
+						return obj[0];
+					}
+				} else {
+					return getObjectByItsName(masterAddons, name);
+				}
+			}
+		} else {
+			return constraint;
+		}
+	}));
+}
+
 //DAT指定
 function loadAndSetDatFile(files) {
 	let promises = [];
@@ -348,19 +374,6 @@ function loadAndSetDatFile(files) {
 		});
 
 		//全車両読み込み完了後、一時的に名前で格納していた連結設定をオブジェクトに変更する
-		let convertConstraintsToObject = (addon, mode) => {
-			addon[CONSTRAINT][mode] = new Set(Array.from(addon[CONSTRAINT][mode]).map(constraint => {
-				if (typeof constraint == "string") {
-					if (constraint == "none") {
-						return ADDON_NONE;
-					} else {
-						return getObjectByItsName(masterAddons, constraint);
-					}
-				} else {
-					return constraint;
-				}
-			}));
-		}
 		masterAddons.forEach((addon) => {
 			convertConstraintsToObject(addon, "prev");
 			convertConstraintsToObject(addon, "next");
