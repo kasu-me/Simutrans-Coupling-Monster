@@ -399,29 +399,30 @@ window.addEventListener("load", function () {
 
 			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
 
-			let pattern = getRegExp(inputs);
+			convertRegExp(inputs);
 
 			let ul = gebi("copy-preview-addon-names-list");
 			ul.innerHTML = "";
 			addons.forEach((addon) => {
 				let li = document.createElement("li");
-				li.innerText = addon.name.replace(pattern, inputs[1]);
+				li.innerText = addon.name.replace(...inputs);
 				ul.appendChild(li);
 			});
 		},
 		copy: function () {
+			//汚染しないため配列コピー
 			let addons = Array.from(Dialog.list.ikkatsuSousaDialog.functions.addons);
 
 			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
 
-			let pattern = getRegExp(inputs);
+			convertRegExp(inputs);
 
 			let tmpAddons = [];
 			let failueCount = 0;
 
+			//連結設定を名前のSetに設定しなおす関数
 			let setCopiedAddonToConstraint = (addon, newAddon, mode) => {
 				let constraints = addon[CONSTRAINT][mode];
-
 				newAddon[CONSTRAINT][mode] = new Set();
 				constraints.forEach((constraint) => {
 					newAddon[CONSTRAINT][mode].add(constraint.name);
@@ -429,7 +430,7 @@ window.addEventListener("load", function () {
 			}
 
 			addons.forEach((addon) => {
-				let newName = addon.name.replace(pattern, inputs[1]);
+				let newName = addon.name.replace(...inputs);
 				//名称重複チェック
 				if (getObjectsByItsName(masterAddons, newName).length == 0) {
 					//複製を実施
@@ -454,16 +455,20 @@ window.addEventListener("load", function () {
 				}
 			});
 
+			//マスタに投入
 			masterAddons.push(...tmpAddons);
 
+			//コピーしたアドオンの連結設定を変換
 			masterAddons.forEach((addon) => {
-				convertConstraintsToObject(addon, "prev", [pattern, inputs[1]]);
-				convertConstraintsToObject(addon, "next", [pattern, inputs[1]]);
+				convertConstraintsToObject(addon, "prev", inputs);
+				convertConstraintsToObject(addon, "next", inputs);
 			});
 
+			//表示更新
 			setAddonNamesToSelectBox(gebi("carsSelectBox"));
 			refresh();
 
+			//成功状況によってリフレッシュ方法を変更
 			if (failueCount == 0) {
 				Dialog.list.ikkatsuSousaDialog.off();
 				Dialog.list.copyCarDialog.off();
@@ -475,19 +480,20 @@ window.addEventListener("load", function () {
 			new Message(`${addons.length - failueCount}両の車両をコピーしました。${failueCount > 0 ? `${failueCount}両の車両はコピーできませんでした。` : ""}`, ["file-saved"], 3000, true, true);
 		}
 	}, true);
-	function getRegExp(patInputs) {
+	//正規表現を解釈し、解釈の成否によって挙動を調整する
+	function convertRegExp(patInputs) {
 		if (patInputs[0] != "") {
 			//正規表現を解釈
 			try {
-				return new RegExp(patInputs[0], "g");
+				patInputs[0] = new RegExp(patInputs[0], "g");
 			} catch (e) {
 				//正規表現の解釈に失敗したら文字列をそのまま返す
-				return patInputs[0];
+				patInputs[0] = patInputs[0];
 			}
 		} else {
 			//検索文字列が指定されていない場合は最後尾に_copyをつける
 			patInputs[1] = patInputs[1] == "" ? "_copy" : patInputs[1];
-			return new RegExp("$");
+			patInputs[0] = new RegExp("$");
 		}
 	}
 	[gebi("copy-replace-pattern"), gebi("copy-replace-replacement")].forEach((input) => {
