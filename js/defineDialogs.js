@@ -441,7 +441,7 @@ window.addEventListener("load", function () {
 					//複製を実施
 					let newAddon = {};
 					for (let prop in addon) {
-						//連結設定を設定しなおし
+						//連結設定を設定しなおし(この段階では名前を文字列で投入する)
 						if (prop == CONSTRAINT) {
 							newAddon[CONSTRAINT] = {};
 							setCopiedAddonToConstraint(addon, newAddon, "prev");
@@ -465,7 +465,7 @@ window.addEventListener("load", function () {
 			//マスタに投入
 			masterAddons.push(...tmpAddons);
 
-			//コピーしたアドオンの連結設定を変換
+			//コピーしたアドオンの連結設定を名前からオブジェクトへ変換
 			masterAddons.forEach((addon) => {
 				convertConstraintsToObject(addon, "prev", inputs);
 				convertConstraintsToObject(addon, "next", inputs);
