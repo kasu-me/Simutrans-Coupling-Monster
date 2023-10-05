@@ -125,11 +125,11 @@ function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
 //マスタアドオンから車両を削除
 function deleteCarFromMaster(addon) {
 	for (let i in masterAddons) {
+		masterAddons[i][CONSTRAINT]["prev"].delete(addon);
+		masterAddons[i][CONSTRAINT]["next"].delete(addon);
 		if (addon.name == masterAddons[i].name) {
 			deleteCarFromMasterById(i);
 		}
-		masterAddons[i][CONSTRAINT]["prev"].delete(addon);
-		masterAddons[i][CONSTRAINT]["next"].delete(addon);
 	}
 	jatab.delete(addon);
 }
