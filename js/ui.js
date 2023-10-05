@@ -184,7 +184,7 @@ function refresh() {
 				//アドオン名称重複チェック
 				let duplicatNamedObjects = getObjectsByItsName(masterAddons, inputValue);
 				if (duplicatNamedObjects.length > 1 || (duplicatNamedObjects.length == 1 && duplicatNamedObjects[0] != editingAddon)) {
-					new Message(`重複した名称は登録できません。`, ["file-saved"], 3000, true, true);
+					new Message(`重複した名称は登録できません。`, ["normal-message"], 3000, true, true);
 					valInput.classList.add("validation-error");
 					return
 				}
@@ -215,7 +215,7 @@ function deleteProperty(propName, evtTargetButton) {
 			let table = tr.parentNode;
 			table.removeChild(tr);
 		}
-		new Message(`プロパティを削除しました。`, ["file-saved"], 3000, true, true);
+		new Message(`プロパティを削除しました。`, ["normal-message"], 3000, true, true);
 	});
 }
 

@@ -149,7 +149,7 @@ window.addEventListener("load", function () {
 
 	new Dialog("previewDialog", "プレビュー", `
 		<div id="dat-preview" class="dialog-preview"></div>
-		`, [{ "content": "保存", "event": `saveFile(Dialog.list.previewDialog.functions.type);`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.previewDialog.off();`, "icon": "close" }], {
+		`, [{ "content": "クリップボードにコピー", "event": `navigator.clipboard.writeText(gebi("dat-preview").innerText).then(()=>{new Message('クリップボードにコピーしました。', ['normal-message'], 3000, true, true);})`, "icon": "tabs" }, { "content": "保存", "event": `saveFile(Dialog.list.previewDialog.functions.type);`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.previewDialog.off();`, "icon": "close" }], {
 		type: "",
 		display: function (datText, type) {
 			Dialog.list.previewDialog.functions.type = type;
@@ -203,7 +203,7 @@ window.addEventListener("load", function () {
 				setAddonNamesToSelectBox(gebi("carsSelectBox"));
 				setImageNamesToSelectBox(gebi("imageSelectBox"));
 				refresh();
-				new Message(`車両を削除しました。`, ["file-saved"], 3000, true, true);
+				new Message(`車両を削除しました。`, ["normal-message"], 3000, true, true);
 			});
 		}
 	}, true);
@@ -315,7 +315,7 @@ window.addEventListener("load", function () {
 				setImageNamesToSelectBox(gebi("imageSelectBox"));
 				refresh();
 				Dialog.list.ikkatsuSousaDialog.off();
-				new Message(`${addons.length}両の車両を削除しました。`, ["file-saved"], 3000, true, true);
+				new Message(`${addons.length}両の車両を削除しました。`, ["normal-message"], 3000, true, true);
 			});
 		}
 	}, true);
@@ -481,7 +481,7 @@ window.addEventListener("load", function () {
 				Dialog.list.copyCarDialog.functions.display();
 			}
 
-			new Message(`${addons.length - failueCount}両の車両をコピーしました。${failueCount > 0 ? `${failueCount}両の車両はコピーできませんでした。` : ""}`, ["file-saved"], 3000, true, true);
+			new Message(`${addons.length - failueCount}両の車両をコピーしました。${failueCount > 0 ? `${failueCount}両の車両はコピーできませんでした。` : ""}`, ["normal-message"], 3000, true, true);
 		}
 	}, true);
 	//正規表現を解釈し、解釈の成否によって挙動を調整する
@@ -572,7 +572,7 @@ window.addEventListener("load", function () {
 				for (let addon of Dialog.list.addCarPropertyDialog.functions.addons) {
 					addon[propName] = propValue;
 				}
-				new Message(`${Dialog.list.addCarPropertyDialog.functions.addons.length}両の車両にプロパティを適用しました。`, ["file-saved"], 3000, true, true);
+				new Message(`${Dialog.list.addCarPropertyDialog.functions.addons.length}両の車両にプロパティを適用しました。`, ["normal-message"], 3000, true, true);
 				refresh();
 				if (gebi("continuously-add-property").checked) {
 					Dialog.list.addCarPropertyDialog.functions.display(Dialog.list.addCarPropertyDialog.functions.addons);
@@ -973,7 +973,7 @@ window.addEventListener("load", function () {
 		area.appendChild(outer);
 	}
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "copy" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "tabs" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
 			loader.start();
 			setTimeout(() => {
@@ -1022,7 +1022,7 @@ window.addEventListener("load", function () {
 					'image/png': blob
 				});
 				await navigator.clipboard.write([clipBoardItem]);
-				new Message("クリップボードにコピーしました。", ["file-saved"], 3000, true, true);
+				new Message("クリップボードにコピーしました。", ["normal-message"], 3000, true, true);
 			});
 		},
 		saveAsFile: function () {

@@ -782,7 +782,8 @@ table.row-hover-hilight tr:hover {
 }
 
 .message-content.image-file-loaded,
-.message-content.file-saved {
+.message-content.file-saved,
+.message-content.normal-message {
 	top: calc(40px + 4.5em);
 }
 
