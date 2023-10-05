@@ -367,28 +367,38 @@ window.addEventListener("load", function () {
 				li.innerText = addon.name;
 				ul.appendChild(li);
 				for (let prop in addon) {
-					if (prop != CONSTRAINT) {
+					if (prop != CONSTRAINT && !prop.startsWith(EMPTYIMAGE)) {
 						properties.add(prop);
 					}
 				}
 			});
 
-			let propCheckboxArea = gebi("copy-taishou-properties");
-			propCheckboxArea.innerHTML = "";
-			properties.forEach((prop) => {
+			let createCheckBox = (displayText, value) => {
 				let label = document.createElement("label");
-				label.setAttribute("for", `copy-prop-chkbox-${prop}`);
+				label.setAttribute("for", `copy-prop-chkbox-${value}`);
 				let checkbox = document.createElement("input");
 				checkbox.setAttribute("type", "checkbox");
 				checkbox.checked = true;
-				checkbox.id = `copy-prop-chkbox-${prop}`;
-				checkbox.value = prop;
-				checkbox.disabled = prop == "name" || prop == "obj";
+				checkbox.id = `copy-prop-chkbox-${value}`;
+				checkbox.value = value;
+				checkbox.disabled = value == "name" || value == "obj";
 				let span = document.createElement("span");
-				span.innerHTML = prop;
+				span.innerHTML = displayText;
 				label.appendChild(checkbox);
 				label.appendChild(span);
-				propCheckboxArea.appendChild(label);
+				return label;
+			}
+
+			let addCheckBox = (prop) => {
+				return createCheckBox(prop, prop);
+			}
+
+			let propCheckboxArea = gebi("copy-taishou-properties");
+			propCheckboxArea.innerHTML = "";
+			propCheckboxArea.appendChild(createCheckBox("連結設定", "constraints"));
+			propCheckboxArea.appendChild(createCheckBox("画像指定", "images"));
+			properties.forEach((prop) => {
+				propCheckboxArea.appendChild(addCheckBox(prop));
 			});
 			gebi("ikkatsu-copy-car-count").innerText = addons.length;
 
@@ -443,9 +453,15 @@ window.addEventListener("load", function () {
 					for (let prop in addon) {
 						//連結設定を設定しなおし(この段階では名前を文字列で投入する)
 						if (prop == CONSTRAINT) {
-							newAddon[CONSTRAINT] = {};
-							setCopiedAddonToConstraint(addon, newAddon, "prev");
-							setCopiedAddonToConstraint(addon, newAddon, "next");
+							newAddon[CONSTRAINT] = { prev: new Set(), next: new Set() };
+							if (copyProperties.indexOf("constraints") != -1) {
+								setCopiedAddonToConstraint(addon, newAddon, "prev");
+								setCopiedAddonToConstraint(addon, newAddon, "next");
+							}
+						} else if (prop.startsWith(EMPTYIMAGE)) {
+							if (copyProperties.indexOf("images") != -1) {
+								newAddon[prop] = addon[prop];
+							}
 						} else {
 							if (copyProperties.indexOf(prop) != -1) {
 								newAddon[prop] = addon[prop];
