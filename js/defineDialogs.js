@@ -407,6 +407,9 @@ window.addEventListener("load", function () {
 			addons.forEach((addon) => {
 				let li = document.createElement("li");
 				li.innerText = addon.name.replace(...inputs);
+				if (li.innerText == "") {
+					li.innerText = "　";
+				}
 				ul.appendChild(li);
 			});
 		},
