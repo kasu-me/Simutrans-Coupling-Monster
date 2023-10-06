@@ -117,6 +117,7 @@ select#carsSelectBox {
 	border: 1px solid var(--formation-table-main-border);
 	padding: 1.0em;
 	background-color: #fff;
+	transition: height 150ms 0s ease;
 }
 
 #constraint-container>div:nth-child(2) {
@@ -177,6 +178,7 @@ select#carsSelectBox {
 	overflow-y: scroll;
 	border: 1px solid var(--formation-table-main-border);
 	margin-top: 1em;
+	transition: height 150ms 0s ease;
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container table {
@@ -246,6 +248,7 @@ footer {
 	margin-bottom: 0;
 	padding: 0.8em var(--main-padding);
 	border-top: 1px solid var(--formation-table-main-border);
+	transition: transform 150ms 0s ease;
 }
 
 footer p {
@@ -817,4 +820,27 @@ table.row-hover-hilight tr:hover {
 
 .message-content.tab-file-loaded {
 	top: calc(40px + 9.0em);
+}
+
+/* 折り畳み */
+#collapsible-button::before {
+	margin: 0;
+	display: block;
+	transition: transform 150ms 0s ease;
+}
+
+body.collapsible #collapsible-button::before {
+	transform: rotate(180deg);
+}
+
+body.collapsible #constraint-container>div {
+	height: calc(100vh - 11em);
+}
+
+body.collapsible #constraint-container>div:nth-child(2) #main-proptable-container {
+	height: calc((100vh - 11em) - var(--simutrans-paktype) - 7.5em);
+}
+
+body.collapsible footer {
+	transform: translateY(calc(100% - 3em));
 }
