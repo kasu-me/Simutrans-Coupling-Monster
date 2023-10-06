@@ -174,12 +174,14 @@ window.addEventListener("load", function () {
 			table.setAttributes({ "class": "row-hover-hilight horizontal-stripes" });
 			table.addRow();
 			table.addCell("<input type='checkbox'>");
+			table.addCell("番号");
 			table.addCell("車両名");
 			table.addCell("日本語名");
 			table.addCell("操作");
 			masterAddons.forEach((addon, i) => {
 				table.addRow();
 				table.addCell(`<input type="checkbox" class="row-selector" value="${addon.name}">`);
+				table.addCell(`${i}`);
 				table.addCell(...reduceText(addon.name, 40));
 				table.addCell(...reduceText(getJapaneseNameFromAddon(addon, "-"), 35));
 				table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="車両を開く" onclick="Dialog.list.carListDialog.functions.open(${i})">search</button><button class="lsf mku-balloon" mku-balloon-message="車両を削除" onclick="Dialog.list.carListDialog.functions.delete(${i})">delete</button>`);

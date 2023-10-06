@@ -609,14 +609,20 @@ table.row-hover-hilight tr:hover {
 }
 
 #carListDialog #car-list-table-container table tr td:nth-child(2) {
-	width: 20em;
+	width: 5em;
+	text-align: right !important;
+	padding-right: 1em;
 }
 
 #carListDialog #car-list-table-container table tr td:nth-child(3) {
 	width: 20em;
 }
 
-#carListDialog #car-list-table-container table tr td:nth-child(3).text-center {
+#carListDialog #car-list-table-container table tr td:nth-child(4) {
+	width: 20em;
+}
+
+#carListDialog #car-list-table-container table tr td:nth-child(4).text-center {
 	text-align: center !important;
 }
 
