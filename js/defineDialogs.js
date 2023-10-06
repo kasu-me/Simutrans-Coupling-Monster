@@ -854,23 +854,37 @@ window.addEventListener("load", function () {
 			let addonWholeImageArea = gebi("addon-image-whole-preview");
 			let positionPointerCursor = gebi("position-pointer-cursor");
 			let addonImagePositionsArea = gebi("addon-image-positions");
-			let x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			let x = 0;
 			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			if (e.shiftKey) {
+				positionPointerCursor.style.width = `${600}px`;
+				x = 0;
+			} else {
+				positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			}
 			if (x >= 0 && y >= 0) {
 				positionPointerCursor.classList.add("on");
 				positionPointerCursor.style.left = `${x * PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
 				positionPointerCursor.style.top = `${y * PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-				addonImagePositionsArea.innerHTML = `x:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[2]}, y:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[1]} => x:${x}, y:${y}`;
+				addonImagePositionsArea.innerHTML = `x:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[2]}, y:${Dialog.list.editImageDialog.functions.editingAddonMainImageData[1]} => ${e.shiftKey ? "x:0～7" : `x:${x}`}, y:${y}`;
 			} else {
 				positionPointerCursor.classList.remove("on");
 			}
 		},
 		clickPositionPointerCursor: function (e) {
 			let addonWholeImageArea = gebi("addon-image-whole-preview");
-			let x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
 			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
-			Dialog.list.editImageDialog.functions.editingAddon[`${EMPTYIMAGE}[${Dialog.list.editImageDialog.functions.selectedDirection}]`] = `${Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]}.${y}.${x}`;
-			Dialog.list.editImageDialog.functions.refresh();
+			if (e.shiftKey) {
+				DIRECTIONS.forEach((dir, i) => {
+					Dialog.list.editImageDialog.functions.editingAddon[`${EMPTYIMAGE}[${dir}]`] = `${Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]}.${y}.${i}`;
+				});
+				Dialog.list.editImageDialog.functions.refresh();
+			} else {
+				let x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+				Dialog.list.editImageDialog.functions.editingAddon[`${EMPTYIMAGE}[${Dialog.list.editImageDialog.functions.selectedDirection}]`] = `${Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]}.${y}.${x}`;
+				Dialog.list.editImageDialog.functions.refresh();
+			}
 		},
 		refresh: function () {
 			refresh();
