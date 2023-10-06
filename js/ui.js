@@ -516,12 +516,6 @@ window.addEventListener("load", () => {
 			jatab.set(getEditingAddon(), jatabInput.innerText);
 		}
 	});
-	jatabInput.addEventListener("keydown", (e) => {
-
-		if (e.key === 'Enter') {
-			return e.preventDefault()
-		}
-	})
 	//name指定イベント
 	let nameInput = gebi("main-proptable-name");
 	nameInput.addEventListener("input", () => {
@@ -543,6 +537,14 @@ window.addEventListener("load", () => {
 		let selectedIndex = selectBox.selectedIndex;
 		setAddonNamesToSelectBox(selectBox);
 		selectBox.selectedIndex = selectedIndex;
+	});
+	//Enter改行無効化
+	[jatabInput, nameInput].forEach((input) => {
+		input.addEventListener("keydown", (e) => {
+			if (e.key === 'Enter') {
+				return e.preventDefault()
+			}
+		});
 	});
 
 	//画像指定セレクトボックスのイベント
