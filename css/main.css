@@ -710,7 +710,7 @@ table.row-hover-hilight tr:hover {
 }
 
 #copyCarDialog .dialog-main-message>div.properties-container>div#copy-taishou-properties {
-	max-width: 700px;
+	max-width: calc(70vw - 14em);
 }
 
 #copyCarDialog .dialog-main-message>div.properties-container label {
