@@ -544,7 +544,7 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 
 #carListDialog #car-list-table-container {
 	border: 2px solid var(--formation-table-main-border);
-	height: 50vh;
+	height: calc(100vh - 25em);
 	overflow-y: scroll;
 }
 
@@ -744,7 +744,7 @@ table.row-hover-hilight tr:hover {
 
 #copyCarDialog .dialog-main-message>div#copy-addon-names-list-container>div:not(:nth-child(2)) {
 	border: 2px solid var(--formation-table-main-border);
-	height: 40vh;
+	height: calc(80vh - 25em);
 	overflow-y: scroll;
 }
 
