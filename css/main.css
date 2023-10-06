@@ -773,6 +773,14 @@ table.row-hover-hilight tr:hover {
 	width: --webkit-fill-available;
 }
 
+#calcCostDialog .dialog-main-message table.input-area {
+	width: 100%;
+}
+
+#calcCostDialog .dialog-main-message table.input-area tr td:first-child {
+	width: 8.5em;
+}
+
 #calcCostDialog input[type="number"] {
 	width: 5em;
 	margin-right: 0.25em;

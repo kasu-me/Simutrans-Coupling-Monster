@@ -4,9 +4,9 @@ function calcKeisu(introYear) {
 }
 
 //calcGear(最高速度,起動加速度,編成重量,編成定員,編成出力) 編成全体のギア計算
-function calcGear(speed, startingAcceleration, formationWeight, formationPayload, formationPower) {
+function calcGear(speed, startingAcceleration, formationWeight, formationPayload, formationPower, isBoostMode) {
 	var gear = Math.floor((formationWeight + 0.06 * formationPayload) * (startingAcceleration * 4.335030006) / formationPower * 100);
-	//if (gebi("isBoosterMode").checked) { gear = Math.floor(gear * 1.2); }
+	if (Boolean(isBoostMode)) { gear = Math.floor(gear * 1.2); }
 	return gear
 }
 //calcCost(ギア比,最高速度,起動加速度,車両定員,車両出力) 車両ごとのコスト計算

@@ -1071,6 +1071,7 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<p><label for="overwrite-exists-property" class="mku-checkbox-container"><input id="overwrite-exists-property" type="checkbox" checked></label><label for="overwrite-exists-property">既存のプロパティに上書き</label></p>
+		<p><span class="mku-balloon" mku-balloon-message="加速度が足りない場合に試してください"><label for="boost-mode" class="mku-checkbox-container"><input id="boost-mode" type="checkbox"></label><label for="boost-mode">ブーストモード</label></span></p>
 	`, [{ "content": "適用", "event": `Dialog.list.calcCostDialog.functions.applyCostsheet();`, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": `Dialog.list.calcCostDialog.off();`, "icon": "close" }], {
 		costs: {},
 		display: function () {
@@ -1097,7 +1098,7 @@ window.addEventListener("load", function () {
 			});
 
 			let keisuu = calcKeisu(introYear);
-			let gear = calcGear(formationSpeed, startingAcceleration, formationWeight, formationPayload, formationPower);
+			let gear = calcGear(formationSpeed, startingAcceleration, formationWeight, formationPayload, formationPower, gebi("boost-mode").checked);
 
 			gebi("formation-payload").innerText = formationPayload;
 			gebi("formation-weight").innerText = formationWeight;
@@ -1145,6 +1146,9 @@ window.addEventListener("load", function () {
 		gebi("apply-costsheet-button").disabled = val.trim() == "" || Number(val) <= 0;
 		Dialog.list.calcCostDialog.functions.refresh();
 	});
+	gebi("boost-mode").addEventListener("change", () => {
+		Dialog.list.calcCostDialog.functions.refresh();
+	})
 
 	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "tabs" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
