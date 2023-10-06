@@ -675,6 +675,10 @@ table.row-hover-hilight tr:hover {
 	margin-left: 0.7em;
 }
 
+#addCarDialog div.off {
+	display: none;
+}
+
 #addCarPropertyDialog .suggestion-box {
 	position: fixed;
 	transform-origin: top center;
