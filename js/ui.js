@@ -221,10 +221,13 @@ function setAddonPreviewBox(parent, box, addon) {
 		let title = document.createElement("p");
 		title.innerHTML = addon.name;
 		box.appendChild(title);
+		let titleJa = document.createElement("p");
+		box.appendChild(titleJa);
 		if (jatab.has(addon)) {
-			let titleJa = document.createElement("p");
 			titleJa.innerHTML = jatab.get(addon);
-			box.appendChild(titleJa);
+		} else {
+			titleJa.innerHTML = "(日本語名未設定)";
+			titleJa.style.opacity = 0.4;
 		}
 		setAddonPreviewImage(box, addon);
 	} else {
