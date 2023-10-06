@@ -1070,8 +1070,8 @@ window.addEventListener("load", function () {
 				</td>
 			</tr>
 		</table>
-		<p><label for="overwrite-exists-property" class="mku-checkbox-container"><input id="overwrite-exists-property" type="checkbox" checked></label><label for="overwrite-exists-property">既存のプロパティに上書き</label></p>
-		<p><span class="mku-balloon" mku-balloon-message="加速度が足りない場合に試してください"><label for="boost-mode" class="mku-checkbox-container"><input id="boost-mode" type="checkbox"></label><label for="boost-mode">ブーストモード</label></span></p>
+		<p><span class="mku-balloon" mku-balloon-message="オンにするとgear･cost･runningcostの値が上書きされる可能性があります"><label for="overwrite-exists-property" class="mku-checkbox-container"><input id="overwrite-exists-property" type="checkbox" checked></label><label for="overwrite-exists-property">既存のプロパティに上書き</label></span></p>
+		<p><span class="mku-balloon" mku-balloon-message="加速度が足りない場合はオンにしてください"><label for="boost-mode" class="mku-checkbox-container"><input id="boost-mode" type="checkbox"></label><label for="boost-mode">ブーストモード</label></span></p>
 	`, [{ "content": "適用", "event": `Dialog.list.calcCostDialog.functions.applyCostsheet();`, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": `Dialog.list.calcCostDialog.off();`, "icon": "close" }], {
 		costs: {},
 		display: function () {
