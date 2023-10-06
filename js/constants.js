@@ -1,4 +1,4 @@
-let gebi = x => document.getElementById(x);
+let gebi = document.getElementById.bind(document);
 //datファイル名
 let masterDatFileName = "";
 //datをJSオブジェクト化したもの
