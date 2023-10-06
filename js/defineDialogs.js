@@ -1119,12 +1119,12 @@ window.addEventListener("load", function () {
 				};
 				return true;
 			} else {
-				new Message(`未設定項目があります。車両のspeed･weight･intro_yearプロパティに値がセットされているか確認してください。`, ["normal-message"], 4000, true, true);
+				new Message(`未設定項目があります。車両の ( speed / payload / power / weight / intro_year ) の各プロパティに値がセットされているか確認してください。`, ["normal-message"], 4000, true, true);
 				return false;
 			}
 		},
 		applyCostsheet: function () {
-			Dialog.list.confirmDialog.functions.display(`車両にコストシートを適用し、性能を設定してもよろしいですか？`, () => {
+			Dialog.list.confirmDialog.functions.display(`編成にコストシートを適用し、性能を設定してもよろしいですか？`, () => {
 				let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 				let formationCosts = Dialog.list.calcCostDialog.functions.costs;
 				let overwriteMode = gebi("overwrite-exists-property").checked;
