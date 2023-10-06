@@ -1075,8 +1075,9 @@ window.addEventListener("load", function () {
 	`, [{ "content": "適用", "event": `Dialog.list.calcCostDialog.functions.applyCostsheet();`, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": `Dialog.list.calcCostDialog.off();`, "icon": "close" }], {
 		costs: {},
 		display: function () {
-			Dialog.list.calcCostDialog.functions.refresh();
-			Dialog.list.calcCostDialog.on();
+			if (Dialog.list.calcCostDialog.functions.refresh()) {
+				Dialog.list.calcCostDialog.on();
+			}
 		},
 		refresh: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
@@ -1099,23 +1100,28 @@ window.addEventListener("load", function () {
 
 			let keisuu = calcKeisu(introYear);
 			let gear = calcGear(formationSpeed, startingAcceleration, formationWeight, formationPayload, formationPower, gebi("boost-mode").checked);
+			if (!(isNaN(formationSpeed) || isNaN(startingAcceleration) || isNaN(formationWeight) || isNaN(formationPayload) || isNaN(formationPower) || isNaN(introYear) || isNaN(keisuu) || isNaN(gear))) {
+				gebi("formation-payload").innerText = formationPayload;
+				gebi("formation-weight").innerText = formationWeight;
+				gebi("formation-power").innerText = formationPower;
+				gebi("formation-speed").innerText = formationSpeed;
+				gebi("formation-keisuu").innerText = keisuu;
+				gebi("formation-gear").innerText = gear / 100;
 
-			gebi("formation-payload").innerText = formationPayload;
-			gebi("formation-weight").innerText = formationWeight;
-			gebi("formation-power").innerText = formationPower;
-			gebi("formation-speed").innerText = formationSpeed;
-			gebi("formation-keisuu").innerText = keisuu;
-			gebi("formation-gear").innerText = gear / 100;
-
-			Dialog.list.calcCostDialog.functions.costs = {
-				startingAcceleration: startingAcceleration,
-				formationPayload: formationPayload,
-				formationWeight: formationWeight,
-				formationPower: formationPower,
-				formationSpeed: formationSpeed,
-				keisuu: keisuu,
-				gear: gear
-			};
+				Dialog.list.calcCostDialog.functions.costs = {
+					startingAcceleration: startingAcceleration,
+					formationPayload: formationPayload,
+					formationWeight: formationWeight,
+					formationPower: formationPower,
+					formationSpeed: formationSpeed,
+					keisuu: keisuu,
+					gear: gear
+				};
+				return true;
+			} else {
+				new Message(`未設定項目があります。車両のspeed･weight･intro_yearプロパティに値がセットされているか確認してください。`, ["normal-message"], 4000, true, true);
+				return false;
+			}
 		},
 		applyCostsheet: function () {
 			Dialog.list.confirmDialog.functions.display(`車両にコストシートを適用し、性能を設定してもよろしいですか？`, () => {
