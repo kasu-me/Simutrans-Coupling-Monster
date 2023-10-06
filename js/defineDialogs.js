@@ -858,7 +858,7 @@ window.addEventListener("load", function () {
 			let x = 0;
 			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
 			if (e.shiftKey) {
-				positionPointerCursor.style.width = `${600}px`;
+				positionPointerCursor.style.width = `600px`;
 				x = 0;
 			} else {
 				positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
