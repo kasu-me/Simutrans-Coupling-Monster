@@ -233,6 +233,42 @@ function loadDatFile(file) {
 	});
 }
 
+//名前(文字列)で指定されている連結設定をオブジェクトに変換
+let convertConstraintsToObject = (addon, mode, regExp) => {
+	addon[CONSTRAINT][mode] = new Set(Array.from(addon[CONSTRAINT][mode]).map(constraint => {
+		if (typeof constraint == "string") {
+			//文字列の場合
+			if (constraint == "none") {
+				//連結設定「無」用車両をセット
+				return ADDON_NONE;
+			} else {
+				let name = constraint;
+				if (regExp != undefined) {
+					//正規表現で車両名を変更する場合
+					//正規表現で変換後の名前
+					name = name.replace(...regExp);
+					let targetAddon;
+					let obj = getObjectsByItsName(masterAddons, name);
+					if (obj.length == 0) {
+						//正規表現で変換後の名前の車両が存在しない場合、元の名前の車両を返す
+						targetAddon = getObjectByItsName(masterAddons, constraint);
+					} else {
+						//正規表現で変換後の名前の車両が存在した場合、その車両を返す
+						targetAddon = obj[0];
+					}
+					//対象車両側の連結設定にも自身を設定して整合性を担保する
+					targetAddon[CONSTRAINT][mode == "next" ? "prev" : "next"].add(addon);
+					return targetAddon;
+				} else {
+					return getObjectByItsName(masterAddons, name);
+				}
+			}
+		} else {
+			return constraint;
+		}
+	}));
+}
+
 //画像をリストに登録
 function appendImageToImagesList(fileName, file) {
 	return new Promise((resolve) => {

@@ -88,16 +88,22 @@ function refresh() {
 	}
 	areas.prev.innerHTML = "";
 	areas.next.innerHTML = "";
-	let propTable = gebi("main-proptable");
+	let propTable = gebi("main-proptable").querySelector("tbody");
 	propTable.querySelectorAll("tr").forEach((tr, i) => {
-		if (i != 0) {
+		//表の内容のうち日本語名･name以外を削除
+		if (i >= 2) {
 			propTable.removeChild(tr);
 		}
 	})
+
+	//日本語名･nameの入力欄
 	let jatabInput = gebi("jatabtable-japanese-name");
 	jatabInput.innerHTML = "";
 	jatabInput.removeAttribute("disabled");
 	jatabInput.setAttribute("contenteditable", "plaintext-only");
+	let nameInput = gebi("main-proptable-name");
+	nameInput.innerHTML = "";
+
 	setFooterAddonsList();
 
 	//ダイアログを開いている場合の処理
@@ -153,9 +159,10 @@ function refresh() {
 
 	//選択中のアドオンのプロパティを表示
 	jatabInput.innerHTML = getJapaneseNameFromAddon(editingAddon);
+	nameInput.innerHTML = editingAddon.name;
 
 	for (let prop in editingAddon) {
-		if (prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
+		if (prop == "name" || prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
 		let tr = document.createElement("tr");
 		let tdProp = document.createElement("td");
 		let tdVal = document.createElement("td");
@@ -176,33 +183,10 @@ function refresh() {
 		} else {
 			tdController.innerHTML = `<button class="lsf mku-balloon" mku-balloon-message="プロパティを削除" onclick="deleteProperty('${prop}',this)">delete</button>`;
 		}
-		//name属性の変更の場合
-		if (prop == "name") {
-			valInput.addEventListener("input", () => {
-				let inputValue = valInput.value;
-
-				//アドオン名称重複チェック
-				let duplicatNamedObjects = getObjectsByItsName(masterAddons, inputValue);
-				if (duplicatNamedObjects.length > 1 || (duplicatNamedObjects.length == 1 && duplicatNamedObjects[0] != editingAddon)) {
-					new Message(`重複した名称は登録できません。`, ["normal-message"], 3000, true, true);
-					valInput.classList.add("validation-error");
-					return
-				}
-				valInput.classList.remove("validation-error");
-				editingAddon[prop] = inputValue;
-
-				//セレクトボックスを設定し直す
-				let selectBox = gebi("carsSelectBox");
-				let selectedIndex = selectBox.selectedIndex;
-				setAddonNamesToSelectBox(selectBox);
-				selectBox.selectedIndex = selectedIndex;
-			});
-		} else {
-			valInput.addEventListener("input", () => {
-				let inputValue = valInput.value;
-				editingAddon[prop] = inputValue;
-			});
-		}
+		valInput.addEventListener("input", () => {
+			let inputValue = valInput.value;
+			editingAddon[prop] = inputValue;
+		});
 	}
 }
 
@@ -316,42 +300,6 @@ function updateViewSelectImageDialogPreviewingImage() {
 	} else {
 		imagePreview.appendChild(NOIMAGE);
 	}
-}
-
-//名前(文字列)で指定されている連結設定をオブジェクトに変換
-let convertConstraintsToObject = (addon, mode, regExp) => {
-	addon[CONSTRAINT][mode] = new Set(Array.from(addon[CONSTRAINT][mode]).map(constraint => {
-		if (typeof constraint == "string") {
-			//文字列の場合
-			if (constraint == "none") {
-				//連結設定「無」用車両をセット
-				return ADDON_NONE;
-			} else {
-				let name = constraint;
-				if (regExp != undefined) {
-					//正規表現で車両名を変更する場合
-					//正規表現で変換後の名前
-					name = name.replace(...regExp);
-					let targetAddon;
-					let obj = getObjectsByItsName(masterAddons, name);
-					if (obj.length == 0) {
-						//正規表現で変換後の名前の車両が存在しない場合、元の名前の車両を返す
-						targetAddon = getObjectByItsName(masterAddons, constraint);
-					} else {
-						//正規表現で変換後の名前の車両が存在した場合、その車両を返す
-						targetAddon = obj[0];
-					}
-					//対象車両側の連結設定にも自身を設定して整合性を担保する
-					targetAddon[CONSTRAINT][mode == "next" ? "prev" : "next"].add(addon);
-					return targetAddon;
-				} else {
-					return getObjectByItsName(masterAddons, name);
-				}
-			}
-		} else {
-			return constraint;
-		}
-	}));
 }
 
 //DAT指定
@@ -571,6 +519,28 @@ window.addEventListener("load", () => {
 			return e.preventDefault()
 		}
 	})
+	//name指定イベント
+	let nameInput = gebi("main-proptable-name");
+	nameInput.addEventListener("input", () => {
+		let inputValue = nameInput.innerHTML;
+		let editingAddon = getEditingAddon();
+
+		//アドオン名称重複チェック
+		let duplicatNamedObjects = getObjectsByItsName(masterAddons, inputValue);
+		if (duplicatNamedObjects.length > 1 || (duplicatNamedObjects.length == 1 && duplicatNamedObjects[0] != editingAddon)) {
+			new Message(`重複した名称は登録できません。`, ["normal-message"], 3000, true, true);
+			nameInput.classList.add("validation-error");
+			return
+		}
+		nameInput.classList.remove("validation-error");
+		editingAddon.name = inputValue;
+
+		//セレクトボックスを設定し直す
+		let selectBox = gebi("carsSelectBox");
+		let selectedIndex = selectBox.selectedIndex;
+		setAddonNamesToSelectBox(selectBox);
+		selectBox.selectedIndex = selectedIndex;
+	});
 
 	//画像指定セレクトボックスのイベント
 	let imageSelectBox = gebi("imageSelectBox");

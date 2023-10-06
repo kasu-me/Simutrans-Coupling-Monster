@@ -89,6 +89,7 @@ input:not([type="range"]),
 	box-shadow: 0 0 5px transparent;
 	display: inline-block;
 	padding: 1px 2px;
+	background-color: #fff;
 }
 
 .input-textbox {
@@ -106,12 +107,14 @@ select:focus {
 }
 
 input.validation-error,
-input.validation-error:not([type="range"]):not([type="checkbox"]):focus {
+input.validation-error:not([type="range"]):not([type="checkbox"]):focus,
+.input-textbox.validation-error {
 	background-color: #ffebeb;
 	border-color: #f00 !important;
 }
 
-input.validation-error:focus {
+input.validation-error:focus,
+.input-textbox.validation-error:focus {
 	box-shadow: 0 0 5px #ffacac !important;
 }
 
