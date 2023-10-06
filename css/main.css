@@ -773,6 +773,15 @@ table.row-hover-hilight tr:hover {
 	width: --webkit-fill-available;
 }
 
+#calcCostDialog input[type="number"] {
+	width: 5em;
+	margin-right: 0.25em;
+}
+
+#calcCostDialog .dialog-main-message p:last-child {
+	margin-bottom: 0;
+}
+
 /* メッセージ */
 .message-content.dat-file-loaded {
 	top: calc(40px + 0em);

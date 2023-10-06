@@ -924,7 +924,7 @@ window.addEventListener("load", function () {
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		`, [{ "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "camera", "id": "open-formated-image-dialog-button" }, { "content": "終了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "close" }], {
+		`, [{ "content": "編成からコスト計算", "event": `Dialog.list.calcCostDialog.functions.display();`, "icon": "graph", "id": "open-calc-cost-dialog-button" }, { "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "camera", "id": "open-formated-image-dialog-button" }, { "content": "終了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "close" }], {
 		currentFormation: [],
 		display: function () {
 			if (masterAddons.length == 0) {
@@ -944,7 +944,8 @@ window.addEventListener("load", function () {
 			gebi("preview-current-formation-count").innerHTML = formation.length;
 			[
 				gebi("clear-preview-formation-button"),
-				gebi("open-formated-image-dialog-button")
+				gebi("open-formated-image-dialog-button"),
+				gebi("open-calc-cost-dialog-button")
 			].forEach((button) => { button.disabled = formation.length == 0; });
 
 			formation.forEach((car, i) => {
@@ -1009,6 +1010,141 @@ window.addEventListener("load", function () {
 		setAddonBalloon(outer, addon);
 		area.appendChild(outer);
 	}
+
+	new Dialog("calcCostDialog", "編成からコスト計算", `
+		<table class="input-area">
+			<tr>
+				<td>
+					係数
+				</td>
+				<td>
+					<span id="formation-keisuu"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					編成定員
+				</td>
+				<td>
+					<span id="formation-payload"></span>人
+				</td>
+			</tr>
+			<tr>
+				<td>
+					編成出力
+				</td>
+				<td>
+					<span id="formation-power"></span>kW
+				</td>
+			</tr>
+			<tr>
+				<td>
+					ギア比
+				</td>
+				<td>
+					×<span id="formation-gear"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					編成重量
+				</td>
+				<td>
+					<span id="formation-weight"></span>t
+				</td>
+			</tr>
+			<tr>
+				<td>
+					編成最高速度
+				</td>
+				<td>
+					<span id="formation-speed"></span>km/h
+				</td>
+			</tr>
+			<tr>
+				<td>
+					起動加速度
+				</td>
+				<td>
+					<input id="formation-starting-acceleration" type="number" min="0">km/h/s
+				</td>
+			</tr>
+		</table>
+		<p><label for="overwrite-exists-property" class="mku-checkbox-container"><input id="overwrite-exists-property" type="checkbox" checked></label><label for="overwrite-exists-property">既存のプロパティに上書き</label></p>
+	`, [{ "content": "適用", "event": `Dialog.list.calcCostDialog.functions.applyCostsheet();`, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": `Dialog.list.calcCostDialog.off();`, "icon": "close" }], {
+		costs: {},
+		display: function () {
+			Dialog.list.calcCostDialog.functions.refresh();
+			Dialog.list.calcCostDialog.on();
+		},
+		refresh: function () {
+			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+
+			let startingAcceleration = Number(gebi("formation-starting-acceleration").value);
+
+			//編成合計
+			let formationWeight = 0, formationPayload = 0, formationPower = 0;
+
+			let formationSpeed = formation[0].speed;
+			let introYear = formation[0].intro_year;
+
+			formation.forEach((addon) => {
+				formationPayload += Number(addon.payload != undefined ? addon.payload : 0);
+				formationWeight += Number(addon.weight != undefined ? addon.weight : 0);
+				formationPower += Number(addon.power != undefined ? addon.power : 0);
+				formationSpeed = Math.min(formationSpeed, addon.speed);
+				introYear = Math.min(introYear, addon.intro_year);
+			});
+
+			let keisuu = calcKeisu(introYear);
+			let gear = calcGear(formationSpeed, startingAcceleration, formationWeight, formationPayload, formationPower);
+
+			gebi("formation-payload").innerText = formationPayload;
+			gebi("formation-weight").innerText = formationWeight;
+			gebi("formation-power").innerText = formationPower;
+			gebi("formation-speed").innerText = formationSpeed;
+			gebi("formation-keisuu").innerText = keisuu;
+			gebi("formation-gear").innerText = gear / 100;
+
+			Dialog.list.calcCostDialog.functions.costs = {
+				startingAcceleration: startingAcceleration,
+				formationPayload: formationPayload,
+				formationWeight: formationWeight,
+				formationPower: formationPower,
+				formationSpeed: formationSpeed,
+				keisuu: keisuu,
+				gear: gear
+			};
+		},
+		applyCostsheet: function () {
+			Dialog.list.confirmDialog.functions.display(`車両にコストシートを適用し、性能を設定してもよろしいですか？`, () => {
+				let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+				let formationCosts = Dialog.list.calcCostDialog.functions.costs;
+				let overwriteMode = gebi("overwrite-exists-property").checked;
+				formation.forEach((addon) => {
+					let power = addon.power != undefined ? addon.power : 0;
+					let cost = calcCost(formationCosts.gear, formationCosts.formationSpeed, addon.payload, power, formationCosts.keisuu)
+					for (let prop in cost) {
+						if (overwriteMode || addon[prop] == undefined) {
+							addon[prop] = cost[prop];
+						}
+					}
+					if (power != 0 && (overwriteMode || addon.gear == undefined)) {
+						addon.gear = formationCosts.gear;
+					}
+				});
+				Dialog.list.calcCostDialog.off();
+				Dialog.list.couplingPreviewDialog.off();
+				refresh();
+				new Message(`${formation.length}両の車両にコストシートを適用しました。`, ["normal-message"], 3000, true, true);
+			});
+		}
+	}, true);
+	gebi("formation-starting-acceleration").addEventListener("input", () => {
+		let val = gebi("formation-starting-acceleration").value;
+		gebi("apply-costsheet-button").disabled = val.trim() == "" || Number(val) <= 0;
+		Dialog.list.calcCostDialog.functions.refresh();
+	});
 
 	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "tabs" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
 		display: function () {
