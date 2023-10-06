@@ -851,6 +851,7 @@ window.addEventListener("load", function () {
 			}, { once: true });
 		},
 		movePositionPointerCursor: function (e) {
+			window.getSelection().removeAllRanges();
 			let addonWholeImageArea = gebi("addon-image-whole-preview");
 			let positionPointerCursor = gebi("position-pointer-cursor");
 			let addonImagePositionsArea = gebi("addon-image-positions");
