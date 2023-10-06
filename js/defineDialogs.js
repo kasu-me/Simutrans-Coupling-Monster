@@ -43,7 +43,8 @@ window.addEventListener("load", function () {
 				</td>
 				<td id="add-car-dialog-image-file">
 					<div><select id="new-car-img-file-name-existing"></select></div>
-					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">ファイルを選択する</button><span id="new-car-img-file-name-preview">ファイルを選択してください</span></div>
+					<div><button class="lsf-icon" icon="image" onclick="gebi('new-car-img-file').click()">ファイルを選択する</button>
+					<span id="new-car-img-file-name-preview">ファイルを選択してください</span></div>
 				</td>
 			</tr>
 			<tr>

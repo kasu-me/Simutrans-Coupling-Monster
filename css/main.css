@@ -665,14 +665,24 @@ table.row-hover-hilight tr:hover {
 	color: #fff;
 }
 
-#addCarDialog div.or {
-	font-size: 80%;
-	margin: 0.5em 0;
+#addCarDialog table.input-area {
+	width: 100%;
 }
 
-#addCarDialog #new-car-img-file-name-preview {
+#addCarDialog table.input-area td:first-child {
+	width: 8.5em;
+}
+
+#addCarDialog table.input-area input,
+#addCarDialog table.input-area select {
+	width: 100%;
+	width: -webkit-fill-available;
+}
+
+#addCarDialog table.input-area #new-car-img-file-name-preview {
+	display: block;
+	margin-top: 0.5em;
 	font-size: 80%;
-	margin-left: 0.7em;
 }
 
 #addCarDialog div.off {
