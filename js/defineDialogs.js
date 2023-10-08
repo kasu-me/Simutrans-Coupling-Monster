@@ -1137,8 +1137,8 @@ window.addEventListener("load", function () {
 			}
 		},
 		applyCostsheet: function () {
-			Dialog.list.confirmDialog.functions.display(`編成にコストシートを適用し、性能を設定してもよろしいですか？`, () => {
-				let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
+			Dialog.list.confirmDialog.functions.display(`コストシートから導出した性能値を${formation.length}両の車両に設定してもよろしいですか？`, () => {
 				let formationCosts = Dialog.list.calcCostDialog.functions.costs;
 				let overwriteMode = gebi("overwrite-exists-property").checked;
 				formation.forEach((addon) => {
