@@ -747,7 +747,7 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<div id="addon-image-preview"></div>
-		<p style="margin-bottom:0;text-align:center;">↓クリックで画像を指定 shift+クリックで1列をまとめて指定↓</p>
+		<p style="margin-bottom:0;text-align:center;">↓クリックで画像を指定・shift+クリックで1列をまとめて指定↓</p>
 		<div id="addon-image-whole-preview">
 			<div class="addon-image-whole-preview-position-pointer" id="position-pointer"></div>
 			<div class="addon-image-whole-preview-position-pointer cursor" id="position-pointer-cursor"></div>
