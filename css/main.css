@@ -375,7 +375,7 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 }
 
 #selectImageDialog .drag-target>img {
-	opacity: 50%;
+	opacity: 40%;
 }
 
 /* 車両に画像指定ダイアログ */
