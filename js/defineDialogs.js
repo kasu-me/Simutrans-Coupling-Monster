@@ -742,7 +742,7 @@ window.addEventListener("load", function () {
 				<td>画像名</td>
 				<td>
 				<span class="selectbox-fluctuation-button">
-					<select id="addon-image-file-name" disabled></select>
+					<select id="addon-image-file-name"></select>
 				</span>
 			</tr>
 		</table>
@@ -925,6 +925,10 @@ window.addEventListener("load", function () {
 		gebi("carsSelectBox").value = gebi("preview-addon-name").value;
 		gebi("carsSelectBox").dispatchEvent(new Event("change"));
 		Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
+		Dialog.list.editImageDialog.functions.refresh();
+	});
+	gebi("addon-image-file-name").addEventListener("change", () => {
+		changeImage(Dialog.list.editImageDialog.functions.editingAddon, gebi("addon-image-file-name").value);
 		Dialog.list.editImageDialog.functions.refresh();
 	});
 

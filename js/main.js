@@ -272,6 +272,14 @@ let convertConstraintsToObject = (addon, mode, regExp) => {
 	}));
 }
 
+//画像を変更
+function changeImage(addon, newImageFileName) {
+	DIRECTIONS.forEach((dir, i) => {
+		let y = getImageNameAndPositionsFromAddonByDirection(addon, dir)[1];
+		addon[EMPTYIMAGE_DIRECTIONS[i]] = `${newImageFileName}.${y}.${i}`
+	})
+}
+
 //画像をリストに登録
 function appendImageToImagesList(fileName, file) {
 	return new Promise((resolve) => {
