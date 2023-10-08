@@ -377,7 +377,8 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 }
 
 #selectImageDialog #image-file-input,
-#addCarDialog #new-car-img-file {
+#addCarDialog #new-car-img-file,
+#addNewImageDialog #new-img-img-file {
 	display: none;
 }
 

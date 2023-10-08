@@ -282,6 +282,7 @@ function changeImage(addon, newImageFileName) {
 
 //画像をリストに登録
 function appendImageToImagesList(fileName, file) {
+	imageFileNames.add(fileName);
 	return new Promise((resolve) => {
 		let image = new Image();
 		image.onload = () => {

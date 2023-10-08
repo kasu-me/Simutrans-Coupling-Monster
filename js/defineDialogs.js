@@ -267,7 +267,7 @@ window.addEventListener("load", function () {
 	}, true);
 	new Dialog("imageListDialog", "画像ファイルリスト", `
 		<div id="image-list-table-container"></div>
-	`, [{ "content": "閉じる", "event": `Dialog.list.imageListDialog.off();`, "icon": "close" }], {
+	`, [{ "content": "新規画像を追加", "event": `Dialog.list.addNewImageDialog.functions.display();`, "icon": "add" }, { "content": "閉じる", "event": `Dialog.list.imageListDialog.off();`, "icon": "close" }], {
 		display: function () {
 			let tableContainer = gebi("image-list-table-container");
 			tableContainer.classList.add("list-table-container");
@@ -288,7 +288,7 @@ window.addEventListener("load", function () {
 				table.addCell(`${fileName}`);
 				if (imageFiles.has(fileName)) {
 					table.addCell(`○`, { "class": "text-center" });
-					table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="画像を見る" onclick="Dialog.list.imageListDialog.functions.open('${fileName}')">eye</button>`);
+					table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="画像を見る" onclick="Dialog.list.imageListDialog.functions.openImage('${fileName}')">eye</button>`);
 				} else {
 					table.addCell(`×`, { "class": "text-center" });
 					table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="ファイルから画像を読み込み" onclick="Dialog.list.selectImageDialog.functions.display('${fileName}')">image</button>`);
@@ -300,7 +300,7 @@ window.addEventListener("load", function () {
 			TableSort.addSortButtonToTable(tableContainer);
 			Dialog.list.imageListDialog.on();
 		},
-		open: function (imageFileName) {
+		openImage: function (imageFileName) {
 			Dialog.list.imagePreviewDialog.functions.display(imageFileName);
 		}
 	}, true);
@@ -316,6 +316,35 @@ window.addEventListener("load", function () {
 			Dialog.list.imagePreviewDialog.on();
 		}
 	}, true);
+	new Dialog("addNewImageDialog", "新規画像を追加", `
+		<div><button class="lsf-icon" icon="image" onclick="gebi('new-img-img-file').click()">ファイルを選択する</button>
+		<span id="new-img-img-file-name-preview">ファイルを選択してください</span></div>
+		<input id="new-img-img-file" type="file" accept=".png">
+	`, [{ "content": "追加", "event": `Dialog.list.addNewImageDialog.functions.loadImage();`, "icon": "add", "id": "new-img-img-button", "disabled": "disabled" }, { "content": "閉じる", "event": `Dialog.list.addNewImageDialog.off();`, "icon": "close" }], {
+		display: function () {
+			gebi("new-img-img-file").value = "";
+			gebi("new-img-img-file").dispatchEvent(new Event("change"));
+			Dialog.list.addNewImageDialog.on();
+		},
+		loadImage: function () {
+			loader.start();
+			let fileName = removeExtention(gebi("new-img-img-file").files[0].name);
+			appendImageToImagesList(fileName, gebi("new-img-img-file").files[0]).then(() => {
+				loader.finish();
+				refresh();
+				Dialog.list.addNewImageDialog.off();
+			});
+		}
+	}, true);
+	gebi("new-img-img-file").addEventListener("change", () => {
+		if (gebi("new-img-img-file").files.length > 0) {
+			gebi("new-img-img-file-name-preview").innerText = gebi("new-img-img-file").files[0].name;
+			gebi("new-img-img-button").disabled = false;
+		} else {
+			gebi("new-img-img-file-name-preview").innerText = "ファイルを選択してください";
+			gebi("new-img-img-button").disabled = true;
+		}
+	});
 	//一覧ダイアログにクラス付与
 	[gebi("imageListDialog"), gebi("carListDialog")].forEach((dialog) => {
 		dialog.classList.add("list-dialog");
