@@ -159,7 +159,7 @@ window.addEventListener("load", function () {
 		}
 	}, true);
 
-	new Dialog("selectImageDialog", "画像ファイルを読み込み", `
+	new Dialog("selectImageDialog", "ファイルから画像を読み込み", `
 		<p>
 		<span class="selectbox-fluctuation-button" style="margin-right:0.75em;">
 		<select id="imageSelectBox">
@@ -224,6 +224,7 @@ window.addEventListener("load", function () {
 	`, [{ "content": "車両追加", "event": `Dialog.list.addCarDialog.functions.display();`, "icon": "add" }, { "content": "一括操作", "event": `Dialog.list.carListDialog.functions.ikkatsuSousa();`, "icon": "wrench", "id": "car-list-ikkatsu-sousa" }, { "content": "閉じる", "event": `Dialog.list.carListDialog.off();`, "icon": "close" }], {
 		display: function () {
 			let tableContainer = gebi("car-list-table-container");
+			tableContainer.classList.add("list-table-container");
 			tableContainer.innerHTML = "";
 			let table = new Table();
 			table.setAttributes({ "class": "row-hover-hilight horizontal-stripes" });
@@ -264,6 +265,62 @@ window.addEventListener("load", function () {
 			});
 		}
 	}, true);
+	new Dialog("imageListDialog", "画像ファイルリスト", `
+		<div id="image-list-table-container"></div>
+	`, [{ "content": "閉じる", "event": `Dialog.list.imageListDialog.off();`, "icon": "close" }], {
+		display: function () {
+			let tableContainer = gebi("image-list-table-container");
+			tableContainer.classList.add("list-table-container");
+			tableContainer.innerHTML = "";
+			let table = new Table();
+			table.setAttributes({ "class": "row-hover-hilight horizontal-stripes" });
+			table.addRow();
+			table.addCell("<input type='checkbox'>");
+			table.addCell("番号");
+			table.addCell("datに記述されている画像ファイル名");
+			table.addCell("画像読込済");
+			table.addCell("操作");
+			let i = 0;
+			imageFileNames.forEach((fileName) => {
+				table.addRow();
+				table.addCell(`<input type="checkbox" class="row-selector" value="${i}">`);
+				table.addCell(`${i}`);
+				table.addCell(`${fileName}`);
+				if (imageFiles.has(fileName)) {
+					table.addCell(`○`, { "class": "text-center" });
+					table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="画像を見る" onclick="Dialog.list.imageListDialog.functions.open('${fileName}')">eye</button>`);
+				} else {
+					table.addCell(`×`, { "class": "text-center" });
+					table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="ファイルから画像を読み込み" onclick="Dialog.list.selectImageDialog.functions.display('${fileName}')">image</button>`);
+				}
+				i++;
+			});
+			tableContainer.innerHTML = table.generateTable();
+			setTableCheckboxEvents(tableContainer, []);
+			TableSort.addSortButtonToTable(tableContainer);
+			Dialog.list.imageListDialog.on();
+		},
+		open: function (imageFileName) {
+			Dialog.list.imagePreviewDialog.functions.display(imageFileName);
+		}
+	}, true);
+	new Dialog("imagePreviewDialog", "画像ファイルプレビュー", `
+		<div id="image-preview-dialog-image-preview-container"></div>
+	`, [{ "content": "閉じる", "event": `Dialog.list.imagePreviewDialog.off();`, "icon": "close" }], {
+		display: function (imageFileName) {
+			gebi("imagePreviewDialog").querySelector(".dialog-title").innerHTML = imageFileName;
+			let container = gebi("image-preview-dialog-image-preview-container");
+			container.innerHTML = "";
+			let image = imageFiles.get(imageFileName);
+			container.appendChild(image);
+			Dialog.list.imagePreviewDialog.on();
+		}
+	}, true);
+	//一覧ダイアログにクラス付与
+	[gebi("imageListDialog"), gebi("carListDialog")].forEach((dialog) => {
+		dialog.classList.add("list-dialog");
+	});
+	//テキストの短縮
 	function reduceText(text, maxChar) {
 		let result = [text.substr(0, maxChar)];
 		if (text == "-") { result.push({ "class": "text-center" }); }
@@ -272,79 +329,6 @@ window.addEventListener("load", function () {
 			result.push({ "class": "mku-balloon", "mku-balloon-message": text })
 		}
 		return result;
-	}
-	//表+チェックボックスで行選択
-	function setTableCheckboxEvents(tableContainer, buttons) {
-		//全件選択チェックボックス
-		let selectAllCheckBox = tableContainer.querySelector("tr td input[type='checkbox']");
-		//各行のチェックボックス
-		let checkboxes = tableContainer.querySelectorAll("tr:not(:nth-child(1)) td input[type='checkbox']");
-		//最後にチェックした行
-		let lastCheckedRow = -1;
-		//各行のステータスに応じてボタンの活性･非活性を切り替え
-		let switchElementsByCheckedStatus = () => {
-			let checkedAtLeastOnce = false;
-			let checkedAll = true;
-			for (let i of checkboxes) {
-				if (i.checked) {
-					checkedAtLeastOnce = true;
-				} else {
-					checkedAll = false;
-				}
-			}
-			buttons.forEach((button) => {
-				button.disabled = !checkedAtLeastOnce;
-			});
-			if (checkedAll) {
-				selectAllCheckBox.checked = true;
-			}
-		}
-		//全選択チェックボックスのイベント
-		selectAllCheckBox.addEventListener("click", () => {
-			tableContainer.querySelectorAll("tr:not(:nth-child(1)) input[type='checkbox']").forEach((checkbox) => {
-				checkbox.checked = selectAllCheckBox.checked;
-			});
-			switchElementsByCheckedStatus();
-		});
-
-		//各行チェックボックスのイベント
-		checkboxes.forEach((checkBox) => {
-			checkBox.addEventListener("click", () => {
-				if (!checkBox.checked) {
-					selectAllCheckBox.checked = false;
-				}
-				lastCheckedRow = findElementIndex(tableContainer.querySelectorAll("tr:not(:nth-child(1)) td input[type='checkbox']"), checkBox);
-				switchElementsByCheckedStatus();
-			});
-		});
-
-		//各行をクリックでチェックボックスをチェック
-		tableContainer.querySelectorAll("tr:not(:nth-child(1)) td:not(:first-child):not(:last-child)").forEach((td) => {
-			td.addEventListener("click", (e) => {
-				if (e.shiftKey && lastCheckedRow != -1) {
-					window.getSelection().removeAllRanges();
-					let checkboxes = tableContainer.querySelectorAll("tr:not(:nth-child(1)) td input[type='checkbox']");
-					let thisCheckBoxIndex = findElementIndex(checkboxes, td.parentNode.querySelector("input[type='checkbox']"));
-					let start = Math.min(lastCheckedRow, thisCheckBoxIndex);
-					let end = Math.max(lastCheckedRow, thisCheckBoxIndex);
-					let direction = checkboxes[lastCheckedRow].checked;
-					checkboxes[lastCheckedRow].click();
-					for (let i = start; i <= end; i++) {
-						if (checkboxes[i].checked != direction) {
-							checkboxes[i].click();
-						}
-					}
-				} else {
-					td.parentNode.querySelector("input[type='checkbox']").click();
-				}
-				window.getSelection().removeAllRanges();
-			});
-		});
-
-		let findElementIndex = (from, target) => {
-			return [].slice.call(from).indexOf(target);
-		};
-		switchElementsByCheckedStatus();
 	}
 
 	new Dialog("ikkatsuSousaDialog", "<span id='ikkatsu-car-count'></span>両の車両に一括操作", `

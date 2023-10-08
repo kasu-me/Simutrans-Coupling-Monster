@@ -112,6 +112,9 @@ function refresh() {
 	if (Dialog.list.carListDialog.isActive) {
 		Dialog.list.carListDialog.functions.display();
 	}
+	if (Dialog.list.imageListDialog.isActive) {
+		Dialog.list.imageListDialog.functions.display();
+	}
 
 	//車両がない場合の処理
 	if (hasNoAddon) {
