@@ -1,7 +1,6 @@
 function setSuggestionBox(input, dropdown, dataset) {
 	setDatasetToSuggestionBox(input, dropdown, dataset);
 	let scroll = () => {
-		dropdown.classList.remove("on");
 	};
 
 	input.addEventListener("focusin", () => {
