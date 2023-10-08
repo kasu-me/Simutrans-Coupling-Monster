@@ -82,4 +82,8 @@ const FORMULAIC_PHRASE_FOR_DAT_VAL = {
 		Passagiere: "二等旅客",
 		Post: "一等旅客",
 	},
+	length: {
+		11: "18m級",
+		12: "20m級",
+	},
 };
