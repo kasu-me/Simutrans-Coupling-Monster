@@ -215,6 +215,10 @@ select#carsSelectBox {
 	z-index: 1000;
 }
 
+#constraint-container>div:nth-child(2) #main-proptable-container table td:nth-child(2) .suggestion-box>div {
+	padding: 0.4em;
+}
+
 #constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
 	color: #f00;
 	font-size: 75%;
@@ -241,6 +245,7 @@ select#carsSelectBox {
 #constraint-container>div:nth-child(2) #main-proptable-container table .input-textbox {
 	width: 100%;
 	font-size: 9pt;
+	padding: 0.4em;
 }
 
 /* 選択中のアドオン */
