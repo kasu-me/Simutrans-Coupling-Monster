@@ -1,0 +1,31 @@
+.suggestion-box {
+	position: fixed;
+	transform-origin: top center;
+	transform: scaleY(0);
+	transition: 150ms ease transform 0s;
+	height: 15em;
+	overflow-y: scroll;
+	background-color: #fff;
+	border: 1px solid #333;
+	min-width: 20em;
+}
+
+.suggestion-box:not(.unavailable).on {
+	transform: scaleY(1);
+}
+
+.suggestion-box>div {
+	cursor: pointer;
+	padding: 0.25em;
+	user-select: none;
+}
+
+.suggestion-box>div:hover {
+	background-color: var(--selection-hover-highlight);
+}
+
+.suggestion-box>div.selected {
+	background-color: var(--selection-highlight);
+	pointer-events: none;
+	color: #fff;
+}

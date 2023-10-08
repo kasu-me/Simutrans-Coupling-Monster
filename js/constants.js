@@ -26,3 +26,50 @@ const DIRECTION_ARROWS = ["↙", "↘", "↓", "←", "↗", "↖", "↑", "→"
 const EMPTYIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${EMPTYIMAGE}[${x}]`);
 //pakタイプ
 const PAK_TYPE = 128;
+
+const FORMULAIC_PHRASE_FOR_DAT_PROP = {
+	copyright: "作者",
+	intro_year: "導入年",
+	intro_month: "導入月",
+	retire_year: "引退年",
+	retire_month: "引退月",
+	waytype: "乗り物の走行する環境の種類",
+	engine_type: "動力種別",
+	freight: "貨物",
+	runningcost: "運行費",
+	cost: "購入費",
+	speed: "最高速度",
+	payload: "最大積載量",
+	weight: "自重",
+	gear: "ギア比",
+	power: "出力",
+	smoke: "煙",
+	sound: "音",
+	loading_time: "積載時間",
+};
+const FORMULAIC_PHRASE_FOR_DAT_VAL = {
+	waytype: {
+		road: "自動車",
+		track: "鉄道",
+		tram_track: "路面電車",
+		air: "航空機",
+		water: "船舶",
+		monorail_track: "モノレール",
+		maglev_track: "リニア",
+		narrowgauge_track: "ナローゲージ",
+	},
+	engine_type: {
+		steam: "蒸気機関",
+		diesel: "ディーゼル",
+		electric: "電気(架線給電)",
+		bio: "動物",
+		sail: "帆走",
+		fuel_cell: "燃料電池",
+		hydrogene: "水素燃料",
+		battery: "蓄電池",
+	},
+	freight: {
+		Passagiere: "二等旅客",
+		Post: "一等旅客",
+	},
+};

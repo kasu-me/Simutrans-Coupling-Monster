@@ -16,7 +16,7 @@ window.addEventListener("load", function () {
 	`, [], {}, true);
 
 
-	new Dialog("addCarDialog", "車両を追加：基本情報の入力", `
+	new Dialog("addCarDialog", "車両を作成：基本情報の入力", `
 		<table class="input-area">
 			<tr>
 				<td>
@@ -57,7 +57,8 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<input id="new-car-img-file" type="file" accept=".png">
-	`, [{ "content": "プロパティ入力へ進む", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarDialog.off();`, "icon": "close" }], {
+		<p><label for="auto-insert-property" class="mku-checkbox-container"><input id="auto-insert-property" type="checkbox" checked></label><label for="auto-insert-property">主要なプロパティの入力欄を自動で用意</label></span></p>
+	`, [{ "content": "車両作成", "event": `Dialog.list.addCarDialog.functions.addCar();`, "icon": "check" }, { "content": "キャンセル", "event": `Dialog.list.addCarDialog.off();`, "icon": "close" }], {
 		display: function () {
 			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
 			gebi("new-car-img-file").dispatchEvent(new Event("change"));
@@ -92,13 +93,29 @@ window.addEventListener("load", function () {
 					promises.push(appendImageToImagesList(fileName, gebi("new-car-img-file").files[0]));
 				}
 				Promise.all(promises).then(() => {
-					addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value);
-					refresh();
-					Dialog.list.addCarDialog.off();
-					Dialog.list.addCarPropertyDialog.functions.display();
-					let selectBox = gebi("carsSelectBox")
-					selectBox.selectedIndex = selectBox.length - 1;
-					selectBox.dispatchEvent(new Event("change"));
+					if (addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value)) {
+						if (gebi("auto-insert-property").checked) {
+							masterAddons.at(-1).copyright = "";
+							masterAddons.at(-1).waytype = "track";
+							masterAddons.at(-1).engine_type = "";
+							masterAddons.at(-1).freight = "";
+							masterAddons.at(-1).speed = "";
+							masterAddons.at(-1).payload = "";
+							masterAddons.at(-1).weight = "";
+							masterAddons.at(-1).power = "";
+							masterAddons.at(-1).intro_year = "";
+							masterAddons.at(-1).intro_month = "";
+						} else {
+							Dialog.list.addCarPropertyDialog.functions.display();
+						}
+						refresh();
+						Dialog.list.addCarDialog.off();
+						let selectBox = gebi("carsSelectBox")
+						selectBox.selectedIndex = selectBox.length - 1;
+						selectBox.dispatchEvent(new Event("change"));
+					} else {
+						Dialog.list.alertDialog.functions.display("重複した名称の車両が存在するため追加できません。別の名前でお試しください。");
+					}
 					loader.finish();
 				});
 			}
@@ -641,92 +658,11 @@ window.addEventListener("load", function () {
 			}
 		}
 	}, true);
-	let suggestions = {
-		copyright: "作者",
-		intro_year: "導入年",
-		intro_month: "導入月",
-		retire_year: "引退年",
-		retire_month: "引退月",
-		waytype: "乗り物の走行する環境の種類",
-		engine_type: "動力種別",
-		freight: "貨物",
-		runningcost: "運行費",
-		cost: "購入費",
-		speed: "最高速度",
-		payload: "最大積載量",
-		weight: "自重",
-		gear: "ギア比",
-		power: "出力",
-		smoke: "煙",
-		sound: "音",
-		loading_time: "積載時間",
-	};
-	let formulaicPhraseForDat = {
-		waytype: {
-			road: "自動車",
-			track: "鉄道",
-			tram_track: "路面電車",
-			air: "航空機",
-			water: "船舶",
-			monorail_track: "モノレール",
-			maglev_track: "リニア",
-			narrowgauge_track: "ナローゲージ",
-		},
-		engine_type: {
-			steam: "蒸気機関",
-			diesel: "ディーゼル",
-			electric: "電気(架線給電)",
-			bio: "動物",
-			sail: "帆走",
-			fuel_cell: "燃料電池",
-			hydrogene: "水素燃料",
-			battery: "蓄電池",
-		},
-		freight: {
-			Passagiere: "二等旅客",
-			Post: "一等旅客",
-		},
-	};
-	function setSuggestionBox(input, dropdown, dataset) {
-		setDatasetToSuggestionBox(input, dropdown, dataset);
-		input.addEventListener("focusin", () => {
-			dropdown.classList.add("on");
-		});
-		input.addEventListener("focusout", () => {
-			if (dropdown.querySelectorAll("div:hover").length == 0) {
-				dropdown.classList.remove("on");
-			}
-		});
-		input.addEventListener("input", () => {
-			dropdown.querySelectorAll("div").forEach((button) => {
-				if (button.dataset.dataName.toUpperCase() == input.value.toUpperCase()) {
-					button.classList.add("selected");
-				} else {
-					button.classList.remove("selected");
-				}
-			});
-		});
-	}
-	function setDatasetToSuggestionBox(input, dropdown, dataset) {
-		dropdown.innerHTML = "";
-		for (let dataName in dataset) {
-			let button = document.createElement("div");
-			button.innerText = `${dataset[dataName]} (${dataName})`;
-			button.dataset.dataName = dataName;
-			button.addEventListener("click", () => {
-				input.value = dataName;
-				input.dispatchEvent(new Event("input"));
-				dropdown.classList.remove("on");
-			});
-			dropdown.appendChild(button);
-		}
-		input.dispatchEvent(new Event("input"));
-	}
 
 	let propertySuggestionBox = gebi("new-property-property-name-suggestion");
 	let valueSuggestionBox = gebi("new-property-value-suggestion");
 
-	setSuggestionBox(gebi("new-property-property-name"), propertySuggestionBox, suggestions);
+	setSuggestionBox(gebi("new-property-property-name"), propertySuggestionBox, FORMULAIC_PHRASE_FOR_DAT_PROP);
 	setSuggestionBox(gebi("new-property-property-value"), valueSuggestionBox, {});
 	valueSuggestionBox.classList.add("unavailable");
 
@@ -769,8 +705,8 @@ window.addEventListener("load", function () {
 		}
 
 		//サジェストが存在する場合はサジェストをセット
-		if (formulaicPhraseForDat.hasOwnProperty(propInputValue)) {
-			setDatasetToSuggestionBox(valueInput, valueSuggestionBox, formulaicPhraseForDat[propInputValue]);
+		if (FORMULAIC_PHRASE_FOR_DAT_VAL.hasOwnProperty(propInputValue)) {
+			setDatasetToSuggestionBox(valueInput, valueSuggestionBox, FORMULAIC_PHRASE_FOR_DAT_VAL[propInputValue]);
 			valueSuggestionBox.classList.remove("unavailable");
 		} else {
 			valueSuggestionBox.classList.add("unavailable");

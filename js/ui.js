@@ -98,11 +98,13 @@ function refresh() {
 
 	//日本語名･nameの入力欄
 	let jatabInput = gebi("jatabtable-japanese-name");
-	jatabInput.innerHTML = "";
+	jatabInput.innerHTML = "　";
 	jatabInput.removeAttribute("disabled");
 	jatabInput.setAttribute("contenteditable", "plaintext-only");
 	let nameInput = gebi("main-proptable-name");
-	nameInput.innerHTML = "";
+	nameInput.innerHTML = "　";
+	nameInput.removeAttribute("disabled");
+	nameInput.setAttribute("contenteditable", "plaintext-only");
 
 	setFooterAddonsList();
 
@@ -115,6 +117,8 @@ function refresh() {
 	if (hasNoAddon) {
 		jatabInput.setAttribute("disabled", "disabled");
 		jatabInput.removeAttribute("contenteditable");
+		nameInput.setAttribute("disabled", "disabled");
+		nameInput.removeAttribute("contenteditable");
 		gebi("carsSelectBox").innerHTML = "";
 		return;
 	}
@@ -182,6 +186,14 @@ function refresh() {
 			tdController.innerHTML = "※必須";
 		} else {
 			tdController.innerHTML = `<button class="lsf mku-balloon" mku-balloon-message="プロパティを削除" onclick="deleteProperty('${prop}',this)">delete</button>`;
+		}
+
+		if (FORMULAIC_PHRASE_FOR_DAT_VAL.hasOwnProperty(prop)) {
+			let valueSuggestionBox = document.createElement("div");
+			valueSuggestionBox.classList.add("suggestion-box");
+			tdVal.appendChild(valueSuggestionBox);
+			setSuggestionBox(valInput, valueSuggestionBox, FORMULAIC_PHRASE_FOR_DAT_VAL[prop]);
+			valInput.dispatchEvent(new Event("input"))
 		}
 		valInput.addEventListener("input", () => {
 			let inputValue = valInput.value;

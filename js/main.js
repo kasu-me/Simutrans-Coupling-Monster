@@ -108,7 +108,9 @@ function addEmptyCarToAddon(master) {
 
 //マスタアドオンに新規車両を追加
 function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
-	//todo:nameの重複チェック
+	if (getObjectsByItsName(masterAddons, name).length > 0) {
+		return false;
+	}
 	addEmptyCarToAddon(masterAddons);
 	masterAddons.at(-1).name = name;
 	masterAddons.at(-1).obj = "vehicle";
@@ -120,6 +122,7 @@ function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
 
 	setAddonNamesToSelectBox(gebi("carsSelectBox"));
 	setImageNamesToSelectBox(gebi("imageSelectBox"));
+	return true;
 }
 
 //マスタアドオンから車両を削除
@@ -317,6 +320,7 @@ function writeDat() {
 					})
 				}
 			} else {
+				if (addon[prop].trim() == "") { continue }
 				dat += `${prop}=${addon[prop]}\n`;
 			}
 		}

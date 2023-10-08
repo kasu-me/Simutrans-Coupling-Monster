@@ -201,6 +201,11 @@ select#carsSelectBox {
 	text-align: left;
 	width: 100%;
 	text-wrap: wrap;
+	position: relative;
+}
+
+#constraint-container>div:nth-child(2) #main-proptable-container table td:nth-child(2) .suggestion-box {
+	z-index: 1000;
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
@@ -692,38 +697,6 @@ table.row-hover-hilight tr:hover {
 	display: none;
 }
 
-#addCarPropertyDialog .suggestion-box {
-	position: fixed;
-	transform-origin: top center;
-	transform: scaleY(0);
-	transition: 150ms ease all 0s;
-	height: 15em;
-	overflow-y: scroll;
-	background-color: #fff;
-	border: 1px solid #333;
-	min-width: 20em;
-}
-
-#addCarPropertyDialog .suggestion-box:not(.unavailable).on {
-	transform: scaleY(1);
-}
-
-#addCarPropertyDialog .suggestion-box>div {
-	cursor: pointer;
-	padding: 0.25em;
-	user-select: none;
-}
-
-#addCarPropertyDialog .suggestion-box>div:hover {
-	background-color: var(--selection-hover-highlight);
-}
-
-#addCarPropertyDialog .suggestion-box>div.selected {
-	background-color: var(--selection-highlight);
-	pointer-events: none;
-	color: #fff;
-}
-
 #addCarPropertyDialog .warning {
 	margin-bottom: 0;
 }
@@ -803,6 +776,7 @@ table.row-hover-hilight tr:hover {
 	margin-right: 0.25em;
 }
 
+#addCarDialog .dialog-main-message p:last-child,
 #calcCostDialog .dialog-main-message p:last-child {
 	margin-bottom: 0;
 }
