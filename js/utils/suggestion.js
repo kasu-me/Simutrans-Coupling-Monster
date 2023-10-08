@@ -2,6 +2,7 @@ function setSuggestionBox(input, dropdown, dataset) {
 	setDatasetToSuggestionBox(input, dropdown, dataset);
 	input.addEventListener("focusin", () => {
 		dropdown.style.top = `${input.getBoundingClientRect().top + input.clientHeight}px`;
+		dropdown.style.minWidth = `${input.getBoundingClientRect().width}px`;
 		dropdown.classList.add("on");
 	});
 	input.addEventListener("focusout", () => {
