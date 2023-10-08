@@ -1155,7 +1155,7 @@ window.addEventListener("load", function () {
 			let gear = calcGear(formationSpeed, startingAcceleration, formationWeight, formationPayload, formationPower, gebi("boost-mode").checked);
 			if (!(isNaN(formationSpeed) || isNaN(startingAcceleration) || isNaN(formationWeight) || isNaN(formationPayload) || isNaN(formationPower) || isNaN(introYear) || isNaN(keisuu) || isNaN(gear))) {
 				gebi("formation-payload").innerText = formationPayload;
-				gebi("formation-weight").innerText = formationWeight;
+				gebi("formation-weight").innerText = Math.floor(formationWeight);
 				gebi("formation-power").innerText = formationPower;
 				gebi("formation-speed").innerText = formationSpeed;
 				gebi("formation-keisuu").innerText = keisuu;
