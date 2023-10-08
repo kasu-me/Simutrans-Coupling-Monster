@@ -747,6 +747,7 @@ window.addEventListener("load", function () {
 			</tr>
 		</table>
 		<div id="addon-image-preview"></div>
+		<p style="margin-bottom:0;text-align:center;">↓クリックで画像を指定 shift+クリックで1列をまとめて指定↓</p>
 		<div id="addon-image-whole-preview">
 			<div class="addon-image-whole-preview-position-pointer" id="position-pointer"></div>
 			<div class="addon-image-whole-preview-position-pointer cursor" id="position-pointer-cursor"></div>
@@ -758,7 +759,10 @@ window.addEventListener("load", function () {
 		imageDisplaySizeRatio: 1,
 		editingAddonMainImageData: null,
 		selectedDirection: -1,
+		lastX: 0,
 		display: function () {
+			Dialog.list.editImageDialog.functions.lastX = 0;
+
 			//編集中アドオンセット
 			Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
 
@@ -792,13 +796,14 @@ window.addEventListener("load", function () {
 			let positionPointerCursor = gebi("position-pointer-cursor");
 			let addonImagePositionsArea = gebi("addon-image-positions");
 			let x = 0;
+			Dialog.list.editImageDialog.functions.lastX = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
 			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
 			if (e.shiftKey) {
 				positionPointerCursor.style.width = `600px`;
 				x = 0;
 			} else {
 				positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-				x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+				x = Dialog.list.editImageDialog.functions.lastX;
 			}
 			if (x >= 0 && y >= 0) {
 				positionPointerCursor.classList.add("on");
@@ -823,6 +828,21 @@ window.addEventListener("load", function () {
 				Dialog.list.editImageDialog.functions.refresh();
 			}
 		},
+		dispatchKeyDownEvent: function (e) {
+			let positionPointerCursor = gebi("position-pointer-cursor");
+			if (e.shiftKey && Dialog.list.editImageDialog.isActive && positionPointerCursor.classList.contains("on")) {
+				positionPointerCursor.style.left = 0;
+				positionPointerCursor.style.width = `600px`;
+			}
+		},
+		dispatchKeyUpEvent: function (e) {
+			let addonWholeImageArea = gebi("addon-image-whole-preview");
+			let positionPointerCursor = gebi("position-pointer-cursor");
+			if (Dialog.list.editImageDialog.isActive && positionPointerCursor.classList.contains("on")) {
+				positionPointerCursor.style.left = `${Dialog.list.editImageDialog.functions.lastX * PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+			}
+		},
 		refresh: function () {
 			refresh();
 
@@ -831,6 +851,8 @@ window.addEventListener("load", function () {
 			addonWholeImageArea.removeEventListener("mouseenter", Dialog.list.editImageDialog.functions.showPositionPointerCursor);
 			addonWholeImageArea.removeEventListener("mousemove", Dialog.list.editImageDialog.functions.movePositionPointerCursor);
 			addonWholeImageArea.removeEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
+			window.removeEventListener("keydown", Dialog.list.editImageDialog.functions.dispatchKeyDownEvent);
+			window.removeEventListener("keyup", Dialog.list.editImageDialog.functions.dispatchKeyUpEvent);
 
 			//日本語名をセット
 			let japaneseName = gebi("display-japanese-name");
@@ -875,6 +897,8 @@ window.addEventListener("load", function () {
 				addonWholeImageArea.addEventListener("mouseenter", Dialog.list.editImageDialog.functions.showPositionPointerCursor);
 				addonWholeImageArea.addEventListener("mousemove", Dialog.list.editImageDialog.functions.movePositionPointerCursor);
 				addonWholeImageArea.addEventListener("click", Dialog.list.editImageDialog.functions.clickPositionPointerCursor);
+				window.addEventListener("keydown", Dialog.list.editImageDialog.functions.dispatchKeyDownEvent);
+				window.addEventListener("keyup", Dialog.list.editImageDialog.functions.dispatchKeyUpEvent);
 
 				//全体内での現在位置表示
 				positionPointer.classList.add("on");

@@ -1,4 +1,3 @@
-
 function setSuggestionBox(input, dropdown, dataset) {
 	setDatasetToSuggestionBox(input, dropdown, dataset);
 	input.addEventListener("focusin", () => {
