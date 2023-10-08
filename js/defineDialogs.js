@@ -114,7 +114,7 @@ window.addEventListener("load", function () {
 						selectBox.selectedIndex = selectBox.length - 1;
 						selectBox.dispatchEvent(new Event("change"));
 					} else {
-						Dialog.list.alertDialog.functions.display("重複した名称の車両が存在するため追加できません。別の名前でお試しください。");
+						Dialog.list.alertDialog.functions.display("重複した名前の車両が存在するため追加できません。別の名前でお試しください。");
 					}
 					loader.finish();
 				});

@@ -27,13 +27,16 @@ const EMPTYIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${EMPTYIMAGE}[${x}]`);
 //pakタイプ
 const PAK_TYPE = 128;
 
-const FORMULAIC_PHRASE_FOR_DAT_PROP = {
+//各種プロパティと日本語名称の対応
+const FORMULAIC_PHRASE_FOR_DAT_PROP_WHOLE = {
+	length: "車体長",
+	obj: "種類",
 	copyright: "作者",
 	intro_year: "導入年",
 	intro_month: "導入月",
 	retire_year: "引退年",
 	retire_month: "引退月",
-	waytype: "乗り物の走行する環境の種類",
+	waytype: "走行環境種別",
 	engine_type: "動力種別",
 	freight: "貨物",
 	runningcost: "運行費",
@@ -47,6 +50,27 @@ const FORMULAIC_PHRASE_FOR_DAT_PROP = {
 	sound: "音",
 	loading_time: "積載時間",
 };
+const FORMULAIC_PHRASE_FOR_DAT_PROP = {
+	copyright: "作者",
+	intro_year: "導入年",
+	intro_month: "導入月",
+	retire_year: "引退年",
+	retire_month: "引退月",
+	waytype: "走行環境種別",
+	engine_type: "動力種別",
+	freight: "貨物",
+	runningcost: "運行費",
+	cost: "購入費",
+	speed: "最高速度",
+	payload: "最大積載量",
+	weight: "自重",
+	gear: "ギア比",
+	power: "出力",
+	smoke: "煙",
+	sound: "音",
+	loading_time: "積載時間",
+};
+//各種プロパティと対応する定型句の組み合わせ
 const FORMULAIC_PHRASE_FOR_DAT_VAL = {
 	waytype: {
 		road: "自動車",

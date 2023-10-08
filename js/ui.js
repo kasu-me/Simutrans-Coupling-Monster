@@ -178,6 +178,11 @@ function refresh() {
 		tdVal.appendChild(valInput);
 		propTable.appendChild(tr);
 		tdProp.innerHTML = prop;
+		if (FORMULAIC_PHRASE_FOR_DAT_PROP_WHOLE.hasOwnProperty(prop)) {
+			let p = document.createElement("p");
+			p.innerHTML = FORMULAIC_PHRASE_FOR_DAT_PROP_WHOLE[prop];
+			tdProp.appendChild(p);
+		}
 		valInput.value = editingAddon[prop];
 		let isDisabled = prop == "obj";
 		let isRequiredProperty = prop == "name" || prop == "obj" || prop == "length";
@@ -187,7 +192,6 @@ function refresh() {
 		} else {
 			tdController.innerHTML = `<button class="lsf mku-balloon" mku-balloon-message="プロパティを削除" onclick="deleteProperty('${prop}',this)">delete</button>`;
 		}
-
 		if (FORMULAIC_PHRASE_FOR_DAT_VAL.hasOwnProperty(prop)) {
 			let valueSuggestionBox = document.createElement("div");
 			valueSuggestionBox.classList.add("suggestion-box");
@@ -537,7 +541,7 @@ window.addEventListener("load", () => {
 		//アドオン名称重複チェック
 		let duplicatNamedObjects = getObjectsByItsName(masterAddons, inputValue);
 		if (duplicatNamedObjects.length > 1 || (duplicatNamedObjects.length == 1 && duplicatNamedObjects[0] != editingAddon)) {
-			new Message(`重複した名称は登録できません。`, ["normal-message"], 3000, true, true);
+			new Message(`重複した名前は登録できません。`, ["normal-message"], 3000, true, true);
 			nameInput.classList.add("validation-error");
 			return
 		}
