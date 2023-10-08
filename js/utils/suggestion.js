@@ -1,13 +1,19 @@
 function setSuggestionBox(input, dropdown, dataset) {
 	setDatasetToSuggestionBox(input, dropdown, dataset);
+	let scroll = () => {
+		dropdown.classList.remove("on");
+	};
+
 	input.addEventListener("focusin", () => {
 		dropdown.style.top = `${input.getBoundingClientRect().top + input.clientHeight}px`;
 		dropdown.style.minWidth = `${input.getBoundingClientRect().width}px`;
 		dropdown.classList.add("on");
+		document.addEventListener("wheel", scroll);
 	});
 	input.addEventListener("focusout", () => {
 		if (dropdown.querySelectorAll("div:hover").length == 0) {
 			dropdown.classList.remove("on");
+			document.removeEventListener("wheel", scroll);
 		}
 	});
 	input.addEventListener("input", () => {
