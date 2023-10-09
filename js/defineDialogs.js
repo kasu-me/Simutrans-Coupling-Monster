@@ -805,11 +805,12 @@ window.addEventListener("load", function () {
 
 				//画像ファイル名セレクトボックスセット
 				setImageNamesToSelectBox(gebi("addon-image-file-name"));
-				loader.finish();
 
 				Dialog.list.editImageDialog.functions.refresh();
 
 				Dialog.list.editImageDialog.on();
+
+				setTimeout(loader.finish, 150);
 			}, 0);
 		},
 		showPositionPointerCursor: function (e) {
