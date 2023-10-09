@@ -192,6 +192,9 @@ function loadDatFile(file) {
 							continue;
 						}
 					}
+					if (propName.startsWith(FREIGHTIMAGE)) {
+						continue;
+					}
 
 					//プロパティ投入
 					if (propName.startsWith(CONSTRAINT)) {

@@ -411,8 +411,13 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 	width: calc(600px - 12.5em);
 }
 
-#editImageDialog #direction-selectbox {
+#editImageDialog #direction-selectbox,
+#editImageDialog #loading-conditions-selectbox {
 	width: unset;
+}
+
+#editImageDialog .selectbox-fluctuation-button:has(#loading-conditions-selectbox) {
+	margin-left: 1.0em;
 }
 
 #editImageDialog #addon-image-preview {

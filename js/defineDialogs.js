@@ -749,19 +749,19 @@ window.addEventListener("load", function () {
 				</td>
 			</tr>
 			<tr>
-				<td>方角</td>
-				<td>
-					<span class="selectbox-fluctuation-button">
-						<select id="direction-selectbox">${directionSelectBox}</select>
-					</span>
-				</td>
-			</tr>
-			<tr>
 				<td>画像名</td>
 				<td>
 				<span class="selectbox-fluctuation-button">
 					<select id="addon-image-file-name"></select>
 				</span>
+			</tr>
+			<tr>
+				<td>方向</td>
+					<td>
+					<span class="selectbox-fluctuation-button">
+						<select id="direction-selectbox">${directionSelectBox}</select>
+					</span>
+				</td>
 			</tr>
 		</table>
 		<div id="addon-image-preview"></div>

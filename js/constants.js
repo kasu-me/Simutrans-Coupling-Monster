@@ -21,9 +21,11 @@ const ADDON_NONE = { name: "none" };
 //datファイル定型句
 const CONSTRAINT = "constraint";
 const EMPTYIMAGE = "emptyimage";
+const FREIGHTIMAGE = "freightimage";
 const DIRECTIONS = ["s", "e", "se", "sw", "n", "w", "nw", "ne"];
 const DIRECTION_ARROWS = ["↙", "↘", "↓", "←", "↗", "↖", "↑", "→"];
 const EMPTYIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${EMPTYIMAGE}[${x}]`);
+const FREIGHTIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${FREIGHTIMAGE}[${x}]`);
 //pakタイプ
 const PAK_TYPE = 128;
 
