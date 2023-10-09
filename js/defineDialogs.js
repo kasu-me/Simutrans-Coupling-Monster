@@ -1255,7 +1255,7 @@ window.addEventListener("load", function () {
 		return length * 4;
 	}
 	function getOffsetValues(position) {
-		if (position.indexOf(",") == -1) {
+		if (!position.includes(",")) {
 			return [Number(position), 0, 0];
 		}
 		return position.split(",").map((x) => { return Number(x) });

@@ -88,7 +88,7 @@ function getImageNameAndPositionsFromAddonByDirection(addon, direction) {
 function addImageFileNameToMasterFromDat(propName, val) {
 	imageFileNames.add(val.split(".")[0]);
 	//内包表記的なやつの場合
-	if (propName.indexOf(",") != -1) {
+	if (propName.includes(",")) {
 		propName.split("[")[1].split(",").map(x => x.trim().split("]")[0]).forEach((direction, i) => {
 			masterAddons.at(-1)[`${EMPTYIMAGE}[${direction}]`] = val.replace(/<\$0>/g, i);
 		});
