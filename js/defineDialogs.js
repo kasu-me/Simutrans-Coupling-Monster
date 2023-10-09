@@ -66,6 +66,16 @@ window.addEventListener("load", function () {
 			gebi("new-car-img-file").dispatchEvent(new Event("change"));
 			gebi("new-car-img-file-name-preview").innerText = "ファイルを選択してください";
 			setImageNamesToSelectBox(gebi("new-car-img-file-name-existing"));
+			let loadImageWaySelectBox = gebi("how-to-load-image")
+			if (imageFiles.size == 0) {
+				loadImageWaySelectBox.disabled = true;
+				loadImageWaySelectBox.selectedIndex = 0;
+				loadImageWaySelectBox.dispatchEvent(new Event("change"));
+			} else {
+				loadImageWaySelectBox.disabled = false;
+				loadImageWaySelectBox.selectedIndex = 1;
+				loadImageWaySelectBox.dispatchEvent(new Event("change"));
+			}
 			Dialog.list.addCarDialog.on();
 		},
 		addCar: function () {
