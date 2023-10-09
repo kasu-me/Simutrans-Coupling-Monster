@@ -535,6 +535,7 @@ window.addEventListener("load", () => {
 			jatab.set(getEditingAddon(), jatabInput.innerText);
 		}
 	});
+	jatabInput.addEventListener("blur", refresh);
 	//name指定イベント
 	let nameInput = gebi("main-proptable-name");
 	nameInput.addEventListener("input", () => {
@@ -557,6 +558,7 @@ window.addEventListener("load", () => {
 		setAddonNamesToSelectBox(selectBox);
 		selectBox.selectedIndex = selectedIndex;
 	});
+	nameInput.addEventListener("blur", refresh);
 	//Enter改行無効化
 	[jatabInput, nameInput].forEach((input) => {
 		input.addEventListener("keydown", (e) => {
