@@ -780,23 +780,27 @@ window.addEventListener("load", function () {
 		lastX: 0,
 		display: function () {
 			Dialog.list.editImageDialog.functions.lastX = 0;
+			loader.start();
 
-			//編集中アドオンセット
-			Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
+			setTimeout(() => {
+				//編集中アドオンセット
+				Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
 
-			//アドオン名セレクトボックスセット
-			let previewAddonNameSelectBox = gebi("preview-addon-name");
-			setAddonNamesToSelectBox(previewAddonNameSelectBox);
-			previewAddonNameSelectBox.value = Dialog.list.editImageDialog.functions.editingAddon.name;
+				//アドオン名セレクトボックスセット
+				let previewAddonNameSelectBox = gebi("preview-addon-name");
+				setAddonNamesToSelectBox(previewAddonNameSelectBox);
+				previewAddonNameSelectBox.value = Dialog.list.editImageDialog.functions.editingAddon.name;
 
-			gebi("direction-selectbox").selectedIndex = 0;
+				gebi("direction-selectbox").selectedIndex = 0;
 
-			//画像ファイル名セレクトボックスセット
-			setImageNamesToSelectBox(gebi("addon-image-file-name"));
+				//画像ファイル名セレクトボックスセット
+				setImageNamesToSelectBox(gebi("addon-image-file-name"));
+				loader.finish();
 
-			Dialog.list.editImageDialog.functions.refresh();
+				Dialog.list.editImageDialog.functions.refresh();
 
-			Dialog.list.editImageDialog.on();
+				Dialog.list.editImageDialog.on();
+			}, 0);
 		},
 		showPositionPointerCursor: function (e) {
 			let addonWholeImageArea = gebi("addon-image-whole-preview");
