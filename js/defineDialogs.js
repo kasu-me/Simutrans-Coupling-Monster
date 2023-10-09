@@ -529,16 +529,16 @@ window.addEventListener("load", function () {
 						//連結設定を設定しなおし(この段階では名前を文字列で投入する)
 						if (prop == CONSTRAINT) {
 							newAddon[CONSTRAINT] = { prev: new Set(), next: new Set() };
-							if (copyProperties.indexOf("constraints") != -1) {
+							if (copyProperties.includes("constraints")) {
 								setCopiedAddonToConstraint(addon, newAddon, "prev");
 								setCopiedAddonToConstraint(addon, newAddon, "next");
 							}
 						} else if (prop.startsWith(EMPTYIMAGE)) {
-							if (copyProperties.indexOf("images") != -1) {
+							if (copyProperties.includes("images")) {
 								newAddon[prop] = addon[prop];
 							}
 						} else {
-							if (copyProperties.indexOf(prop) != -1) {
+							if (copyProperties.includes(prop)) {
 								newAddon[prop] = addon[prop];
 							}
 						}
