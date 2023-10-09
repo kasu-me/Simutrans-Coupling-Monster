@@ -227,6 +227,7 @@ window.addEventListener("load", function () {
 		<div id="car-list-table-container"></div>
 	`, [{ "content": "車両追加", "event": `Dialog.list.addCarDialog.functions.display();`, "icon": "add" }, { "content": "一括操作", "event": `Dialog.list.carListDialog.functions.ikkatsuSousa();`, "icon": "wrench", "id": "car-list-ikkatsu-sousa" }, { "content": "閉じる", "event": `Dialog.list.carListDialog.off();`, "icon": "close" }], {
 		display: function () {
+			let currentChecked = Array.from(document.querySelectorAll("#carListDialog .row-selector:checked")).map(checkbox => checkbox.value);
 			let tableContainer = gebi("car-list-table-container");
 			tableContainer.classList.add("list-table-container");
 			tableContainer.innerHTML = "";
@@ -240,7 +241,7 @@ window.addEventListener("load", function () {
 			table.addCell("操作");
 			masterAddons.forEach((addon, i) => {
 				table.addRow();
-				table.addCell(`<input type="checkbox" class="row-selector" value="${addon.name}">`);
+				table.addCell(`<input type="checkbox" class="row-selector" value="${addon.name}" ${currentChecked.includes(addon.name) ? `checked` : ""}>`);
 				table.addCell(`${i}`);
 				table.addCell(...reduceText(addon.name, 40));
 				table.addCell(...reduceText(getJapaneseNameFromAddon(addon, "-"), 35));
