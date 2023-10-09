@@ -53,6 +53,8 @@ window.addEventListener("load", function () {
 				</td>
 				<td>
 					<input id="new-car-length" type="number" min="1" value="12">
+					<div id="new-car-length-suggestion" class="suggestion-box">
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -141,6 +143,8 @@ window.addEventListener("load", function () {
 		}
 	});
 	gebi("how-to-load-image").dispatchEvent(new Event("change"));
+	setSuggestionBox(gebi("new-car-length"), gebi("new-car-length-suggestion"), FORMULAIC_PHRASE_FOR_DAT_VAL.length);
+
 
 	new Dialog("openDatFileDialog", "総合読み込み", `
 		<div id="dat-file-drop-area" class="filefield">
