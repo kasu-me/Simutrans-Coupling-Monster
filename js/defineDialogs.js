@@ -64,7 +64,7 @@ window.addEventListener("load", function () {
 		display: function () {
 			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
 			gebi("new-car-img-file").dispatchEvent(new Event("change"));
-			gebi("new-car-img-file-name-preview").innerText = "ファイルを選択してください";
+			gebi("new-car-length").dispatchEvent(new Event("input"));
 			setImageNamesToSelectBox(gebi("new-car-img-file-name-existing"));
 			let loadImageWaySelectBox = gebi("how-to-load-image")
 			if (imageFiles.size == 0) {
