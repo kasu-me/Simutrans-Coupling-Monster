@@ -420,10 +420,15 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 }
 
 /* 車両に画像指定ダイアログ */
+#editImageDialog {
+	top: 3vh;
+}
+
 #editImageDialog div.dialog-main-message {
 	padding: 1.0em;
 	margin: 0 1.8em;
 	border: solid 1px var(--formation-table-main-border);
+	max-height: calc(100vh - 14em);
 }
 
 #editImageDialog .input-area {

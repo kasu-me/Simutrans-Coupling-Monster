@@ -15,8 +15,8 @@
 	margin: 1em;
 	width: calc(var(--simutrans-paktype) + 2em + 2px);
 	word-wrap: break-word;
-	border: 2px solid buttonface;
-	background-color: buttonface;
+	border: 2px solid #ccc;
+	background-color: #f5f5f5;
 	user-select: none;
 }
 
