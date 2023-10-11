@@ -455,7 +455,7 @@ td.formation-name button,
 	min-width: 15em;
 	border: 1px solid #333;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
-	z-index: 2;
+	z-index: 1001;
 }
 
 .context-menu.on {
