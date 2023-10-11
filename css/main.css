@@ -137,16 +137,30 @@ select#carsSelectBox {
 
 #constraint-container>div.constraint-view {
 	overflow-y: scroll;
+	background-repeat: no-repeat;
+	background-size: 20vw;
+}
+
+#constraint-container>div#constraint-prev-container {
+	background-position: bottom 1rem left 1rem;
+	background-image: url(../img/constraint_prev.png);
+}
+
+#constraint-container>div#constraint-next-container {
+	background-position: bottom 1rem right 1rem;
+	background-image: url(../img/constraint_next.png);
 }
 
 #constraint-container>div.constraint-view>ul {
 	padding-left: 0;
 	display: flex;
 	flex-wrap: wrap;
+	margin: 0;
 }
 
 #constraint-container>div.constraint-view>ul>li.draggable-object {
 	list-style: none;
+	z-index: 1;
 }
 
 #constraint-container>div p {
