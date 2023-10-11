@@ -212,6 +212,8 @@ select#carsSelectBox {
 	width: 100%;
 	text-wrap: wrap;
 	position: relative;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container table td:nth-child(2) .suggestion-box {
@@ -236,7 +238,7 @@ select#carsSelectBox {
 #constraint-container>div:nth-child(2) #main-proptable-container table td {
 	padding: 10px;
 	text-align: center;
-	border: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 	font-size: 75%;
 }
 
