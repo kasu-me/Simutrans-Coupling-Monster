@@ -23,8 +23,8 @@ header {
 	width: 100%;
 	background-color: #fff;
 	margin: 0;
-	margin-bottom: 2.0em;
-	padding: 0.8em var(--main-padding);
+	margin-bottom: calc(2.0em - 4px);
+	padding: calc(0.8em - 4px) var(--main-padding);
 	border-bottom: 1px solid var(--formation-table-main-border);
 	display: flex;
 }
@@ -44,7 +44,7 @@ header div.button-outer {
 }
 
 header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button {
-	padding: 4px 6px;
+	padding: 8px 10px;
 	background-color: var(--button-face);
 	border: 1px solid var(--button-face);
 }
@@ -173,10 +173,12 @@ select#carsSelectBox {
 
 #constraint-container>div:nth-child(2) #main-image-container .image-container {
 	cursor: pointer;
+	display: block;
+	margin: 0 auto;
 }
 
 #constraint-container>div:nth-child(2) #main-proptable-container {
-	height: calc((100vh - 18.5em - var(--simutrans-paktype)) - var(--simutrans-paktype) - 7.5em);
+	height: calc((100vh - 18.5em - var(--simutrans-paktype)) - var(--simutrans-paktype) - 6.6em + 4px);
 	overflow-y: scroll;
 	border: 1px solid var(--formation-table-main-border);
 	margin-top: 1em;
@@ -824,11 +826,11 @@ body.collapsible #collapsible-button::before {
 }
 
 body.collapsible #constraint-container>div {
-	height: calc(100vh - 11em);
+	height: calc(100vh - 11em + 8px);
 }
 
 body.collapsible #constraint-container>div:nth-child(2) #main-proptable-container {
-	height: calc((100vh - 11em) - var(--simutrans-paktype) - 7.5em);
+	height: calc((100vh - 11em) - var(--simutrans-paktype) - 6.6em + 8px);
 }
 
 body.collapsible footer {
