@@ -441,3 +441,58 @@ td.formation-name button,
 	padding: 30px;
 	margin-bottom: 1.0em;
 }
+
+/* 右クリックメニュー */
+.context-menu {
+	display: block;
+	position: absolute;
+	background-color: #fff;
+	top: 0;
+	left: 0;
+	transform: scale(0);
+	transform-origin: left top;
+	transition: transform 150ms 0s ease;
+	min-width: 15em;
+	border: 1px solid #333;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+	z-index: 2;
+}
+
+.context-menu.on {
+	transform: scale(1);
+}
+
+.context-menu>button {
+	cursor: pointer;
+	font-size: 11pt;
+	background-color: #fff;
+	color: var(--button-face);
+	display: block;
+	width: 100%;
+	border: none;
+	border-radius: 0;
+	padding: 8px 10px;
+	padding-right: 12px;
+	text-align: left;
+}
+
+.context-menu>button:hover {
+	background-color: var(--table-alternate-color-2);
+
+}
+
+.context-menu>button:not(:last-child) {
+	border-bottom: 1px solid #777 !important;
+}
+
+.context-menu>button::before {
+	display: inline-block;
+	width: 1.0em;
+}
+
+.context-menu>button:disabled {
+	pointer-events: none !important;
+	background-color: #ddd !important;
+	border-color: #ccc;
+	color: #777 !important;
+}

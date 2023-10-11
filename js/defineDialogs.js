@@ -438,9 +438,13 @@ window.addEventListener("load", function () {
 	</div>
 
 	`, [{ "content": "コピー", "event": `Dialog.list.copyCarDialog.functions.copy();`, "icon": "tabs" }, { "content": "閉じる", "event": `Dialog.list.copyCarDialog.off();`, "icon": "close" }], {
-		display: function () {
+		addons: [],
+		display: function (addons) {
 			//対象アドオン
-			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
+			if (addons == undefined) {
+				addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
+			}
+			Dialog.list.copyCarDialog.functions.addons = addons;
 
 			//対象プロパティ
 			let properties = new Set();
@@ -491,7 +495,7 @@ window.addEventListener("load", function () {
 			Dialog.list.copyCarDialog.on();
 		},
 		refresh: function () {
-			let addons = Dialog.list.ikkatsuSousaDialog.functions.addons;
+			let addons = Dialog.list.copyCarDialog.functions.addons;
 
 			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
 
@@ -510,7 +514,7 @@ window.addEventListener("load", function () {
 		},
 		copy: function () {
 			//汚染しないため配列コピー
-			let addons = Array.from(Dialog.list.ikkatsuSousaDialog.functions.addons);
+			let addons = Array.from(Dialog.list.copyCarDialog.functions.addons);
 
 			let inputs = [gebi("copy-replace-pattern").value.trim(), gebi("copy-replace-replacement").value];
 			generateRegExp(inputs);

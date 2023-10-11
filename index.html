@@ -39,6 +39,7 @@
 	<script src="js/utils/suggestion.js"></script>
 	<link rel="stylesheet" href="css/utils/suggestion.css">
 	<script src="js/utils/tableSelect.js"></script>
+	<script src="js/contextMenu.js"></script>
 	<!-- balloonで使用する空のスタイルシート -->
 	<style id="stylesheet"></style>
 </head>
@@ -191,6 +192,14 @@
 		<div class="loader">Loading...</div>
 	</div>
 
+	<div class="context-menu" id="main-context-menu">
+		<button class="lsf-icon" icon="image"
+			onclick="Dialog.list.editImageDialog.functions.display()">車両と画像の対応</button>
+		<button class="lsf-icon" icon="tabs"
+			onclick="Dialog.list.copyCarDialog.functions.display([getEditingAddon()])">車両をコピー</button>
+		<button class="lsf-icon" icon="param"
+			onclick="Dialog.list.addCarPropertyDialog.functions.display()">プロパティを追加</button>
+	</div>
 </body>
 
 </html>
