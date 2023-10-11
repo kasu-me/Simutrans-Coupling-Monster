@@ -1,25 +1,33 @@
 function setSuggestionBox(input, dropdown, dataset) {
 	setDatasetToSuggestionBox(input, dropdown, dataset);
 	let scroll = () => {
-		if (dropdown.matches(":hover")) {
-
-		} else {
-			dropdown.classList.remove("on");
+		if (!dropdown.matches(":hover")) {
+			hideSuggestionDropdown();
+			input.addEventListener("click", showSuggestionDropdown, { once: true });
 		}
 	};
-
-	input.addEventListener("focusin", () => {
+	let windowResized = () => {
+		hideSuggestionDropdown();
+		input.addEventListener("click", showSuggestionDropdown, { once: true });
+	};
+	let showSuggestionDropdown = () => {
 		dropdown.style.top = `${input.getBoundingClientRect().top + input.clientHeight}px`;
 		dropdown.style.minWidth = `${input.getBoundingClientRect().width}px`;
 		dropdown.classList.add("on");
 		document.addEventListener("wheel", scroll);
-	});
-	input.addEventListener("focusout", () => {
+		window.addEventListener("resize", windowResized);
+	}
+	let hideSuggestionDropdown = () => {
 		if (dropdown.querySelectorAll("div:hover").length == 0) {
 			dropdown.classList.remove("on");
 			document.removeEventListener("wheel", scroll);
+			window.removeEventListener("resize", windowResized);
 		}
-	});
+	}
+
+	input.addEventListener("focusin", showSuggestionDropdown);
+	input.addEventListener("focusout", hideSuggestionDropdown);
+
 	input.addEventListener("input", () => {
 		dropdown.querySelectorAll("div").forEach((button) => {
 			if (button.dataset.dataName.toUpperCase() == input.value.toUpperCase()) {
