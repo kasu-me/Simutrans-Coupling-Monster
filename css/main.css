@@ -49,6 +49,7 @@ header>div.button-group div.button-outer>button {
 	background-color: var(--button-face);
 	border: 1px solid var(--button-face);
 	border-radius: 3px;
+	font-size: 11pt;
 }
 
 header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button:hover,
