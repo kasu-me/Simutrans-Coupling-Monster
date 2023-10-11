@@ -398,6 +398,7 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 }
 
 #editImageDialog .input-area {
+	font-size: 0.8rem;
 	margin-bottom: 1em;
 	width: 600px;
 	position: sticky;
@@ -408,11 +409,11 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 }
 
 #editImageDialog .input-area td:first-child {
-	width: 6em;
+	width: 6.5em;
 }
 
 #editImageDialog select {
-	width: calc(600px - 12.5em);
+	width: calc(600px - 10.2rem);
 }
 
 #editImageDialog #direction-selectbox,
