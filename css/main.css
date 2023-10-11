@@ -133,12 +133,14 @@ select#carsSelectBox {
 #constraint-container>div:nth-child(2) {
 	text-align: center;
 	overflow-y: hidden;
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
 }
 
 #constraint-container>div.constraint-view {
 	overflow-y: scroll;
 	background-repeat: no-repeat;
 	background-size: 20vw;
+	box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.3) inset;
 }
 
 #constraint-container>div#constraint-prev-container {
@@ -161,6 +163,7 @@ select#carsSelectBox {
 #constraint-container>div.constraint-view>ul>li.draggable-object {
 	list-style: none;
 	z-index: 1;
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
 }
 
 #constraint-container>div p {
@@ -305,7 +308,10 @@ footer #addons-list {
 	width: 100%;
 	overflow-x: scroll;
 	min-height: var(--simutrans-paktype);
+	box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3) inset;
 }
+
+footer #addons-list>div.draggable-object {}
 
 footer #addons-list>div.draggable-object:not(:last-child) {
 	margin-right: 0;
