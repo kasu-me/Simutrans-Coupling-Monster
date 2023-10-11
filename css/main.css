@@ -43,14 +43,21 @@ header div.button-outer {
 	margin-right: 0.75em;
 }
 
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button {
+header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button,
+header>div.button-group div.button-outer>button {
 	padding: 8px 10px;
 	background-color: var(--button-face);
 	border: 1px solid var(--button-face);
+	border-radius: 3px;
 }
 
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button:hover {
+header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button:hover,
+header>div.button-group div.button-outer>button:hover {
 	background-color: var(--button-face-hover);
+}
+
+header>div.button-group div.button-outer>button:active {
+	background-color: var(--button-face-active);
 }
 
 header>div.button-group div.button-outer .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:checked) .mku-drop-parent-button {
@@ -91,6 +98,7 @@ header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-cont
 }
 
 header>div.button-group div.button-outer .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:disabled) .mku-drop-parent-button,
+header>div.button-group div.button-outer>button:disabled,
 header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button:disabled {
 	pointer-events: none !important;
 	background-color: #ddd !important;
