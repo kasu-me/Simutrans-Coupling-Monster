@@ -1,0 +1,6 @@
+/* プレビューダイアログ */
+#previewDialog div.dialog-main-message:has(.dialog-preview) {
+	padding: 1.0em;
+	margin: 0 1.8em;
+	border: solid 1px var(--formation-table-main-border);
+}

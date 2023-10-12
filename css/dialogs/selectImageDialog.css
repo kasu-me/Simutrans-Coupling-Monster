@@ -1,0 +1,22 @@
+/* 画像ファイル指定ダイアログ */
+
+#selectImageDialog #selected-image-preview {
+	text-align: center;
+	border: 1px solid var(--formation-table-main-border);
+	background-color: var(--simutrans-transparent);
+	width: calc(var(--simutrans-paktype) * 8 + var(--scrollbar-width));
+	height: 50vh;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	user-select: none;
+}
+
+#selectImageDialog #image-file-input,
+#addCarDialog #new-car-img-file,
+#addNewImageDialog #new-img-img-file {
+	display: none;
+}
+
+#selectImageDialog .drag-target>img {
+	opacity: 40%;
+}

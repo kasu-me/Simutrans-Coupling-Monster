@@ -1,0 +1,77 @@
+/* 車両に画像指定ダイアログ */
+#editImageDialog {
+	top: 3vh;
+}
+
+#editImageDialog div.dialog-main-message {
+	padding: 1.0em;
+	margin: 0 1.8em;
+	border: solid 1px var(--formation-table-main-border);
+	max-height: calc(100vh - 14em);
+}
+
+#editImageDialog .input-area {
+	font-size: 0.8rem;
+	margin-bottom: 1em;
+	width: 600px;
+	position: sticky;
+	top: 0;
+	left: 0;
+	background: rgba(255, 255, 255, 0.9);
+	z-index: 2;
+}
+
+#editImageDialog .input-area td:first-child {
+	width: 6.5em;
+}
+
+#editImageDialog select {
+	width: calc(600px - 10.2rem);
+}
+
+#editImageDialog #direction-selectbox,
+#editImageDialog #loading-conditions-selectbox {
+	width: unset;
+}
+
+#editImageDialog .selectbox-fluctuation-button:has(#loading-conditions-selectbox) {
+	margin-left: 1.0em;
+}
+
+#editImageDialog #addon-image-preview {
+	text-align: center;
+}
+
+#editImageDialog #addon-image-preview .image-container {
+	text-align: left;
+	padding: 0.5em;
+}
+
+#editImageDialog #addon-image-whole-preview {
+	width: 600px;
+	position: relative;
+	background-color: var(--simutrans-transparent);
+	background-size: cover;
+	background-repeat: no-repeat;
+	display: none;
+}
+
+#editImageDialog #addon-image-whole-preview.on {
+	display: block;
+}
+
+#editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer {
+	position: absolute;
+	border: 2px solid #f00;
+	display: none;
+	cursor: default;
+}
+
+#editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer.cursor {
+	border: 2px solid #00f;
+	cursor: pointer;
+}
+
+#editImageDialog #addon-image-whole-preview .addon-image-whole-preview-position-pointer.on {
+	display: block;
+}

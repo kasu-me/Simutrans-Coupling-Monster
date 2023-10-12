@@ -1,0 +1,17 @@
+#calcCostDialog .dialog-main-message table.input-area {
+	width: 100%;
+}
+
+#calcCostDialog .dialog-main-message table.input-area tr td:first-child {
+	width: 8.5em;
+}
+
+#calcCostDialog input[type="number"] {
+	width: 5em;
+	margin-right: 0.25em;
+}
+
+#addCarDialog .dialog-main-message p:last-child,
+#calcCostDialog .dialog-main-message p:last-child {
+	margin-bottom: 0;
+}

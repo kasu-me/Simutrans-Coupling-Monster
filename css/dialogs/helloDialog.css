@@ -1,0 +1,46 @@
+/* 初期ダイアログ */
+#helloDialog {
+	height: 90vh;
+	top: 5vh;
+}
+
+#helloDialog .dialog-main-message {
+	max-height: unset;
+}
+
+#helloDialog #hello-menu {
+	display: flex;
+	width: calc(100vw - 20em);
+	justify-content: space-around;
+}
+
+#helloDialog #hello-menu>div.hello-menu-container {
+	display: block;
+	user-select: none;
+	border: 2px solid var(--formation-table-main-border);
+	text-align: center;
+	padding: 1em 2em;
+	margin: 15vh 3em;
+	width: 35vh;
+	background-color: var(--table-alternate-color-1);
+	cursor: pointer;
+	border-radius: 5px;
+}
+
+#helloDialog #hello-menu>div.hello-menu-container:hover {
+	background-color: var(--sub-light-color);
+}
+
+#helloDialog #hello-menu>div.hello-menu-container>div>img {
+	width: 100%;
+}
+
+#helloDialog #hello-menu>div.hello-menu-container>p {
+	margin: 0;
+	font-size: 95%;
+}
+
+#helloDialog #hello-menu>div.hello-menu-container>p.title {
+	font-size: 130%;
+	font-weight: bold;
+}

@@ -1,0 +1,10 @@
+/* ダイアログ */
+.dialog-area .dialog-content>div.dialog-main-message>p:first-child {
+	margin-top: 0;
+}
+
+#infoDialog,
+#alertDialog,
+#confirmDialog {
+	top: 25%;
+}
