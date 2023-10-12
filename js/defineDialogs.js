@@ -79,58 +79,65 @@ window.addEventListener("load", function () {
 			Dialog.list.addCarDialog.on();
 		},
 		addCar: function () {
-			if (gebi("new-car-name").value == "" || gebi("new-car-length").value == "") {
-				Dialog.list.alertDialog.functions.display("入力されていない項目があります。");
-				return;
+			loader.start();
+			let carName = gebi("new-car-name").value.trim();
+			let carLength = gebi("new-car-length").value.trim();
+			let isFileSelected = gebi("new-car-img-file").files.length > 0;
+			let fileName;
+			//画像ファイルの指定確認
+			if (isFileSelected && gebi("how-to-load-image").value == "0") {
+				fileName = removeExtention(gebi("new-car-img-file").files[0].name);
+			} else if (gebi("how-to-load-image").value == "1") {
+				fileName = gebi("new-car-img-file-name-existing").value;
 			} else {
-				loader.start();
-				let isFileSelected = gebi("new-car-img-file").files.length > 0;
-				let fileName;
-				if (isFileSelected && gebi("how-to-load-image").value == "0") {
-					fileName = removeExtention(gebi("new-car-img-file").files[0].name);
-				} else if (gebi("how-to-load-image").value == "1") {
-					fileName = gebi("new-car-img-file-name-existing").value
-				} else {
-					loader.finish();
-					Dialog.list.alertDialog.functions.display("画像ファイルの指定を見直してください。");
-					return;
-				}
-				if (fileName.trim() == "") {
-					loader.finish();
-					Dialog.list.alertDialog.functions.display("画像ファイルの指定を見直してください。");
-					return;
-				}
-				let promises = [];
-				if (isFileSelected) {
-					promises.push(appendImageToImagesList(fileName, gebi("new-car-img-file").files[0]));
-				}
-				Promise.all(promises).then(() => {
-					if (addCarToMaster(gebi("new-car-name").value, fileName, 0, gebi("new-car-length").value)) {
-						if (gebi("auto-insert-property").checked) {
-							masterAddons.at(-1).copyright = "";
-							masterAddons.at(-1).waytype = "track";
-							masterAddons.at(-1).engine_type = "";
-							masterAddons.at(-1).freight = "";
-							masterAddons.at(-1).speed = "";
-							masterAddons.at(-1).payload = "";
-							masterAddons.at(-1).weight = "";
-							masterAddons.at(-1).power = "";
-							masterAddons.at(-1).intro_year = "";
-							masterAddons.at(-1).intro_month = "";
-						} else {
-							Dialog.list.addCarPropertyDialog.functions.display();
-						}
-						refresh();
-						Dialog.list.addCarDialog.off();
-						let selectBox = gebi("carsSelectBox")
-						selectBox.selectedIndex = selectBox.length - 1;
-						selectBox.dispatchEvent(new Event("change"));
-					} else {
-						Dialog.list.alertDialog.functions.display("重複した名前の車両が存在するため追加できません。別の名前でお試しください。");
-					}
-					loader.finish();
-				});
+				loader.finish();
+				Dialog.list.alertDialog.functions.display("画像ファイルを指定してください。");
+				return;
 			}
+			if (fileName.trim() == "") {
+				loader.finish();
+				Dialog.list.alertDialog.functions.display("画像ファイルの指定を見直してください。");
+				return;
+			}
+			//画像ファイルの読み込み
+			let promises = [];
+			if (isFileSelected) {
+				promises.push(appendImageToImagesList(fileName, gebi("new-car-img-file").files[0]));
+			}
+
+			//その他プロパティ投入等
+			Promise.all(promises).then(() => {
+				if (carName == "") {
+					carName = `new_car_${masterAddons.length + 1}`;
+				}
+				if (carLength == "") {
+					carLength = 12;
+				}
+				if (addCarToMaster(carName, fileName, 0, carLength)) {
+					if (gebi("auto-insert-property").checked) {
+						masterAddons.at(-1).copyright = "";
+						masterAddons.at(-1).waytype = "track";
+						masterAddons.at(-1).engine_type = "";
+						masterAddons.at(-1).freight = "";
+						masterAddons.at(-1).speed = "";
+						masterAddons.at(-1).payload = "";
+						masterAddons.at(-1).weight = "";
+						masterAddons.at(-1).power = "";
+						masterAddons.at(-1).intro_year = "";
+						masterAddons.at(-1).intro_month = "";
+					} else {
+						Dialog.list.addCarPropertyDialog.functions.display();
+					}
+					refresh();
+					Dialog.list.addCarDialog.off();
+					let selectBox = gebi("carsSelectBox")
+					selectBox.selectedIndex = selectBox.length - 1;
+					selectBox.dispatchEvent(new Event("change"));
+				} else {
+					Dialog.list.alertDialog.functions.display("重複した名前の車両が存在するため追加できません。別の名前でお試しください。");
+				}
+				loader.finish();
+			});
 		}
 	}, true);
 	gebi("new-car-img-file").addEventListener("change", () => {
