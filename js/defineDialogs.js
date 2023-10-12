@@ -1338,6 +1338,7 @@ window.addEventListener("load", function () {
 	new Dialog("helpDialog", "Coupling Monster について", `<div class="dialog-preview">
 		<div class="mku-tab-container" id="help-tab">
 			<div class="mku-tab-content" tab-title="概要">
+				<img src="img/logo_title.png" class="logo" alt="COUPLING MONSTER">
 				<h2>このアプリは何？</h2>
 				<p>フリー輸送シミュレーションゲーム「Simutrans」のアドオン製作を支援するWebアプリケーションです。</p>
 				<p>本アプリでは、Simutransの車両アドオン製作において最も面倒なことの一つ、<strong>連結の設定</strong>を支援します。</p>

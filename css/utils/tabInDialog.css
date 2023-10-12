@@ -22,6 +22,12 @@
 	margin-bottom: 0;
 }
 
+#helpDialog .mku-tab-container .mku-tab-content img.logo {
+	width: calc(100% - 4em);
+	margin: 1.5em 2em;
+	margin-top: 1em;
+}
+
 #helpDialog table.input-area td:first-child {
 	width: 7em;
 }
