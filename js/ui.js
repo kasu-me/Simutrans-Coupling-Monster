@@ -45,12 +45,19 @@ function setAddonPreviewImage(target, addon) {
 	return setAddonPreviewImageByDirection(target, addon, "s");
 }
 function setAddonPreviewImageByDirection(target, addon, direction) {
-	if (addon == undefined) { return }
-	let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddonByDirection(addon, direction);
-	let img = imageFiles.get(imgName);
-
+	let imgName, imgPositionY, imgPositionX, img;
 	let div = document.createElement("div");
 	div.classList.add("image-container");
+
+	if (addon == undefined) {
+		imgName = undefined;
+		[imgPositionY, imgPositionX] = [0, 0];
+		div.classList.add("no-selection");
+	} else {
+		[imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddonByDirection(addon, direction);
+	}
+	img = imageFiles.get(imgName);
+
 	if (img != undefined) {
 		div.style.backgroundImage = `url(${img.src})`;
 		div.style.backgroundPositionX = `${-imgPositionX * PAK_TYPE}px`;
@@ -123,6 +130,7 @@ function refresh() {
 		nameInput.setAttribute("disabled", "disabled");
 		nameInput.removeAttribute("contenteditable");
 		gebi("carsSelectBox").innerHTML = "";
+		setAddonPreviewImage(mainImageContainer);
 		return;
 	}
 	//車両がなければ以下の処理は行わない
@@ -226,27 +234,38 @@ function deleteProperty(propName, evtTargetButton) {
 function setFooterAddonsList() {
 	let addonsList = gebi("addons-list");
 	addonsList.innerHTML = "";
-	masterAddons.forEach((addon) => {
-		setAddonPreviewBox(addonsList, document.createElement("div"), addon);
-	});
+	if (masterAddons.length > 0) {
+		masterAddons.forEach((addon) => {
+			setAddonPreviewBox(addonsList, document.createElement("div"), addon);
+		});
+	} else {
+		setAddonPreviewBox(addonsList, document.createElement("div"), "NO-ADDON");
+	}
 }
 
 //アドオンプレビューボックス設定
 function setAddonPreviewBox(parent, box, addon) {
 	box.classList.add("draggable-object");
 	if (addon != undefined) {
-		setAddonBalloon(box, addon);
-		box.dataset.addonName = addon.name;
 		let title = document.createElement("p");
-		title.innerHTML = addon.name;
 		box.appendChild(title);
 		let titleJa = document.createElement("p");
 		box.appendChild(titleJa);
-		if (jatab.has(addon)) {
-			titleJa.innerHTML = jatab.get(addon);
+		if (addon == "NO-ADDON") {
+			addon = undefined;
+			title.innerHTML = "車両なし";
+			titleJa.innerHTML = "　"
+			box.classList.add("no-selection");
 		} else {
-			titleJa.innerHTML = "(日本語名未設定)";
-			titleJa.style.opacity = 0.4;
+			setAddonBalloon(box, addon);
+			box.dataset.addonName = addon.name;
+			title.innerHTML = addon.name;
+			if (jatab.has(addon)) {
+				titleJa.innerHTML = jatab.get(addon);
+			} else {
+				titleJa.innerHTML = "(日本語名未設定)";
+				titleJa.style.opacity = 0.4;
+			}
 		}
 		setAddonPreviewImage(box, addon);
 	} else {
@@ -261,8 +280,11 @@ function setAddonPreviewBox(parent, box, addon) {
 
 //アドオンバルーン設定
 function setAddonBalloon(target, addon) {
+	setBalloon(target, `<strong>${addon.name}</strong>${getJapaneseNameFromAddon(addon, "", "\n")}`)
+}
+function setBalloon(target, message) {
 	target.classList.add("mku-balloon");
-	target.setAttribute("mku-balloon-message", `<strong>${addon.name}</strong>${getJapaneseNameFromAddon(addon, "", "\n")}`);
+	target.setAttribute("mku-balloon-message", message);
 }
 
 //アドオンドラッグアンドドロップイベントをセット

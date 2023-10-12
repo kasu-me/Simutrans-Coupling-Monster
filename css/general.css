@@ -69,6 +69,11 @@ strong {
 	text-align: center;
 }
 
+.no-selection {
+	user-select: none;
+	pointer-events: none;
+}
+
 /* リンク */
 a:link,
 a:visited {

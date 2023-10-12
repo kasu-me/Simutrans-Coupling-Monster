@@ -910,8 +910,7 @@ window.addEventListener("load", function () {
 			let preview = setAddonPreviewImageByDirection(addonImageArea, Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
 			//方向別矢印をセット
 			preview.innerHTML = DIRECTION_ARROWS[selectBox.selectedIndex];
-			preview.classList.add("mku-balloon");
-			preview.setAttribute("mku-balloon-message", `矢印の向きと車両の向きが同じであれば正しい方向にセットされています`);
+			setBalloon(preview, `矢印の向きと車両の向きが同じであれば正しい方向にセットされています`);
 
 			//全体内での位置表示用の全体画像
 			gebi("open-select-image-dialog-button").onclick = () => {
