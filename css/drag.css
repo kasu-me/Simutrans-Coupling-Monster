@@ -24,6 +24,10 @@
 	cursor: auto;
 }
 
+.draggable-object:hover {
+	background-color: #fafafa;
+}
+
 .draggable-object>p {
 	margin-top: 0;
 	margin-bottom: 0;
