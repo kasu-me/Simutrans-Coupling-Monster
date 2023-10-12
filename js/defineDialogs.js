@@ -1,6 +1,6 @@
 window.addEventListener("load", function () {
 
-	new Dialog("helloDialog", "おはよう", `
+	new Dialog("helloDialog", `おはよう`, `
 		<div id="hello-menu">
 			<div class="hello-menu-container" onclick="Dialog.list.openDatFileDialog.functions.display()">
 				<div><img src="img/button_open.png"></div>

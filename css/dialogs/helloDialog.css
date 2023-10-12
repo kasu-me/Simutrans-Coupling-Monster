@@ -4,6 +4,15 @@
 	top: 5vh;
 }
 
+#helloDialog .dialog-title {
+	color: transparent;
+	height: 4em;
+	background-image: url(../../img/logo_title.png);
+	background-repeat: no-repeat;
+	background-size: auto 2em;
+	background-position: 1em 1em;
+}
+
 #helloDialog .dialog-main-message {
 	max-height: unset;
 }
