@@ -1065,7 +1065,7 @@ window.addEventListener("load", function () {
 		area.appendChild(outer);
 	}
 
-	new Dialog("calcCostDialog", "編成からコスト計算", `
+	new Dialog("calcCostDialog", "編成からコスト計算(Pak128Japan専用)", `
 		<table class="input-area">
 			<tr>
 				<td>
@@ -1378,7 +1378,7 @@ window.addEventListener("load", function () {
 				</table>
 			</div>
 			<div class="mku-tab-content" tab-title="コスト計算について">
-				<p>本アプリでは、pak128japanの公式コスト計算シートに基づいて車両コスト(cost･runningcost･gear)を計算することが可能です。</p>
+				<p>本アプリでは、Pak128Japan公式のコスト計算式に基づいて、車両コスト(cost･runningcost･gear)を算出･設定することが可能です。</p>
 				<h2>公式コスト計算式の仕様</h2>
 				<p>pak128japanの公式コスト計算シートによると、鉄道車両のコストは編成を組んだ状態で算出することになっております。</p>
 				<p>そのため本アプリでは、「連結プレビュー」機能で編成を組成すると、組成した車両を対象にコストを計算することができます。</p>
