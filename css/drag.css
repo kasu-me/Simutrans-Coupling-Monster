@@ -13,7 +13,7 @@
 	cursor: pointer;
 	padding: 0.5em 1em;
 	margin: 1em;
-	width: calc(var(--simutrans-paktype) + 2em + 2px);
+	width: calc(var(--simutrans-paktype) + 2em + 4px);
 	word-wrap: break-word;
 	border: 2px solid #ccc;
 	background-color: #f5f5f5;

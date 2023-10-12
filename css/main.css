@@ -279,11 +279,6 @@ select#carsSelectBox {
 	padding: 0.4em;
 }
 
-/* 選択中のアドオン */
-#addons-list .draggable-object.editing {
-	border: 2px solid var(--formation-table-main-border);
-}
-
 /* フッタ */
 footer {
 	z-index: 999;
@@ -314,6 +309,15 @@ footer #addons-list {
 
 footer #addons-list>div.draggable-object:not(:last-child) {
 	margin-right: 0;
+}
+
+footer #addons-list>div.draggable-object {
+	width: calc(var(--simutrans-paktype) + 2em + 4px + 1px);
+}
+
+/* 選択中のアドオン */
+footer #addons-list>div.draggable-object.editing {
+	border: 2px solid var(--formation-table-main-border);
 }
 
 
