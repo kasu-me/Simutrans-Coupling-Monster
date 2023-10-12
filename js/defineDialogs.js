@@ -20,15 +20,7 @@ window.addEventListener("load", function () {
 		<table class="input-area">
 			<tr>
 				<td>
-					名前
-				</td>
-				<td>
-					<input id="new-car-name">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					画像
+					画像指定方法
 				</td>
 				<td>
 					<select id="how-to-load-image">
@@ -49,10 +41,18 @@ window.addEventListener("load", function () {
 			</tr>
 			<tr>
 				<td>
+					名前
+				</td>
+				<td>
+					<input id="new-car-name" placeholder="new_car">
+				</td>
+			</tr>
+			<tr>
+				<td>
 					車両長
 				</td>
 				<td>
-					<input id="new-car-length" type="number" min="1" value="12">
+					<input id="new-car-length" type="number" min="1" placeholder="12">
 					<div id="new-car-length-suggestion" class="suggestion-box">
 					</div>
 				</td>
