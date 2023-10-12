@@ -533,6 +533,8 @@ window.addEventListener("load", function () {
 				});
 			}
 
+			let lastCopiedCarName = "";
+			//コピー実行
 			addons.forEach((addon) => {
 				let newName = addon.name.replace(...inputs);
 				//名称重複および空文字チェック
@@ -562,6 +564,8 @@ window.addEventListener("load", function () {
 					//候補リストから削除
 					let addonIndex = Dialog.list.ikkatsuSousaDialog.functions.addons.indexOf(addon);
 					Dialog.list.ikkatsuSousaDialog.functions.addons.splice(addonIndex, 1);
+					//名前を記録
+					lastCopiedCarName = newName;
 				} else {
 					failueCount++;
 				}
@@ -584,6 +588,12 @@ window.addEventListener("load", function () {
 			if (failueCount == 0) {
 				Dialog.list.ikkatsuSousaDialog.off();
 				Dialog.list.copyCarDialog.off();
+				//1両のみのコピーであればコピーした車両を表示する
+				if (addons.length == 1) {
+					let selectBox = gebi("carsSelectBox");
+					selectBox.value = lastCopiedCarName;
+					selectBox.dispatchEvent(new Event("change"));
+				}
 			} else {
 				gebi("ikkatsu-car-count").innerText = Dialog.list.ikkatsuSousaDialog.functions.addons.length;
 				Dialog.list.copyCarDialog.functions.display();
