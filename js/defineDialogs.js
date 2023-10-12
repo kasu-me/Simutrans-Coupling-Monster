@@ -1393,7 +1393,7 @@ window.addEventListener("load", function () {
 					</tr>
 				</table>
 			</div>
-			<div class="mku-tab-content" tab-title="コスト計算について">
+			<div class="mku-tab-content" tab-title="コスト計算">
 				<p>本アプリでは、Pak128Japan公式のコスト計算式に基づいて、旅客車両の各種コスト(cost･runningcost･gear)を算出･設定することが可能です。</p>
 				<h2>公式コスト計算式の仕様</h2>
 				<p>pak128japanの公式コスト計算シートによると、鉄道車両のコストは編成を組んだ状態で算出することになっております。</p>
