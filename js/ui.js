@@ -175,6 +175,7 @@ function refresh() {
 	//選択中のアドオンのプロパティを表示
 	jatabInput.innerHTML = getJapaneseNameFromAddon(editingAddon);
 	nameInput.innerHTML = editingAddon.name;
+	nameInput.classList.remove("validation-error");
 
 	for (let prop in editingAddon) {
 		if (prop == "name" || prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
@@ -564,10 +565,14 @@ window.addEventListener("load", () => {
 		let inputValue = nameInput.innerHTML;
 		let editingAddon = getEditingAddon();
 
-		//アドオン名称重複チェック
+		//アドオン名称バリデーションチェック
 		let duplicatNamedObjects = getObjectsByItsName(masterAddons, inputValue);
 		if (duplicatNamedObjects.length > 1 || (duplicatNamedObjects.length == 1 && duplicatNamedObjects[0] != editingAddon)) {
 			new Message(`重複した名前は登録できません。`, ["normal-message"], 3000, true, true);
+			nameInput.classList.add("validation-error");
+			return
+		} else if (inputValue.trim() == "") {
+			new Message(`名前を入力してください。`, ["normal-message"], 3000, true, true);
 			nameInput.classList.add("validation-error");
 			return
 		}
