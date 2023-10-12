@@ -318,13 +318,17 @@ footer #addons-list>div.draggable-object:not(:last-child) {
 
 
 /* メッセージ */
+
+.message-content.normal-message {
+	top: calc(40px + 0em);
+}
+
 .message-content.dat-file-loaded {
 	top: calc(40px + 0em);
 }
 
 .message-content.image-file-loaded,
-.message-content.file-saved,
-.message-content.normal-message {
+.message-content.file-saved {
 	top: calc(40px + 4.5em);
 }
 
