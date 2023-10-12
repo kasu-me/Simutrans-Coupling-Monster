@@ -1,8 +1,6 @@
 window.addEventListener("load", () => {
 	document.querySelector("#constraint-container > div:nth-child(2)").addEventListener("contextmenu", (e) => {
-		if (masterAddons.length > 0) {
-			turnOnContext(gebi("main-context-menu"), e);
-		}
+		turnOnContext(gebi("main-context-menu"), e);
 	});
 });
 

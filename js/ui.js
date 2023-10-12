@@ -74,6 +74,7 @@ function setAddonPreviewImageByDirection(target, addon, direction) {
 //表示更新
 function refresh() {
 	let hasNoAddon = masterAddons.length == 0;
+	let contextMenu = gebi("main-context-menu");
 
 	//ボタンの活性制御
 	document.querySelectorAll("header .mku-drop-container button").forEach((button, i) => {
@@ -131,9 +132,20 @@ function refresh() {
 		nameInput.removeAttribute("contenteditable");
 		gebi("carsSelectBox").innerHTML = "";
 		setAddonPreviewImage(mainImageContainer);
+		let contextMenuButtons = Array.from(contextMenu.querySelectorAll("button"));
+		contextMenuButtons.forEach((button) => {
+			button.disabled = true;
+		});
+		contextMenuButtons.at(-1).disabled = false;
 		return;
 	}
 	//車両がなければ以下の処理は行わない
+
+	//右クリックメニューの活性化
+	let contextMenuButtons = contextMenu.querySelectorAll("button");
+	contextMenuButtons.forEach((button) => {
+		button.disabled = false;
+	});
 
 	//編集中のアドオンの取得
 	let editingAddon = getEditingAddon();
