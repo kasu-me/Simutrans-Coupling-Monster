@@ -166,7 +166,7 @@ window.addEventListener("load", function () {
 	new Dialog("openDatFileDialog", "総合読み込み", `
 		<div id="dat-file-drop-area" class="filefield">
 			<p>dat,png,tabファイルをまとめてドラッグ＆ドロップすると全ての読み込みを行います</p>
-			<p>最低でも1件のdatファイルと1件の有効な車両が含まれている必要があります</p>
+			<p>最低でも1件の有効な車両が記述されたdatファイルが含まれている必要があります</p>
 			<p id="overwrite-warn">既に読み込まれているデータがある場合、重複する内容は上書きされます</p>
 		</div>
 		`, [{ "content": "キャンセル", "event": `refresh();Dialog.list.openDatFileDialog.off();`, "icon": "close" }], {
