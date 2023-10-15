@@ -244,7 +244,7 @@ let convertConstraintsToObject = (addon, mode, regExp) => {
 	addon[CONSTRAINT][mode] = new Set(Array.from(addon[CONSTRAINT][mode]).map(constraint => {
 		if (typeof constraint == "string") {
 			//文字列の場合
-			if (constraint == "none") {
+			if (constraint.toLowerCase() == "none") {
 				//連結設定「無」用車両をセット
 				return ADDON_NONE;
 			} else {
