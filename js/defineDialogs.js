@@ -7,7 +7,7 @@ window.addEventListener("load", function () {
 				<p class="title">既存のファイルを開く</p>
 				<p>PC上のdat･png･ja.tabを読み込んで編集します</p>
 			</div>
-			<div class="hello-menu-container" onclick="Dialog.list.helloDialog.off();Dialog.list.addCarDialog.functions.display()">
+			<div class="hello-menu-container" onclick="Dialog.list.helloDialog.off();document.body.classList.toggle('collapsible');Dialog.list.addCarDialog.functions.display()">
 				<div><img src="img/button_new.png"></div>
 				<p class="title">新規アドオン作成</p>
 				<p>ブラウザ上でアドオンを製作します</p>
