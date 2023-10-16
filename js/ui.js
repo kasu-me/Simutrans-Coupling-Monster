@@ -124,13 +124,16 @@ function refresh() {
 		Dialog.list.imageListDialog.functions.display();
 	}
 
+	let carsSelectBox = gebi("carsSelectBox");
+
 	//車両がない場合の処理
 	if (hasNoAddon) {
 		jatabInput.setAttribute("disabled", "disabled");
 		jatabInput.removeAttribute("contenteditable");
 		nameInput.setAttribute("disabled", "disabled");
 		nameInput.removeAttribute("contenteditable");
-		gebi("carsSelectBox").innerHTML = "";
+		carsSelectBox.innerHTML = "";
+		carsSelectBox.disabled = true;
 		setAddonPreviewImage(mainImageContainer);
 		let contextMenuButtons = Array.from(contextMenu.querySelectorAll("button"));
 		contextMenuButtons.forEach((button) => {
@@ -141,7 +144,8 @@ function refresh() {
 	}
 	//車両がなければ以下の処理は行わない
 
-	//右クリックメニューの活性化
+	//各種活性化
+	carsSelectBox.disabled = false;
 	let contextMenuButtons = contextMenu.querySelectorAll("button");
 	contextMenuButtons.forEach((button) => {
 		button.disabled = false;
