@@ -1,61 +1,65 @@
-#copyCarDialog .dialog-main-message>div {
-	display: flex;
-}
+#copyCarDialog {
+	.dialog-main-message>div {
+		display: flex;
 
-#copyCarDialog .dialog-main-message>div.properties-container>div#copy-taishou-properties {
-	max-width: calc(70vw - 14em);
-}
+		&.properties-container {
+			>div#copy-taishou-properties {
+				max-width: calc(70vw - 14em);
+			}
 
-#copyCarDialog .dialog-main-message>div.properties-container label {
-	display: inline-block;
-	margin-left: 1em;
-}
+			& label {
+				display: inline-block;
+				margin-left: 1em;
 
+				&:has(input:disabled) {
+					pointer-events: none;
+				}
 
-#copyCarDialog .dialog-main-message>div.properties-container label input {
-	vertical-align: middle;
-	cursor: pointer;
-}
+				& input {
+					vertical-align: middle;
+					cursor: pointer;
+				}
 
-#copyCarDialog .dialog-main-message>div.properties-container label:has(input:disabled) {
-	pointer-events: none;
-}
+			}
+		}
 
-#copyCarDialog .dialog-main-message>div.list-container {
-	margin-top: 1.5em;
-	align-items: center;
-}
+		&.list-container {
+			margin-top: 1.5em;
+			align-items: center;
 
-#copyCarDialog .dialog-main-message>div.list-container>div:nth-child(2) {
-	width: 2em;
-	text-align: center;
-}
+			>div:nth-child(2) {
+				width: 2em;
+				text-align: center;
+			}
 
-#copyCarDialog .dialog-main-message>div.list-container>div:not(:nth-child(2)) {
-	width: calc((100% - 2em) / 2);
-}
+			>div:not(:nth-child(2)) {
+				width: calc((100% - 2em) / 2);
+			}
 
-#copyCarDialog .dialog-main-message>div#copy-addon-names-list-container>div:not(:nth-child(2)) {
-	border: 2px solid var(--formation-table-main-border);
-	height: calc(80vh - 25em);
-	overflow-y: scroll;
-}
+			& ul {
+				padding-left: 0;
+				margin: 0;
+			}
 
-#copyCarDialog .dialog-main-message>div.list-container ul {
-	padding-left: 0;
-	margin: 0;
-}
+			& li {
+				list-style: none;
+				background-color: var(--table-alternate-color-1);
 
-#copyCarDialog .dialog-main-message>div.list-container li {
-	list-style: none;
-	background-color: var(--table-alternate-color-1);
-}
+				&:nth-child(even) {
+					background-color: var(--table-alternate-color-2);
+				}
+			}
 
-#copyCarDialog .dialog-main-message>div.list-container li:nth-child(even) {
-	background-color: var(--table-alternate-color-2);
-}
+			& input {
+				width: 100%;
+				width: --webkit-fill-available;
+			}
+		}
 
-#copyCarDialog .dialog-main-message>div.list-container input {
-	width: 100%;
-	width: --webkit-fill-available;
+		&#copy-addon-names-list-container>div:not(:nth-child(2)) {
+			border: 2px solid var(--formation-table-main-border);
+			height: calc(80vh - 25em);
+			overflow-y: scroll;
+		}
+	}
 }

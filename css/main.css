@@ -27,76 +27,81 @@ header {
 	padding: calc(0.8em - 4px) var(--main-padding);
 	border-bottom: 1px solid var(--formation-table-main-border);
 	display: flex;
+
+	>div.button-group {
+		display: flex;
+
+		&:not(:last-child) {
+			margin-right: 1.0em;
+			padding-right: 0.25em;
+			border-right: 1px solid #bbb;
+		}
+	}
+
+	& div.button-outer {
+		margin-right: 0.75em;
+	}
+
+	>div.button-group div.button-outer {
+
+		.mku-drop-menu-container .mku-drop-parent-button,
+		>button {
+			padding: 8px 10px;
+			background-color: var(--button-face);
+			border: 1px solid var(--button-face);
+			border-radius: 3px;
+			font-size: 11pt;
+
+			&:hover {
+				background-color: var(--button-face-hover);
+			}
+
+			&:active {
+				background-color: var(--button-face-active);
+			}
+		}
+
+		.mku-drop-menu-container {
+			&:has(input.mku-drop-menu-checkbox:checked) .mku-drop-parent-button {
+				color: var(--button-face);
+				background-color: #fff !important;
+			}
+
+			.mku-drop-container {
+				border: 1px solid #333;
+				box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+
+				& button {
+					font-size: 11pt;
+					background-color: #fff;
+					color: var(--button-face);
+					display: block;
+					width: 100%;
+					border: none;
+					border-radius: 0;
+					padding: 8px 10px;
+					padding-right: 12px;
+					text-align: left;
+
+					&:not(:last-child) {
+						border-bottom: 1px solid #777 !important;
+					}
+
+					&:hover {
+						background-color: var(--table-alternate-color-2);
+					}
+
+					&::before {
+						display: inline-block;
+						width: 1.0em;
+					}
+				}
+
+			}
+		}
+	}
 }
 
-header>div.button-group {
-	display: flex;
-}
-
-header>div.button-group:not(:last-child) {
-	margin-right: 1.0em;
-	padding-right: 0.25em;
-	border-right: 1px solid #bbb;
-}
-
-header div.button-outer {
-	margin-right: 0.75em;
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button,
-header>div.button-group div.button-outer>button {
-	padding: 8px 10px;
-	background-color: var(--button-face);
-	border: 1px solid var(--button-face);
-	border-radius: 3px;
-	font-size: 11pt;
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-parent-button:hover,
-header>div.button-group div.button-outer>button:hover {
-	background-color: var(--button-face-hover);
-}
-
-header>div.button-group div.button-outer>button:active {
-	background-color: var(--button-face-active);
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:checked) .mku-drop-parent-button {
-	color: var(--button-face);
-	background-color: #fff !important;
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container {
-	border: 1px solid #333;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button:not(:last-child) {
-	border-bottom: 1px solid #777 !important;
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button {
-	font-size: 11pt;
-	background-color: #fff;
-	color: var(--button-face);
-	display: block;
-	width: 100%;
-	border: none;
-	border-radius: 0;
-	padding: 8px 10px;
-	padding-right: 12px;
-	text-align: left;
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button:hover {
-	background-color: var(--table-alternate-color-2);
-
-}
-
-header>div.button-group div.button-outer .mku-drop-menu-container .mku-drop-container button::before {
-	display: inline-block;
-	width: 1.0em;
-}
 
 header>div.button-group div.button-outer .mku-drop-menu-container:has(input.mku-drop-menu-checkbox:disabled) .mku-drop-parent-button,
 header>div.button-group div.button-outer>button:disabled,
@@ -118,67 +123,152 @@ select#carsSelectBox {
 	padding: 0 var(--main-padding);
 	margin-top: 1em;
 	margin-bottom: 3em;
-}
 
-#constraint-container>div {
-	page-break-inside: avoid;
-	break-inside: avoid;
-	break-before: column;
-	height: calc(100vh - 18.5em - var(--simutrans-paktype));
-	border: 1px solid var(--formation-table-main-border);
-	padding: 1.0em;
-	background-color: #fff;
-	transition: height 150ms 0s ease;
-}
+	>div {
+		page-break-inside: avoid;
+		break-inside: avoid;
+		break-before: column;
+		height: calc(100vh - 18.5em - var(--simutrans-paktype));
+		border: 1px solid var(--formation-table-main-border);
+		padding: 1.0em;
+		background-color: #fff;
+		transition: height 150ms 0s ease;
 
-#constraint-container>div:nth-child(2) {
-	text-align: center;
-	overflow-y: hidden;
-	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
-}
+		&:nth-child(2) {
+			text-align: center;
+			overflow-y: hidden;
+			box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
 
-#constraint-container>div.constraint-view {
-	overflow-y: scroll;
-	background-repeat: no-repeat;
-	background-size: 20vw;
-	box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1) inset;
-}
+			#main-image-container .image-container {
+				cursor: pointer;
+				display: block;
+				margin: 0 auto;
+			}
 
-#constraint-container>div#constraint-prev-container {
-	background-position: bottom 1rem left 1rem;
-	background-image: url(../img/constraint_prev.png);
-}
+			#main-proptable-container {
+				height: calc((100vh - 18.5em - var(--simutrans-paktype)) - var(--simutrans-paktype) - 6.6em + 4px);
+				overflow-y: scroll;
+				border: 1px solid var(--formation-table-main-border);
+				margin-top: 1em;
+				transition: height 150ms 0s ease;
 
-#constraint-container>div#constraint-next-container {
-	background-position: bottom 1rem right 1rem;
-	background-image: url(../img/constraint_next.png);
-}
+				& table {
+					width: 100%;
+					border-collapse: collapse;
 
-#constraint-container>div.constraint-view>ul {
-	padding-left: 0;
-	display: flex;
-	flex-wrap: wrap;
-	margin: 0;
-}
+					& input,
+					& .input-textbox {
+						width: 100%;
+						font-size: 9pt;
+						padding: 0.4em;
+					}
 
-#constraint-container>div.constraint-view>ul>li.draggable-object {
-	list-style: none;
-	z-index: 1;
-	box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.3);
-}
+					& tr:nth-child(even) {
+						background-color: #f2f2f2;
+					}
 
-#constraint-container>div p {
-	margin-top: 0;
-}
+					& th,
+					& td {
+						padding: 10px;
+						text-align: center;
+						border-bottom: 1px solid #ccc;
+						font-size: 75%;
+					}
 
-#constraint-container>div p#prop-controller {
-	margin: 0;
-	background-color: rgba(255, 255, 255, 0.9);
-	padding-top: 1em;
-	padding-bottom: 1em;
-	position: sticky;
-	margin-top: 0.5em;
-	bottom: 0;
+					& td {
+						&:first-child {
+							text-align: right;
+							font-weight: bold;
+
+							& p {
+								opacity: 0.5;
+								font-weight: normal;
+								margin: 0;
+							}
+						}
+
+						&:first-child,
+						&:last-child {
+							width: max-content;
+							text-wrap: nowrap;
+						}
+
+						&:nth-child(2) {
+							text-align: left;
+							width: 100%;
+							text-wrap: wrap;
+							position: relative;
+							padding-left: 0;
+							padding-right: 0;
+
+							.suggestion-box {
+								z-index: 1000;
+
+								>div {
+									padding: 0.4em;
+								}
+							}
+						}
+
+						&:last-child {
+							color: #f00;
+							font-size: 75%;
+
+							& button {
+								font-size: 12pt;
+								padding: 1px 8px;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		&.constraint-view {
+			overflow-y: scroll;
+			background-repeat: no-repeat;
+			background-size: 20vw;
+			box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1) inset;
+
+			>ul {
+				padding-left: 0;
+				display: flex;
+				flex-wrap: wrap;
+				margin: 0;
+
+				>li.draggable-object {
+					list-style: none;
+					z-index: 1;
+					box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.3);
+				}
+
+			}
+		}
+
+		&#constraint-prev-container {
+			background-position: bottom 1rem left 1rem;
+			background-image: url(../img/constraint_prev.png);
+		}
+
+		&#constraint-next-container {
+			background-position: bottom 1rem right 1rem;
+			background-image: url(../img/constraint_next.png);
+		}
+
+		& p {
+			margin-top: 0;
+
+			&#prop-controller {
+				margin: 0;
+				background-color: rgba(255, 255, 255, 0.9);
+				padding-top: 1em;
+				padding-bottom: 1em;
+				position: sticky;
+				margin-top: 0.5em;
+				bottom: 0;
+			}
+		}
+	}
 }
 
 .image-container {
@@ -190,93 +280,11 @@ select#carsSelectBox {
 	background-color: var(--simutrans-transparent);
 	overflow: hidden;
 	background-repeat: no-repeat;
-}
 
-.image-container.no-image {
-	background-position: center;
-	background-size: 50%;
-}
-
-#constraint-container>div:nth-child(2) #main-image-container .image-container {
-	cursor: pointer;
-	display: block;
-	margin: 0 auto;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container {
-	height: calc((100vh - 18.5em - var(--simutrans-paktype)) - var(--simutrans-paktype) - 6.6em + 4px);
-	overflow-y: scroll;
-	border: 1px solid var(--formation-table-main-border);
-	margin-top: 1em;
-	transition: height 150ms 0s ease;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:first-child {
-	text-align: right;
-	font-weight: bold;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:first-child,
-#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
-	width: max-content;
-	text-wrap: nowrap;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:first-child p {
-	opacity: 0.5;
-	font-weight: normal;
-	margin: 0;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:nth-child(2) {
-	text-align: left;
-	width: 100%;
-	text-wrap: wrap;
-	position: relative;
-	padding-left: 0;
-	padding-right: 0;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:nth-child(2) .suggestion-box {
-	z-index: 1000;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:nth-child(2) .suggestion-box>div {
-	padding: 0.4em;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child {
-	color: #f00;
-	font-size: 75%;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table td:last-child button {
-	font-size: 12pt;
-	padding: 1px 8px;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table th,
-#constraint-container>div:nth-child(2) #main-proptable-container table td {
-	padding: 10px;
-	text-align: center;
-	border-bottom: 1px solid #ccc;
-	font-size: 75%;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table tr:nth-child(even) {
-	background-color: #f2f2f2;
-}
-
-#constraint-container>div:nth-child(2) #main-proptable-container table input,
-#constraint-container>div:nth-child(2) #main-proptable-container table .input-textbox {
-	width: 100%;
-	font-size: 9pt;
-	padding: 0.4em;
+	&.no-image {
+		background-position: center;
+		background-size: 50%;
+	}
 }
 
 /* フッタ */
@@ -292,52 +300,53 @@ footer {
 	padding: 0.8em var(--main-padding);
 	border-top: 1px solid var(--formation-table-main-border);
 	transition: transform 150ms 0s ease;
-}
 
-footer p {
-	margin-top: 0;
-}
+	& p {
+		margin-top: 0;
+	}
 
-footer #addons-list {
-	border: 1px solid var(--formation-table-main-border);
-	display: flex;
-	width: 100%;
-	overflow-x: scroll;
-	min-height: var(--simutrans-paktype);
-	box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.1) inset;
-}
+	& #addons-list {
+		border: 1px solid var(--formation-table-main-border);
+		display: flex;
+		width: 100%;
+		overflow-x: scroll;
+		min-height: var(--simutrans-paktype);
+		box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.1) inset;
 
-footer #addons-list>div.draggable-object:not(:last-child) {
-	margin-right: 0;
-}
+		>div.draggable-object {
+			width: calc(var(--simutrans-paktype) + 2em + 4px + 1px);
 
-footer #addons-list>div.draggable-object {
-	width: calc(var(--simutrans-paktype) + 2em + 4px + 1px);
-}
+			&:not(:last-child) {
+				margin-right: 0;
+			}
 
-/* 選択中のアドオン */
-footer #addons-list>div.draggable-object.editing {
-	border: 2px solid var(--formation-table-main-border);
+			&.editing {
+				border: 2px solid var(--formation-table-main-border);
+			}
+		}
+	}
+
 }
 
 
 /* メッセージ */
+.message-content {
+	&.normal-message {
+		top: calc(40px + 0em);
+	}
 
-.message-content.normal-message {
-	top: calc(40px + 0em);
-}
+	&.dat-file-loaded {
+		top: calc(40px + 0em);
+	}
 
-.message-content.dat-file-loaded {
-	top: calc(40px + 0em);
-}
+	&.image-file-loaded,
+	&.file-saved {
+		top: calc(40px + 4.5em);
+	}
 
-.message-content.image-file-loaded,
-.message-content.file-saved {
-	top: calc(40px + 4.5em);
-}
-
-.message-content.tab-file-loaded {
-	top: calc(40px + 9.0em);
+	&.tab-file-loaded {
+		top: calc(40px + 9.0em);
+	}
 }
 
 /* 折り畳み */
@@ -347,18 +356,20 @@ footer #addons-list>div.draggable-object.editing {
 	transition: transform 150ms 0s ease;
 }
 
-body.collapsible #collapsible-button::before {
-	transform: rotate(180deg);
-}
+body.collapsible {
+	#collapsible-button::before {
+		transform: rotate(180deg);
+	}
 
-body.collapsible #constraint-container>div {
-	height: calc(100vh - 11em + 8px);
-}
+	#constraint-container>div {
+		height: calc(100vh - 11em + 8px);
 
-body.collapsible #constraint-container>div:nth-child(2) #main-proptable-container {
-	height: calc((100vh - 11em) - var(--simutrans-paktype) - 6.6em + 8px);
-}
+		&:nth-child(2) #main-proptable-container {
+			height: calc((100vh - 11em) - var(--simutrans-paktype) - 6.6em + 8px);
+		}
+	}
 
-body.collapsible footer {
-	transform: translateY(calc(100% - 3em));
+	& footer {
+		transform: translateY(calc(100% - 3em));
+	}
 }

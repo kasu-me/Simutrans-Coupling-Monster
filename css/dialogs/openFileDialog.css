@@ -1,9 +1,11 @@
 /* 開くダイアログ*/
-#openDatFileDialog .filefield,
-#openJaTabFileDialog .filefield {
-	min-width: 100%;
-	width: 60vw;
-	height: 45vh;
-	text-align: center;
-	border: dashed var(--formation-table-main-border);
+#openDatFileDialog,
+#openJaTabFileDialog {
+	.filefield {
+		min-width: 100%;
+		width: 60vw;
+		height: 45vh;
+		text-align: center;
+		border: dashed var(--formation-table-main-border);
+	}
 }

@@ -1,93 +1,87 @@
 #couplingPreviewDialog {
 	width: 100vw;
-}
 
-#couplingPreviewDialog {
-	width: 100vw;
-}
+	& div.dialog-main-message {
+		padding: 0;
+		margin: 0 1.8em;
+		border: solid 1px var(--formation-table-main-border);
+		height: calc(100vh - 25em);
+		overflow-y: scroll;
 
-#couplingPreviewDialog div.dialog-main-message {
-	padding: 0;
-	margin: 0 1.8em;
-	border: solid 1px var(--formation-table-main-border);
-	height: calc(100vh - 25em);
-	overflow-y: scroll;
-}
+		>div:first-child {
+			background-color: rgba(255, 255, 255, 0.9);
+			border-bottom: 1px solid #ccc;
+			position: sticky;
+			top: 0;
+			left: 0;
+			padding: 1em;
 
-#couplingPreviewDialog div.dialog-main-message>div:first-child {
-	background-color: rgba(255, 255, 255, 0.9);
-	border-bottom: 1px solid #ccc;
-	position: sticky;
-	top: 0;
-	left: 0;
-	padding: 1em;
-}
+			>p {
+				margin-top: 0;
+			}
 
-#couplingPreviewDialog div.dialog-main-message>div:last-child {
-	padding: 1em;
-}
+			>.cars-container {
+				flex-wrap: nowrap;
+				overflow-x: scroll;
+			}
 
-#couplingPreviewDialog div.dialog-main-message>div:first-child>p {
-	margin-top: 0;
-}
+		}
 
-#couplingPreviewDialog div.dialog-main-message>div:first-child>.cars-container {
-	flex-wrap: nowrap;
-	overflow-x: scroll;
-}
+		>div:last-child {
+			padding: 1em;
+		}
 
-#couplingPreviewDialog div.dialog-main-message>div:first-child>.cars-container .outer {}
+		& p {
+			margin-bottom: 0;
+		}
+	}
 
+	.cars-container {
+		display: flex;
+		flex-wrap: wrap;
+	}
 
-#couplingPreviewDialog div.dialog-main-message p {
-	margin-bottom: 0;
-}
+	#preview-current-formation,
+	#preview-current-candidate {
+		.outer {
+			margin: 10px;
+			width: calc(var(--simutrans-paktype) * var(--small-preview-ratio) + 2px);
+			height: calc(var(--simutrans-paktype) * var(--small-preview-ratio) + 2px);
+			border: 1px solid var(--simutrans-transparent);
 
-#couplingPreviewDialog .cars-container {
-	display: flex;
-	flex-wrap: wrap;
-}
+			.image-container {
+				transform-origin: left top;
+				border: none;
+			}
+		}
+	}
 
-#couplingPreviewDialog #preview-current-formation .outer,
-#couplingPreviewDialog #preview-current-candidate .outer {
-	margin: 10px;
-	width: calc(var(--simutrans-paktype) * var(--small-preview-ratio) + 2px);
-	height: calc(var(--simutrans-paktype) * var(--small-preview-ratio) + 2px);
-	border: 1px solid var(--simutrans-transparent);
-}
+	#preview-current-formation .outer.dummy {
+		border-color: transparent;
+	}
 
-#couplingPreviewDialog #preview-current-formation .outer.dummy {
-	border-color: transparent;
-}
+	#preview-current-formation .outer:not(.dummy):last-child,
+	#preview-current-candidate .outer {
+		cursor: pointer;
+		border: 1px solid #000;
 
-#couplingPreviewDialog #preview-current-formation .outer:not(.dummy):last-child,
-#couplingPreviewDialog #preview-current-candidate .outer {
-	cursor: pointer;
-	border: 1px solid #000;
-}
+		&:hover {
+			border-color: #f00;
+		}
+	}
 
-#couplingPreviewDialog #preview-current-formation .outer:not(.dummy):last-child:hover,
-#couplingPreviewDialog #preview-current-candidate .outer:hover {
-	border-color: #f00;
-}
+	& button#clear-preview-formation-button {
+		margin-left: 0.8em;
+	}
 
-#couplingPreviewDialog #preview-current-formation .outer .image-container,
-#couplingPreviewDialog #preview-current-candidate .outer .image-container {
-	transform-origin: left top;
-	border: none;
-}
-
-#couplingPreviewDialog button#clear-preview-formation-button {
-	margin-left: 0.8em;
-}
-
-.status-bar {
-	position: sticky;
-	bottom: 0;
-	left: 0;
-	padding: 0.5em;
-	width: 100%;
-	min-height: 4em;
-	background-color: rgba(255, 255, 255, 0.9);
-	border-top: 1px solid #ccc;
+	.status-bar {
+		position: sticky;
+		bottom: 0;
+		left: 0;
+		padding: 0.5em;
+		width: 100%;
+		min-height: 4em;
+		background-color: rgba(255, 255, 255, 0.9);
+		border-top: 1px solid #ccc;
+	}
 }

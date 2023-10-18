@@ -1,7 +1,107 @@
-.dialog-content.list-dialog .list-table-container {
-	border: 2px solid var(--formation-table-main-border);
-	height: calc(100vh - 25em);
-	overflow-y: scroll;
+.dialog-content.list-dialog {
+	.list-table-container {
+		border: 2px solid var(--formation-table-main-border);
+		height: calc(100vh - 25em);
+		overflow-y: scroll;
+
+		& table {
+			border: none;
+			border-collapse: separate;
+			border-spacing: 0;
+			min-width: 820px;
+
+			& tr {
+				&:nth-child(1) {
+					text-align: center;
+					font-weight: bold;
+					background-color: var(--formation-table-main-border) !important;
+					position: sticky;
+					top: 0;
+					left: 0;
+
+					& td {
+						border-bottom: var(--formation-table-main-border) 2px solid;
+					}
+				}
+
+				&:nth-child(2n) {
+					background-color: var(--table-alternate-color-1);
+				}
+
+				&:nth-child(2n+1) {
+					background-color: var(--table-alternate-color-2);
+				}
+
+				& td {
+					&:first-child {
+						padding: 0;
+						width: 1.5em;
+						text-align: center;
+					}
+
+					&:last-child {
+						width: 5em;
+						border-right: none;
+
+						& button {
+							font-size: 11pt;
+
+							&:not(:last-child) {
+								margin-right: 0.5em;
+							}
+						}
+
+					}
+
+					&:first-child,
+					&:last-child {
+						cursor: auto;
+					}
+
+					&:nth-child(2) {
+						width: 5em;
+						text-align: right !important;
+						padding-right: 1em;
+					}
+
+					&.text-center {
+						text-align: center !important;
+					}
+				}
+
+				& input,
+				&:not(:nth-child(1)) {
+					cursor: pointer;
+				}
+
+				&:not(:nth-child(1)) {
+					& td:last-child {
+						text-align: center;
+					}
+
+					& td:not(:first-child):not(:last-child) {
+						text-align: left;
+						white-space: nowrap;
+						overflow: hidden;
+					}
+				}
+
+				&:nth-child(1) {
+					& td {
+						color: #fff;
+					}
+				}
+
+				&:has(input:checked) {
+					background-color: var(--selection-highlight) !important;
+
+					& td {
+						color: #fff;
+					}
+				}
+			}
+		}
+	}
 }
 
 .generated-table-container:has(.dialog-content.list-dialog .list-table-container table) {
@@ -9,111 +109,14 @@
 	overflow-y: scroll;
 }
 
-.dialog-content.list-dialog .list-table-container table {
-	border: none;
-	border-collapse: separate;
-	border-spacing: 0;
-	min-width: 820px;
-}
-
-.dialog-content.list-dialog .list-table-container table tr:nth-child(1) {
-	text-align: center;
-	font-weight: bold;
-	background-color: var(--formation-table-main-border) !important;
-	position: sticky;
-	top: 0;
-	left: 0;
-}
-
-.dialog-content.list-dialog .list-table-container table tr:nth-child(1) td {
-	border-bottom: var(--formation-table-main-border) 2px solid;
-}
-
-table.horizontal-stripes tr:nth-child(2n) {
-	background-color: var(--table-alternate-color-1);
-}
-
-table.horizontal-stripes tr:nth-child(2n+1) {
-	background-color: var(--table-alternate-color-2);
-}
-
 table.row-hover-hilight tr:hover {
 	background-color: var(--selection-hover-highlight) !important;
 }
 
-.dialog-content.list-dialog .list-table-container table tr td:first-child {
-	padding: 0;
-	width: 1.5em;
-}
+.dialog-content.list-dialog #car-list-table-container table tr {
 
-.dialog-content.list-dialog .list-table-container table tr td:last-child {
-	width: 13.1em;
-	border-right: none;
-}
-
-.dialog-content.list-dialog .list-table-container table input,
-.dialog-content.list-dialog .list-table-container table tr:not(:nth-child(1)) {
-	cursor: pointer;
-}
-
-.dialog-content.list-dialog .list-table-container table tr td:first-child,
-.dialog-content.list-dialog .list-table-container table tr td:last-child {
-	cursor: auto;
-}
-
-.dialog-content.list-dialog .list-table-container table tr td:nth-child(2) {
-	width: 5em;
-	text-align: right !important;
-	padding-right: 1em;
-}
-
-.dialog-content.list-dialog #car-list-table-container table tr td:nth-child(3) {
-	width: 20em;
-}
-
-.dialog-content.list-dialog #car-list-table-container table tr td:nth-child(4) {
-	width: 20em;
-}
-
-.dialog-content.list-dialog .list-table-container table tr td.text-center {
-	text-align: center !important;
-}
-
-.dialog-content.list-dialog .list-table-container table tr td:last-child {
-	width: 5em;
-}
-
-.dialog-content.list-dialog .list-table-container table tr td:last-child button {
-	font-size: 11pt;
-}
-
-.dialog-content.list-dialog .list-table-container table tr td:last-child button:not(:last-child) {
-	margin-right: 0.5em;
-}
-
-.dialog-content.list-dialog .list-table-container table tr:nth-child(1) td {
-	color: #fff;
-}
-
-.dialog-content.list-dialog .list-table-container table tr:not(:nth-child(1)) td:last-child {
-	text-align: center;
-}
-
-.dialog-content.list-dialog .list-table-container table tr td:first-child {
-	text-align: center;
-}
-
-.dialog-content.list-dialog .list-table-container table tr:not(:nth-child(1)) td:not(:first-child):not(:last-child) {
-	text-align: left;
-	white-space: nowrap;
-	overflow: hidden;
-}
-
-
-.dialog-content.list-dialog .list-table-container table tr:not(:nth-child(1)):has(input:checked) {
-	background-color: var(--selection-highlight) !important;
-}
-
-.dialog-content.list-dialog .list-table-container table tr:has(input:checked) td {
-	color: #fff;
+	& td:nth-child(3),
+	& td:nth-child(4) {
+		width: 20em;
+	}
 }

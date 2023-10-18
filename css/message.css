@@ -26,26 +26,33 @@
 	z-index: 999998;
 	padding: 1.0em;
 	border-radius: 4px;
-}
 
-.message-content.on {
-	display: block;
-	animation: message-show 300ms ease-out 0s;
-}
+	&.on {
+		display: block;
+		animation: message-show 300ms ease-out 0s;
+	}
 
-.message-content.off {
-	display: block;
-	animation: message-hide forwards 300ms ease-in 0s;
-}
+	&,
+	&.off {
+		display: block;
+		animation: message-hide forwards 300ms ease-in 0s;
+	}
 
-.message-content a {
-	margin-left: 1.0em;
-	color: #00f;
-	cursor: pointer;
-}
+	&.off {
+		display: block;
+		animation: message-hide forwards 300ms ease-in 0s;
+	}
 
-.message-content a:hover {
-	color: #f00;
+	& a {
+		margin-left: 1.0em;
+		color: #00f;
+		cursor: pointer;
+
+		&:hover {
+			color: #f00;
+		}
+	}
+
 }
 
 @keyframes message-show {

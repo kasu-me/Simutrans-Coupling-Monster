@@ -1,25 +1,27 @@
-#addCarDialog table.input-area {
-	width: 100%;
-}
+#addCarDialog {
+	& table.input-area {
+		width: 100%;
 
-#addCarDialog table.input-area td:first-child {
-	width: 8.5em;
-}
+		& td:first-child {
+			width: 8.5em;
+		}
 
-#addCarDialog table.input-area input,
-#addCarDialog table.input-area select {
-	width: 100%;
-	width: -webkit-fill-available;
-}
+		& input,
+		& select {
+			width: 100%;
+			width: -webkit-fill-available;
+		}
 
-#addCarDialog table.input-area #new-car-img-file-name-preview {
-	display: block;
-	margin-top: 0.5em;
-	font-size: 80%;
-}
+		#new-car-img-file-name-preview {
+			display: block;
+			margin-top: 0.5em;
+			font-size: 80%;
+		}
 
-#addCarDialog div.off {
-	display: none;
+		& div.off {
+			display: none;
+		}
+	}
 }
 
 #addCarPropertyDialog .warning {

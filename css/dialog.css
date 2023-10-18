@@ -2,14 +2,14 @@
 
 body:has(.dialog-area.on) {
 	overflow-y: hidden;
-}
 
-body:has(.dialog-area.on)>* {
-	margin-right: var(--scrollbar-width);
-}
+	>* {
+		margin-right: var(--scrollbar-width);
+	}
 
-body:has(.dialog-area.on)>footer {
-	padding-right: calc(var(--main-padding) + var(--scrollbar-width));
+	>footer {
+		padding-right: calc(var(--main-padding) + var(--scrollbar-width));
+	}
 }
 
 .dialog-area {
@@ -22,6 +22,108 @@ body:has(.dialog-area.on)>footer {
 	display: none;
 	margin: 0;
 	z-index: 99997;
+
+	&.on {
+		animation: show 150ms linear 0s;
+
+		.dialog-content.off {
+			display: none;
+		}
+	}
+
+	&.off {
+		display: block;
+		animation: hide forwards 150ms linear 0s;
+
+		.dialog-content.off {
+			display: block;
+			visibility: hidden;
+			animation: hide forwards 150ms linear 0s;
+		}
+	}
+
+	.dialog-content {
+		position: absolute;
+		top: 15%;
+		left: 0;
+		visibility: visible;
+		background-color: #fff;
+		padding: 0;
+		min-width: 512px;
+		max-width: calc(100% - 6.0em);
+		max-height: 100%;
+		text-align: center;
+		border: 1px solid var(--main-color);
+		transition: var(--main-transition);
+		box-shadow: 0px 0px 10px #000;
+		overflow: hidden;
+		width: max-content;
+
+		>* {
+			text-align: left;
+		}
+
+		>div.dialog-main-message,
+		>p.dialog-foot-buttons-container {
+			padding: 0 1.8em;
+		}
+
+		>p.dialog-foot-buttons-container {
+			padding-bottom: 1.8em;
+			margin-top: 1.5em;
+			margin-bottom: 0;
+			text-align: right;
+
+			>button {
+				margin: 0 0.5em;
+
+				&:first-child {
+					margin-left: 0;
+				}
+
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+		}
+
+		>p.dialog-title {
+			margin-top: 0;
+			margin-bottom: 1.75em;
+			font-weight: bold;
+			font-size: 1.1em;
+			user-select: none;
+			cursor: grab;
+			border-bottom: 1px solid #000;
+			padding: 1.8em;
+			padding-top: 0.85em;
+			padding-bottom: 0.75em;
+			line-height: 1em;
+
+			&.grabbed {
+				cursor: grabbing;
+			}
+
+		}
+
+		>div.dialog-main-message {
+			max-height: calc(100vh - 25em);
+			overflow-y: auto;
+		}
+
+		.dialog-icon {
+			float: left;
+			width: 45px;
+			margin-right: 0.5em;
+		}
+	}
+}
+
+.dialog-area-overlay {
+	.dialog-content {
+		top: 10%;
+		min-width: 480px;
+	}
 }
 
 .dialog-area-overlay,
@@ -29,116 +131,35 @@ body:has(.dialog-area.on)>footer {
 	z-index: 99999;
 }
 
-.dialog-area .dialog-content {
-	position: absolute;
-	top: 15%;
-	left: 0;
-	visibility: visible;
-	background-color: #fff;
-	padding: 0;
-	min-width: 512px;
-	max-width: calc(100% - 6.0em);
-	max-height: 100%;
-	text-align: center;
-	border: 1px solid var(--main-color);
-	transition: var(--main-transition);
-	box-shadow: 0px 0px 10px #000;
-	overflow: hidden;
-	width: max-content;
-}
-
-.dialog-area-overlay .dialog-content {
-	top: 10%;
-	min-width: 480px;
-}
-
-.dialog-area .dialog-content>* {
-	text-align: left;
-}
-
-.dialog-area .dialog-content>div.dialog-main-message,
-.dialog-area .dialog-content>p.dialog-foot-buttons-container {
-	padding: 0 1.8em;
-}
-
-.dialog-area .dialog-content>p.dialog-foot-buttons-container {
-	padding-bottom: 1.8em;
-}
-
-.dialog-area .dialog-content>p.dialog-title {
-	margin-top: 0;
-	margin-bottom: 1.75em;
-	font-weight: bold;
-	font-size: 1.1em;
-	user-select: none;
-	cursor: grab;
-	border-bottom: 1px solid #000;
-	padding: 1.8em;
-	padding-top: 0.85em;
-	padding-bottom: 0.75em;
-	line-height: 1em;
-}
-
-.dialog-area .dialog-content>p.dialog-title.grabbed {
-	cursor: grabbing;
-}
-
-.dialog-area .dialog-content>div.dialog-main-message {
-	max-height: calc(100vh - 25em);
-	overflow-y: auto;
-}
-
-.dialog-area .dialog-content>p.dialog-foot-buttons-container {
-	margin-top: 1.5em;
-	margin-bottom: 0;
-	text-align: right;
-}
 
 button.dialog-main-button {
 	font-size: 1.0em;
 	padding: 0.25em 0.5em;
 }
 
-.dialog-area .dialog-content>p.dialog-foot-buttons-container>button {
-	margin: 0 0.5em;
-}
-
-.dialog-area .dialog-content>p.dialog-foot-buttons-container>button:first-child {
-	margin-left: 0;
-}
-
-.dialog-area .dialog-content>p.dialog-foot-buttons-container>button:last-child {
-	margin-right: 0;
-}
 
 .dialog-area.on,
 .dialog-area .dialog-content.on {
 	display: block;
 }
 
-.dialog-area.on {
-	animation: show 150ms linear 0s;
-}
+.dialog-content {
+	& ul.dialog-buttons-list {
+		list-style: none;
+		padding-left: 0;
 
-.dialog-area.off {
-	display: block;
-	animation: hide forwards 150ms linear 0s;
-}
+		& li {
+			margin: 1em 0;
 
-.dialog-area.on .dialog-content.off {
-	display: none;
-}
+			& button {
+				width: 100%;
 
-.dialog-area.off .dialog-content.off {
-	display: block;
-	visibility: hidden;
-	animation: hide forwards 150ms linear 0s;
-}
-
-.dialog-area .dialog-content .dialog-icon {
-	float: left;
-	width: 45px;
-	margin-right: 0.5em;
+				&.lsf-icon::before {
+					margin-right: 0.3em;
+				}
+			}
+		}
+	}
 }
 
 @keyframes show {
@@ -167,21 +188,4 @@ button.dialog-main-button {
 	.dialog-area .dialog-content {
 		width: 90%;
 	}
-}
-
-.dialog-content ul.dialog-buttons-list {
-	list-style: none;
-	padding-left: 0;
-}
-
-.dialog-content ul.dialog-buttons-list li {
-	margin: 1em 0;
-}
-
-.dialog-content ul.dialog-buttons-list li button {
-	width: 100%;
-}
-
-.dialog-content ul.dialog-buttons-list li button.lsf-icon::before {
-	margin-right: 0.3em;
 }
