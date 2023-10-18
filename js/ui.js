@@ -623,3 +623,7 @@ window.addEventListener("load", () => {
 	//初期画面を開く
 	Dialog.list.helloDialog.functions.display();
 });
+
+window.onerror = () => {
+	new Message(`エラーが発生しました。`, ["normal-message"], 3000, true, true);
+}
