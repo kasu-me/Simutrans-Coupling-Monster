@@ -813,7 +813,7 @@ window.addEventListener("load", function () {
 			Dialog.list.editImageDialog.functions.lastX = 0;
 			loader.start();
 
-			queueMicrotask(() => {
+			setTimeout(() => {
 				//編集中アドオンセット
 				Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
 
@@ -832,7 +832,7 @@ window.addEventListener("load", function () {
 				Dialog.list.editImageDialog.on();
 
 				setTimeout(loader.finish, 150);
-			});
+			}, 0);
 		},
 		showPositionPointerCursor: function (e) {
 			let addonWholeImageArea = gebi("addon-image-whole-preview");
