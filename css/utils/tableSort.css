@@ -28,6 +28,9 @@
 	-o-font-feature-settings: "liga" 1, "dlig" 1;
 	font-feature-settings: "liga" 1, "dlig" 1;
 	font-weight: 100;
+	display: inline-block;
+	width: 1em;
+	transform-origin: center center;
 }
 
 .tablesort-sorted-column {
