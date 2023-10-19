@@ -1,101 +1,101 @@
-#helpDialog.dialog-content {
-	max-width: 100%;
-	resize: horizontal;
-	overflow: hidden;
+#helpDialog {
+	&.dialog-content {
+		max-width: 100%;
+		resize: horizontal;
+		overflow: hidden;
+		width: 768px;
+		top: 2.5em;
+	}
+
+	>div.dialog-main-message {
+		max-height: unset;
+		overflow: unset;
+	}
+
+	.mku-tab-container .mku-tab-content {
+		height: calc(100vh - 20em);
+
+		& img.logo {
+			width: calc(100% - 4em);
+			margin: 1.5em 2em;
+			margin-top: 1em;
+		}
+	}
+
+	>p.dialog-title {
+		margin-bottom: 0;
+	}
+
+	& table.input-area td {
+		&:first-child {
+			width: 7em;
+		}
+
+		&:last-child p {
+			font-size: 120%;
+			margin-bottom: 0.5em;
+		}
+	}
 }
 
-#helpDialog.dialog-content {
-	width: 768px;
-	top: 2.5em;
+.mku-tab-container {
+	.mku-tab-label-container {
+		transform: translateY(1px);
+
+		& label {
+			border-color: var(--formation-table-main-border);
+			background: var(--formation-table-main-border);
+			color: #fff;
+			border-radius: 5px 5px 0 0;
+			margin-right: 0.25em;
+
+			&:hover {
+				background-color: var(--button-face-hover);
+			}
+
+			&:active {
+				background-color: var(--button-face-active);
+			}
+
+			&.on {
+				background-color: #fff;
+				color: var(--formation-table-main-border);
+			}
+		}
+	}
+
+	.mku-tab-content {
+		overflow-y: auto;
+		border: 1px solid var(--formation-table-main-border);
+		padding: 1em;
+		width: 100%;
+		font-size: 10pt;
+
+		& h2 {
+			border-left: 7px solid var(--formation-table-main-border);
+			padding-left: 0.35em;
+			font-size: 11.5pt;
+			margin-top: 1.5em;
+		}
+
+		& h3 {
+			font-size: 10.5pt;
+
+			&::before {
+				content: "●";
+				display: inline-block;
+				color: var(--formation-table-main-border);
+				margin-right: 0.25em;
+				font-size: 0.8em;
+				vertical-align: middle;
+			}
+		}
+
+		*:first-of-type {
+			margin-top: 0;
+		}
+	}
 }
-
-#helpDialog>div.dialog-main-message {
-	max-height: unset;
-	overflow: unset;
-}
-
-#helpDialog .mku-tab-container .mku-tab-content {
-	height: calc(100vh - 20em);
-}
-
-#helpDialog>p.dialog-title {
-	margin-bottom: 0;
-}
-
-#helpDialog .mku-tab-container .mku-tab-content img.logo {
-	width: calc(100% - 4em);
-	margin: 1.5em 2em;
-	margin-top: 1em;
-}
-
-#helpDialog table.input-area td:first-child {
-	width: 7em;
-}
-
-#helpDialog table.input-area td:last-child p {
-	font-size: 120%;
-	margin-bottom: 0.5em;
-}
-
-.mku-tab-container .mku-tab-label-container {
-	transform: translateY(1px);
-}
-
-.mku-tab-container .mku-tab-label-container label {
-	border-color: var(--formation-table-main-border);
-	background: var(--formation-table-main-border);
-	color: #fff;
-	border-radius: 5px 5px 0 0;
-	margin-right: 0.25em;
-}
-
-.mku-tab-container .mku-tab-label-container label:hover {
-	background-color: var(--button-face-hover);
-}
-
-.mku-tab-container .mku-tab-label-container label:active {
-	background-color: var(--button-face-active);
-}
-
-.mku-tab-container .mku-tab-label-container label.on {
-	background-color: #fff;
-	color: var(--formation-table-main-border);
-}
-
-
-.mku-tab-container .mku-tab-content {
-	overflow-y: auto;
-	border: 1px solid var(--formation-table-main-border);
-	padding: 1em;
-	width: 100%;
-	font-size: 10pt;
-}
-
-.mku-tab-container .mku-tab-content h2 {
-	border-left: 7px solid var(--formation-table-main-border);
-	padding-left: 0.35em;
-	font-size: 11.5pt;
-	margin-top: 1.5em;
-}
-
-.mku-tab-container .mku-tab-content h3 {
-	font-size: 10.5pt;
-}
-
-.mku-tab-container .mku-tab-content h3::before {
-	content: "●";
-	display: inline-block;
-	color: var(--formation-table-main-border);
-	margin-right: 0.25em;
-	font-size: 0.8em;
-	vertical-align: middle;
-}
-
-.mku-tab-container .mku-tab-content *:first-of-type {
-	margin-top: 0;
-}
-
-
 
 @media screen and (max-width: 768px) {
 	#helpDialog.dialog-content {
