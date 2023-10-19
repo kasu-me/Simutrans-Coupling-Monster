@@ -382,10 +382,10 @@ function loadAndSetDatFile(files) {
 			notDatFilesCount++;
 		}
 	}
-	loader.start();
+	loader.start("dat");
 	//全DAT読み込み完了後
 	Promise.all(promises).then((results) => {
-		loader.finish();
+		loader.finish("dat");
 
 		//読み込み結果のマスタ投入
 		results.forEach((result) => {
@@ -481,10 +481,10 @@ function loadAndSetImageFile(files, forceAttachMode) {
 			}
 		};
 	}
-	loader.start();
+	loader.start("png");
 	//全PNG読み込み後
 	return Promise.all(promises).then(() => {
-		loader.finish();
+		loader.finish("png");
 		let message = ``;
 		message = `${promises.length}件のPNGファイルを読み込みました。${failureCount > 0 ? `${failureCount}件のPNGファイルはDATから参照されていないため読み込みませんでした。` : ""}${notImageFilesCount > 0 ? `${notImageFilesCount}件のファイルはPNGファイルではないため読み込みませんでした。` : ""}`;
 		new Message(message, ["image-file-loaded"], 3000, true, true);
@@ -509,10 +509,10 @@ function loadAndSetJaTabFile(files) {
 			notTabFilesCount++;
 		}
 	}
-	loader.start();
+	loader.start("jatab");
 	//全TAB読み込み後
 	return Promise.all(promises).then((count) => {
-		loader.finish();
+		loader.finish("jatab");
 		let message = ``;
 		if (count.length != 0) {
 			message = `${count.reduce((sum, val) => sum + val)}両の車両に日本語名を適用しました。${notTabFilesCount > 0 ? `${notTabFilesCount}件のファイルはTABファイルではないため読み込みませんでした。` : ""}`;
