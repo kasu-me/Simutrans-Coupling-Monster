@@ -11,7 +11,7 @@ function setSuggestionBox(input, dropdown, dataset) {
 		input.addEventListener("click", showSuggestionDropdown, { once: true });
 	};
 	let showSuggestionDropdown = () => {
-		dropdown.style.top = `${input.getBoundingClientRect().top + input.clientHeight}px`;
+		dropdown.style.top = `${input.getBoundingClientRect().top + input.clientHeight + 1}px`;
 		dropdown.style.minWidth = `${input.getBoundingClientRect().width}px`;
 		dropdown.classList.add("on");
 		document.addEventListener("wheel", scroll);
