@@ -332,7 +332,7 @@ function writeDat() {
 					})
 				}
 			} else {
-				if (addon[prop].trim() == "") { continue }
+				if (addon[prop].trim?.() == "") { continue }
 				dat += `${prop}=${addon[prop]}\n`;
 			}
 		}
