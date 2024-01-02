@@ -92,11 +92,13 @@
 					}
 				}
 
-				&:has(input:checked) {
-					background-color: var(--selection-highlight) !important;
+				&:not(:nth-child(1)) {
+					&:has(input:checked) {
+						background-color: var(--selection-highlight) !important;
 
-					& td {
-						color: #fff;
+						& td {
+							color: #fff;
+						}
 					}
 				}
 			}
