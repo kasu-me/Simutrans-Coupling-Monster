@@ -1235,6 +1235,7 @@ window.addEventListener("load", function () {
 				for (let car of formation) {
 					if (!imageFiles.has(car[EMPTYIMAGE_DIRECTIONS[0]].split(".")[0])) {
 						Dialog.list.alertDialog.functions.display("画像が指定されていない車両があるため撮影できません。");
+						loader.finish();
 						return;
 					}
 				}
