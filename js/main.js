@@ -126,16 +126,6 @@ function addCarToMaster(name, imgFileName, imgFilePositionY, length) {
 }
 
 //マスタアドオンから車両を削除
-function deleteCarFromMaster(addon) {
-	for (let i in masterAddons) {
-		masterAddons[i][CONSTRAINT]["prev"].delete(addon);
-		masterAddons[i][CONSTRAINT]["next"].delete(addon);
-		if (addon.name == masterAddons[i].name) {
-			deleteCarFromMasterById(i);
-		}
-	}
-	jatab.delete(addon);
-}
 function deleteCarFromMasterByName(addonName) {
 	for (let i in masterAddons) {
 		if (addonName == masterAddons[i].name) {
@@ -145,6 +135,11 @@ function deleteCarFromMasterByName(addonName) {
 	}
 }
 function deleteCarFromMasterById(id) {
+	let addon = masterAddons[id];
+	for (let i in masterAddons) {
+		masterAddons[i][CONSTRAINT]["prev"].delete(addon);
+		masterAddons[i][CONSTRAINT]["next"].delete(addon);
+	}
 	masterAddons.splice(id, 1);
 	//削除した際、連結プレビューの連結も解除する
 	Dialog.list.couplingPreviewDialog.functions.currentFormation = [];
