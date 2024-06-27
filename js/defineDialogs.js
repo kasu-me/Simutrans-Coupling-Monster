@@ -1418,7 +1418,7 @@ window.addEventListener("load", function () {
 				<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
 				<p>なお、バグ報告の際は、症状とともに「読み込んだファイル」「ご利用のOS･ブラウザ」をお伝えいただくと、解決がスムーズになります。お手数ですが、ご協力をお願いいたします。</p>
 				<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
-				<p>© 2023 M_Kasumi</p>
+				<p>© 2023-2024 M_Kasumi</p>
 			</div>
 		</div>
 	`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);
