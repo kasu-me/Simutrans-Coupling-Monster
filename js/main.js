@@ -40,7 +40,7 @@ function readFile(file, resolve, reject) {
 function saveFile(type) {
 	if (masterAddons.length != 0) {
 		let text = type == "dat" ? writeDat() : writeJaTab();
-		let fileName = type == "dat" ? masterDatFileName : "ja.tab";
+		let fileName = type == "dat" ? (masterDatFileName == "" ? "newfile" : masterDatFileName) : "ja.tab";
 		if (type == "ja.tab" && jatab.size == 0) {
 			new Message("日本語化ファイルは内容が存在しないため保存しませんでした。", ["file-saved"], 3000, true, true);
 		} else {
