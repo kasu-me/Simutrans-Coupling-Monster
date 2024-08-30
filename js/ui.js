@@ -410,7 +410,7 @@ function loadAndSetDatFile(files) {
 		});
 
 		if (failedAddonNames.size > 0) {
-			Dialog.list.alertDialog.functions.display(`datファイルの連結設定欄に存在しない車両が記載されています。<br><br>連結設定に不備がある車両：<br>${[...failedAddonNames]}`);
+			Dialog.list.alertDialog.functions.display(`datファイルの連結設定欄に存在しない車両が記載されています。下記車両については不備のある連結設定を削除しました。<ul><li>${[...failedAddonNames].join("</li><li>")}</li></ul>`);
 		}
 
 		//セレクトボックス更新
