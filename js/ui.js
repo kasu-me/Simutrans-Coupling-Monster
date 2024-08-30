@@ -392,11 +392,26 @@ function loadAndSetDatFile(files) {
 			masterAddons.push(...result);
 		});
 
+		//全車両読み込み後、連結設定に読み込めていない車両がないかチェックするための変数
+		let failedAddonNames = new Set();
+
 		//全車両読み込み完了後、一時的に名前で格納していた連結設定をオブジェクトに変更する
 		masterAddons.forEach((addon) => {
 			convertConstraintsToObject(addon, "prev");
 			convertConstraintsToObject(addon, "next");
+
+			//オブジェクト設定後、失敗しているものを削除する
+			if (addon.constraint.prev.delete(undefined)) {
+				failedAddonNames.add(addon.name);
+			}
+			if (addon.constraint.next.delete(undefined)) {
+				failedAddonNames.add(addon.name);
+			}
 		});
+
+		if (failedAddonNames.size > 0) {
+			Dialog.list.alertDialog.functions.display(`datファイルの連結設定欄に存在しない車両が記載されています。<br><br>連結設定に不備がある車両：<br>${[...failedAddonNames]}`);
+		}
 
 		//セレクトボックス更新
 		setAddonNamesToSelectBox(gebi("carsSelectBox"));

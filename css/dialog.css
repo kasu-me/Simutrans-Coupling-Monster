@@ -109,12 +109,17 @@ body:has(.dialog-area.on) {
 		>div.dialog-main-message {
 			max-height: calc(100vh - 25em);
 			overflow-y: auto;
+
+			&:has(.dialog-icon) {
+				display: flex;
+			}
 		}
 
 		.dialog-icon {
 			float: left;
 			width: 45px;
 			margin-right: 0.5em;
+			align-self: self-start;
 		}
 	}
 }
