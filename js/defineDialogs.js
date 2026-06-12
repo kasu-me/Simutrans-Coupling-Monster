@@ -1412,7 +1412,7 @@ window.addEventListener("load", function () {
 		targetCtx.drawImage(sourceCanvas, left, top, width, height, 0, 0, width, height);
 	}
 
-	new Dialog("helpDialog", "Coupling Monster について", `< div class="dialog-preview" >
+	new Dialog("helpDialog", "Coupling Monster について", `<div class="dialog-preview" >
 					<div class="mku-tab-container" id="help-tab">
 						<div class="mku-tab-content" tab-title="概要">
 							<img src="img/logo_title.png" class="logo" alt="COUPLING MONSTER">
