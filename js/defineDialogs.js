@@ -1092,25 +1092,36 @@ window.addEventListener("load", function () {
 		refresh: function () {
 			let templatesArea = gebi("formation-templates-area");
 			templatesArea.innerHTML = "";
-			Dialog.list.formationTemplateDialog.functions.templates.forEach(template => {
+			Dialog.list.formationTemplateDialog.functions.templates.forEach((template, i) => {
 				const templateArea = document.createElement("div");
 				templateArea.classList.add("template-row");
 				templatesArea.appendChild(templateArea);
+				const templateHeaderArea = document.createElement("div");
+				templateHeaderArea.classList.add("template-row-header");
+				templateArea.appendChild(templateHeaderArea);
 				const templateNameArea = document.createElement("input");
 				templateNameArea.classList.add("template-name");
 				templateNameArea.value = template.name?.trim() ?? "";
 				templateNameArea.addEventListener("input", () => { template.name = templateNameArea.value.trim() });
 				templateNameArea.setAttribute("placeholder", "テンプレートの名前を入力")
-				templateArea.appendChild(templateNameArea);
+				templateHeaderArea.appendChild(templateNameArea);
+				const removeButton = document.createElement("button");
+				removeButton.classList.add("remove-button");
+				removeButton.innerText = "削除";
+				templateHeaderArea.appendChild(removeButton);
+				removeButton.addEventListener("click", () => {
+					Dialog.list.formationTemplateDialog.functions.templates.splice(i, 1);
+					Dialog.list.formationTemplateDialog.functions.refresh();
+				});
 				const carsContainer = document.createElement("div");
 				carsContainer.classList.add("cars-container");
 				templateArea.appendChild(carsContainer);
-				template.formation.forEach((car, i) => {
+				template.formation.forEach((car, j) => {
 					let outer = createOuter(false);
 					outer.dataset.addonName = car.name;
 					setAddonPreviewImage(outer, car);
 					setAddonBalloon(outer, car);
-					if (i == template.formation.length - 1) {
+					if (j == template.formation.length - 1) {
 						outer.addEventListener("click", () => {
 							gebi("mku-balloon").classList.remove("on");
 							template.formation.pop();
