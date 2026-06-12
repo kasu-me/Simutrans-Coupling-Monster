@@ -994,7 +994,7 @@ window.addEventListener("load", function () {
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		`, [{ "content": "編成からコスト計算", "event": `Dialog.list.calcCostDialog.functions.display();`, "icon": "graph", "id": "open-calc-cost-dialog-button" }, { "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "camera", "id": "open-formated-image-dialog-button" }, { "content": "終了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "close" }], {
+		`, [{ "content": "編成からコスト計算", "event": `Dialog.list.calcCostDialog.functions.display();`, "icon": "graph", "id": "open-calc-cost-dialog-button" }, { "content": "撮影", "event": `Dialog.list.formatedAddonsImageDialog.functions.display();`, "icon": "camera", "id": "open-formated-image-dialog-button" }, { "content": "編成テンプレートに追加", "event": `Dialog.list.formationTemplateDialog.functions.display();`, "icon": "add", "id": "open-formation-template-dialog-button" }, { "content": "終了", "event": `Dialog.list.couplingPreviewDialog.off();`, "icon": "close" }], {
 		currentFormation: [],
 		display: function () {
 			if (masterAddons.length == 0) {
@@ -1015,6 +1015,7 @@ window.addEventListener("load", function () {
 			[
 				gebi("clear-preview-formation-button"),
 				gebi("open-formated-image-dialog-button"),
+				gebi("open-formation-template-dialog-button"),
 				gebi("open-calc-cost-dialog-button")
 			].forEach((button) => { button.disabled = formation.length == 0; });
 
@@ -1080,9 +1081,57 @@ window.addEventListener("load", function () {
 		setAddonBalloon(outer, addon);
 		area.appendChild(outer);
 	}
-
+	new Dialog("formationTemplateDialog", "編成テンプレート (OTRP)", `<div id="formation-templates-area"></div><span>※「閉じる」を選択してもテンプレートは保存されています。必要なテンプレートを全て追加してから出力することもできます。</span>`, [{ "content": "クリップボードにコピー", "event": `navigator.clipboard.writeText(Dialog.list.formationTemplateDialog.functions.generateFormationTemplate()).then(()=>{new Message('編成テンプレートをクリップボードにコピーしました。', ['normal-message'], 3000, true, true);});`, "icon": "tabs" }, { "content": "クリア", "event": `Dialog.list.formationTemplateDialog.functions.templates=[];Dialog.list.formationTemplateDialog.functions.refresh();`, "icon": "clear" }, { "content": "閉じる", "event": `Dialog.list.formationTemplateDialog.off();`, "icon": "close" }], {
+		templates: [],
+		display: function () {
+			let formation = [...Dialog.list.couplingPreviewDialog.functions.currentFormation];
+			Dialog.list.formationTemplateDialog.functions.templates.push({ "name": null, "formation": formation });
+			Dialog.list.formationTemplateDialog.functions.refresh();
+			Dialog.list.formationTemplateDialog.on();
+		},
+		refresh: function () {
+			let templatesArea = gebi("formation-templates-area");
+			templatesArea.innerHTML = "";
+			Dialog.list.formationTemplateDialog.functions.templates.forEach(template => {
+				const templateArea = document.createElement("div");
+				templateArea.classList.add("template-row");
+				templatesArea.appendChild(templateArea);
+				const templateNameArea = document.createElement("input");
+				templateNameArea.classList.add("template-name");
+				templateNameArea.value = template.name?.trim() ?? "";
+				templateNameArea.addEventListener("input", () => { template.name = templateNameArea.value.trim() });
+				templateNameArea.setAttribute("placeholder", "テンプレートの名前を入力")
+				templateArea.appendChild(templateNameArea);
+				const carsContainer = document.createElement("div");
+				carsContainer.classList.add("cars-container");
+				templateArea.appendChild(carsContainer);
+				template.formation.forEach((car, i) => {
+					let outer = createOuter(false);
+					outer.dataset.addonName = car.name;
+					setAddonPreviewImage(outer, car);
+					setAddonBalloon(outer, car);
+					if (i == template.formation.length - 1) {
+						outer.addEventListener("click", () => {
+							gebi("mku-balloon").classList.remove("on");
+							template.formation.pop();
+							Dialog.list.couplingPreviewDialog.functions.refresh(true);
+						});
+					}
+					carsContainer.appendChild(outer);
+				});
+			});
+		},
+		generateFormationTemplate: function () {
+			const templates = Dialog.list.formationTemplateDialog.functions.templates;
+			const strs = [];
+			templates.forEach(template => {
+				strs.push(`name=${template.name}\n${template.formation.map((car, i) => `vehicle[${i}]=${car.name}`).join("\n")}`);
+			});
+			return strs.join("\n-\n");
+		}
+	}, true);
 	new Dialog("calcCostDialog", "編成からコスト計算(Pak128Japan専用)", `
-		<table class="input-area">
+					< table class= "input-area" >
 			<tr>
 				<td>
 					係数
@@ -1139,10 +1188,10 @@ window.addEventListener("load", function () {
 					<input id="formation-starting-acceleration" type="number" min="0">km/h/s
 				</td>
 			</tr>
-		</table>
+		</table >
 		<p><span class="mku-balloon" mku-balloon-message="オンにするとgear･cost･runningcostの値が上書きされる可能性があります"><label for="overwrite-exists-property" class="mku-checkbox-container"><input id="overwrite-exists-property" type="checkbox" checked></label><label for="overwrite-exists-property">既存のプロパティに上書き</label></span></p>
 		<p><span class="mku-balloon" mku-balloon-message="加速度が足りない場合はオンにしてください"><label for="boost-mode" class="mku-checkbox-container"><input id="boost-mode" type="checkbox"></label><label for="boost-mode">ブーストモード</label></span></p>
-	`, [{ "content": "適用", "event": `Dialog.list.calcCostDialog.functions.applyCostsheet();`, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": `Dialog.list.calcCostDialog.off();`, "icon": "close" }], {
+	`, [{ "content": "適用", "event": `Dialog.list.calcCostDialog.functions.applyCostsheet(); `, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": `Dialog.list.calcCostDialog.off(); `, "icon": "close" }], {
 		costs: {},
 		display: function () {
 			if (Dialog.list.calcCostDialog.functions.refresh()) {
@@ -1189,13 +1238,13 @@ window.addEventListener("load", function () {
 				};
 				return true;
 			} else {
-				new Message(`未設定項目があります。車両の ( speed / payload / power / weight / intro_year ) の各プロパティに値がセットされているか確認してください。`, ["normal-message"], 4000, true, true);
+				new Message(`未設定項目があります。車両の(speed / payload / power / weight / intro_year) の各プロパティに値がセットされているか確認してください。`, ["normal-message"], 4000, true, true);
 				return false;
 			}
 		},
 		applyCostsheet: function () {
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
-			Dialog.list.confirmDialog.functions.display(`コストシートから導出した性能値を${formation.length}両の車両に設定してもよろしいですか？`, () => {
+			Dialog.list.confirmDialog.functions.display(`コストシートから導出した性能値を${formation.length} 両の車両に設定してもよろしいですか？`, () => {
 				let formationCosts = Dialog.list.calcCostDialog.functions.costs;
 				let overwriteMode = gebi("overwrite-exists-property").checked;
 				formation.forEach((addon) => {
@@ -1213,7 +1262,7 @@ window.addEventListener("load", function () {
 				Dialog.list.calcCostDialog.off();
 				Dialog.list.couplingPreviewDialog.off();
 				refresh();
-				new Message(`${formation.length}両の車両にコストシートを適用しました。`, ["normal-message"], 3000, true, true);
+				new Message(`${formation.length} 両の車両にコストシートを適用しました。`, ["normal-message"], 3000, true, true);
 			});
 		}
 	}, true);
@@ -1226,7 +1275,7 @@ window.addEventListener("load", function () {
 		Dialog.list.calcCostDialog.functions.refresh();
 	})
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard();`, "icon": "tabs" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile();`, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off();`, "icon": "close" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `< canvas id = "formated-addons-image" ></canvas > `, [{ "content": "クリップボードにコピー", "event": `Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard(); `, "icon": "tabs" }, { "content": "保存", "event": `Dialog.list.formatedAddonsImageDialog.functions.saveAsFile(); `, "icon": "download" }, { "content": "閉じる", "event": `Dialog.list.formatedAddonsImageDialog.off(); `, "icon": "close" }], {
 		display: function () {
 			loader.start();
 			setTimeout(() => {
@@ -1352,75 +1401,75 @@ window.addEventListener("load", function () {
 		targetCtx.drawImage(sourceCanvas, left, top, width, height, 0, 0, width, height);
 	}
 
-	new Dialog("helpDialog", "Coupling Monster について", `<div class="dialog-preview">
-		<div class="mku-tab-container" id="help-tab">
-			<div class="mku-tab-content" tab-title="概要">
-				<img src="img/logo_title.png" class="logo" alt="COUPLING MONSTER">
-				<h2>このアプリは何？</h2>
-				<p>フリー輸送シミュレーションゲーム「Simutrans」のアドオン製作を支援するWebアプリケーションです。</p>
-				<p>本アプリでは、Simutransの車両アドオン製作において最も面倒なことの一つ、<strong>連結の設定</strong>を支援します。</p>
-				<p>また、メインの機能は連結に関する設定を行うことですが、それ以外のプロパティについても簡易的ながら編集することが可能です。</p>
-				<p>このほか、ja.tabを読み込むことで、日本語化後の車両名を確認しながら作業をしたり、日本語名を編集したりすることも可能です。</p>
-				<h2>使い方</h2>
-				<p><a href="https://ahozura.kasu.me/portal/?p=5449&page=2" target="_blank">使い方についてはこちらをご覧ください</a>。</p>
-				<h2>ご注意･免責事項</h2>
-				<p>本アプリはサーバとの通信は一切行っておらず、本アプリで製作したデータは皆さんのPC内で完結しています。バックアップ等はご自身の責任において行っていただくようお願いいたします。</p>
-				<p>本アプリを利用して出力されるdatファイルは、読み込んだdatファイルの内容のうち、有効な車両についての部分のみとなります。たとえば、車両と建物が同じファイルに記載されていた場合、本アプリでは建物の記述は完全に無視され、出力されるdatファイルには車両のみが記述されます。この他、読み込み中に何らかのエラーが発生した場合も、その部分が正しく出力されない可能性があります。元のdatファイルを本アプリで生成したdatファイルで上書きしてしまうことはせず、元ファイルのバックアップを取っておくことを強くおすすめいたします。</p>
-				<h2>謝辞</h2>
-				<ul>
-				<li>ボタン等の各種アイコンに「<a href="https://kudakurage.com/ligature_symbols/" target="_blank">Ligature Symbols</a>」を利用させていただきました。</li>
-				<li>ソートに「<a href="https://github.com/bubkoo/natsort" target="_blank">natsort</a>」を利用させていただきました。</li>
-				</ul>
-				<p>御礼申し上げます。</p>
-			</div>
-			<div class="mku-tab-content" tab-title="推奨環境">
-				<h2>推奨環境</h2>
-				<table class="input-area">
-					<tr>
-						<td>
-							ブラウザ
-						</td>
-						<td>
-							<p>Google Chrome (最新版推奨)</p>
-							PCでのご利用を推奨します。スマートフォン等のタッチデバイスでの動作の保証はいたしかねます。
-						</td>
-					</tr>
-					<tr>
-						<td>
-							画面
-						</td>
-						<td>
-							<p>FHD(1920×1080)以上推奨</p>
-							これより小さい画面でご利用の場合、操作がしづらくなる場合があります。そのような場合、ブラウザの拡大率を縮小していただくことで操作がしやすくなります。
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div class="mku-tab-content" tab-title="コスト計算">
-				<p>本アプリでは、Pak128Japan公式のコスト計算式に基づいて、旅客車両の各種コスト(cost･runningcost･gear)を算出･設定することが可能です。</p>
-				<h2>公式コスト計算式の仕様</h2>
-				<p>pak128japanの公式コスト計算シートによると、鉄道車両のコストは編成を組んだ状態で算出することになっております。</p>
-				<p>そのため本アプリでは、「連結プレビュー」機能で編成を組成すると、組成した車両を対象にコストを計算することができます。</p>
-				<h2>コスト計算に必要な値</h2>
-				<p>本機能を用いてコスト計算を行うには、対象となる車両に以下の値が設定されている必要があります。</p>
-				<ul>
-					<li>最高速度(speed)</li>
-					<li>定員(payload)</li>
-					<li>出力(power) ※動力を持つ車両が編成内に最低1両あればよい</li>
-					<li>重量(weight)</li>
-					<li>導入年(intro_year)</li>
-				</ul>
-				<p>このほか、コスト計算ダイアログ内で「起動加速度」を入力する必要があります。</p>
-				<h2>「係数」について</h2>
-				<p>pak128japanの公式コスト計算シートに登場する概念で、古い年代の車両ほど大きく、新しい年代の車両ほど小さくなる整数です。同じスペックの車両でも、係数が小さいほど安価になります。</p>
-				<p>本アプリでは、公式シートから推測した計算式に基づいて、係数を導入年から自動算出します。そのため、本アプリを用いてコスト計算を行う場合、対象車両の「intro_year」プロパティに値が設定されている必要があります。</p>
-			</div>
-			<div class="mku-tab-content" tab-title="お問い合わせ">
-				<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
-				<p>なお、バグ報告の際は、症状とともに「読み込んだファイル」「ご利用のOS･ブラウザ」をお伝えいただくと、解決がスムーズになります。お手数ですが、ご協力をお願いいたします。</p>
-				<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
-				<p>© 2023-2025 M_Kasumi</p>
-			</div>
-		</div>
-	`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);
+	new Dialog("helpDialog", "Coupling Monster について", `< div class="dialog-preview" >
+					<div class="mku-tab-container" id="help-tab">
+						<div class="mku-tab-content" tab-title="概要">
+							<img src="img/logo_title.png" class="logo" alt="COUPLING MONSTER">
+								<h2>このアプリは何？</h2>
+								<p>フリー輸送シミュレーションゲーム「Simutrans」のアドオン製作を支援するWebアプリケーションです。</p>
+								<p>本アプリでは、Simutransの車両アドオン製作において最も面倒なことの一つ、<strong>連結の設定</strong>を支援します。</p>
+								<p>また、メインの機能は連結に関する設定を行うことですが、それ以外のプロパティについても簡易的ながら編集することが可能です。</p>
+								<p>このほか、ja.tabを読み込むことで、日本語化後の車両名を確認しながら作業をしたり、日本語名を編集したりすることも可能です。</p>
+								<h2>使い方</h2>
+								<p><a href="https://ahozura.kasu.me/portal/?p=5449&page=2" target="_blank">使い方についてはこちらをご覧ください</a>。</p>
+								<h2>ご注意･免責事項</h2>
+								<p>本アプリはサーバとの通信は一切行っておらず、本アプリで製作したデータは皆さんのPC内で完結しています。バックアップ等はご自身の責任において行っていただくようお願いいたします。</p>
+								<p>本アプリを利用して出力されるdatファイルは、読み込んだdatファイルの内容のうち、有効な車両についての部分のみとなります。たとえば、車両と建物が同じファイルに記載されていた場合、本アプリでは建物の記述は完全に無視され、出力されるdatファイルには車両のみが記述されます。この他、読み込み中に何らかのエラーが発生した場合も、その部分が正しく出力されない可能性があります。元のdatファイルを本アプリで生成したdatファイルで上書きしてしまうことはせず、元ファイルのバックアップを取っておくことを強くおすすめいたします。</p>
+								<h2>謝辞</h2>
+								<ul>
+									<li>ボタン等の各種アイコンに「<a href="https://kudakurage.com/ligature_symbols/" target="_blank">Ligature Symbols</a>」を利用させていただきました。</li>
+									<li>ソートに「<a href="https://github.com/bubkoo/natsort" target="_blank">natsort</a>」を利用させていただきました。</li>
+								</ul>
+								<p>御礼申し上げます。</p>
+						</div>
+						<div class="mku-tab-content" tab-title="推奨環境">
+							<h2>推奨環境</h2>
+							<table class="input-area">
+								<tr>
+									<td>
+										ブラウザ
+									</td>
+									<td>
+										<p>Google Chrome (最新版推奨)</p>
+										PCでのご利用を推奨します。スマートフォン等のタッチデバイスでの動作の保証はいたしかねます。
+									</td>
+								</tr>
+								<tr>
+									<td>
+										画面
+									</td>
+									<td>
+										<p>FHD(1920×1080)以上推奨</p>
+										これより小さい画面でご利用の場合、操作がしづらくなる場合があります。そのような場合、ブラウザの拡大率を縮小していただくことで操作がしやすくなります。
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="mku-tab-content" tab-title="コスト計算">
+							<p>本アプリでは、Pak128Japan公式のコスト計算式に基づいて、旅客車両の各種コスト(cost･runningcost･gear)を算出･設定することが可能です。</p>
+							<h2>公式コスト計算式の仕様</h2>
+							<p>pak128japanの公式コスト計算シートによると、鉄道車両のコストは編成を組んだ状態で算出することになっております。</p>
+							<p>そのため本アプリでは、「連結プレビュー」機能で編成を組成すると、組成した車両を対象にコストを計算することができます。</p>
+							<h2>コスト計算に必要な値</h2>
+							<p>本機能を用いてコスト計算を行うには、対象となる車両に以下の値が設定されている必要があります。</p>
+							<ul>
+								<li>最高速度(speed)</li>
+								<li>定員(payload)</li>
+								<li>出力(power) ※動力を持つ車両が編成内に最低1両あればよい</li>
+								<li>重量(weight)</li>
+								<li>導入年(intro_year)</li>
+							</ul>
+							<p>このほか、コスト計算ダイアログ内で「起動加速度」を入力する必要があります。</p>
+							<h2>「係数」について</h2>
+							<p>pak128japanの公式コスト計算シートに登場する概念で、古い年代の車両ほど大きく、新しい年代の車両ほど小さくなる整数です。同じスペックの車両でも、係数が小さいほど安価になります。</p>
+							<p>本アプリでは、公式シートから推測した計算式に基づいて、係数を導入年から自動算出します。そのため、本アプリを用いてコスト計算を行う場合、対象車両の「intro_year」プロパティに値が設定されている必要があります。</p>
+						</div>
+						<div class="mku-tab-content" tab-title="お問い合わせ">
+							<p>バグ報告･ご意見･ご要望･ご質問は<a href="https://twitter.com/KasumiTrans" target="_blank">Twitter</a>または<a href="mailto:morooka@kasu.me" target="_blank">メール</a>までお願いいたします。</p>
+							<p>なお、バグ報告の際は、症状とともに「読み込んだファイル」「ご利用のOS･ブラウザ」をお伝えいただくと、解決がスムーズになります。お手数ですが、ご協力をお願いいたします。</p>
+							<p>変更履歴は<a href="https://github.com/kasu-me/Simutrans-Coupling-Monster" target="_blank">GitHub</a>をご覧ください。</p>
+							<p>© 2023-2025 M_Kasumi</p>
+						</div>
+					</div>
+				`, [{ "content": "閉じる", "event": `Dialog.list.helpDialog.off(); `, "icon": "close" }], {}, true);
 });
