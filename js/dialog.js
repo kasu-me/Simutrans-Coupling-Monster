@@ -91,7 +91,11 @@ class Dialog {
 			button.classList.add("dialog-main-button");
 			button.innerHTML = buttons[i]["content"];
 			for (let j in buttons[i]) {
-				button.setAttribute("onclick", buttons[i]["event"]);
+				if (typeof buttons[i]["event"] === "string") {
+					button.setAttribute("onclick", buttons[i]["event"]);
+				} else {
+					button.addEventListener("click", buttons[i]["event"]);
+				}
 				if (j == "content" || j == "event") {
 					continue;
 				} else if (j == "icon") {
@@ -129,7 +133,7 @@ class Dialog {
 		Dialog.open(this.dialog);
 		if (!isActiveInFirstTime) {
 			this.dialog.style.top = "";
-			this.dialog.style.left = `${(window.innerWidth - this.dialog.getBoundingClientRect().width) / 2}px`;
+			this.setCenterPositionX();
 		}
 	}
 	off() {
@@ -140,6 +144,9 @@ class Dialog {
 			Dialog.close(this.background);
 		}
 		Dialog.close(this.dialog);
+	}
+	setCenterPositionX() {
+		this.dialog.style.left = `${(window.innerWidth - this.dialog.getBoundingClientRect().width) / 2}px`;
 	}
 	get isActive() {
 		return this.dialog.classList.contains("on");
