@@ -1,0 +1,39 @@
+.mku-radio-container {
+	& input[type="radio"] {
+		display: none;
+	}
+
+	/* セグメントコントロール（ピルトグル）スタイル */
+	padding: 0.3em 0.8em;
+	border: 1.5px solid var(--formation-table-main-border);
+	background: #faf8fc;
+	user-select: none;
+	transition: background 0.12s, color 0.12s;
+
+	/* 隣接アイテム間のボーダーを重ねて1本に */
+	& + .mku-radio-container {
+		margin-left: -1.5px;
+	}
+
+	/* グループの両端だけ角丸 */
+	&:first-of-type {
+		border-radius: 1em 0 0 1em;
+	}
+	&:last-of-type {
+		border-radius: 0 1em 1em 0;
+	}
+
+	/* 選択中 */
+	&:has(input[type="radio"]:checked) {
+		background: var(--button-face);
+		color: #fff;
+		border-color: var(--button-face);
+		position: relative;
+		z-index: 1;
+	}
+
+	/* 未選択ホバー */
+	&:not(:has(input[type="radio"]:checked)):hover {
+		background: var(--sub-light-color);
+	}
+}

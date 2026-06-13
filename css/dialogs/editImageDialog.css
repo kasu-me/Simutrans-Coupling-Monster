@@ -41,7 +41,6 @@
 	#image-type-selector {
 		display: flex;
 		align-items: center;
-		gap: 1.2em;
 		font-size: 0.85rem;
 		margin: 0.4em 0;
 
