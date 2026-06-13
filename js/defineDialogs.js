@@ -463,7 +463,7 @@ window.addEventListener("load", function () {
 				li.innerText = addon.name;
 				ul.appendChild(li);
 				for (let prop in addon) {
-					if (prop != CONSTRAINT && !prop.startsWith(EMPTYIMAGE)) {
+					if (prop != CONSTRAINT && !prop.startsWith(EMPTYIMAGE) && !prop.startsWith(FREIGHTIMAGE)) {
 						properties.add(prop);
 					}
 				}
@@ -556,7 +556,7 @@ window.addEventListener("load", function () {
 								setCopiedAddonToConstraint(addon, newAddon, "prev");
 								setCopiedAddonToConstraint(addon, newAddon, "next");
 							}
-						} else if (prop.startsWith(EMPTYIMAGE)) {
+						} else if (prop.startsWith(EMPTYIMAGE) || prop.startsWith(FREIGHTIMAGE)) {
 							if (copyProperties.includes("images")) {
 								newAddon[prop] = addon[prop];
 							}
@@ -724,8 +724,8 @@ window.addEventListener("load", function () {
 		let confirmButton = gebi("new-property-confirm");
 		let valueInput = gebi("new-property-property-value");
 
-		//name,obj,constraint,emptyimageは書き込み禁止
-		let isDisabled = (propInputValue == "name" || propInputValue == "obj" || propInputValue.startsWith(EMPTYIMAGE) || propInputValue == CONSTRAINT);
+		//name,obj,constraint,emptyimage,freightimage(反転画像UIで管理)は書き込み禁止
+		let isDisabled = (propInputValue == "name" || propInputValue == "obj" || propInputValue.startsWith(EMPTYIMAGE) || propInputValue.startsWith(FREIGHTIMAGE) || propInputValue == CONSTRAINT);
 		confirmButton.disabled = isDisabled;
 		valueInput.disabled = isDisabled;
 		if (isDisabled) {
@@ -795,6 +795,12 @@ window.addEventListener("load", function () {
 				</td>
 			</tr>
 		</table>
+		<div id="image-type-selector">
+			<label class="mku-radio-container"><input type="radio" name="image-type" value="empty" checked>通常画像</label>
+			<label class="mku-radio-container"><input type="radio" name="image-type" value="reverse">反転時画像 (OTRP)</label>
+			<button id="clear-reverse-image-button" class="lsf-icon" icon="delete">反転画像を全削除</button>
+		</div>
+		<div id="reverse-image-note">※反転時画像は「アドオン正方向(反転走行時と逆向き)」で指定します。未設定の方向は通常画像が使用されます。表示には good.Reverse.pak の併用が必要です。</div>
 		<div id="addon-image-preview"></div>
 		<p style="margin-bottom:0;text-align:center;">↓クリックで画像を指定・shift+クリックで1列をまとめて指定↓</p>
 		<div id="addon-image-whole-preview">
@@ -809,8 +815,22 @@ window.addEventListener("load", function () {
 		editingAddonMainImageData: null,
 		selectedDirection: -1,
 		lastX: 0,
+		//編集対象の画像種別 "empty"(通常) / "reverse"(反転時画像)
+		editingImageType: "empty",
+		//反転画像が未設定の方向で表示する基準スプライトシートのファイル名(任意)
+		reverseSheetOverride: undefined,
+		//現在のモード・方向に対応する画像プロパティキーを返す
+		getEditingImageKey: function (direction) {
+			if (Dialog.list.editImageDialog.functions.editingImageType == "reverse") {
+				return getFreightImageKey(REVERSE_IMAGE_TYPE_INDEX, direction);
+			}
+			return `${EMPTYIMAGE}[${direction}]`;
+		},
 		display: function () {
 			Dialog.list.editImageDialog.functions.lastX = 0;
+			//ダイアログを開くたびに通常画像モードへリセット
+			Dialog.list.editImageDialog.functions.editingImageType = "empty";
+			Dialog.list.editImageDialog.functions.reverseSheetOverride = undefined;
 			loader.start();
 
 			setTimeout(() => {
@@ -821,6 +841,11 @@ window.addEventListener("load", function () {
 				let previewAddonNameSelectBox = gebi("preview-addon-name");
 				setAddonNamesToSelectBox(previewAddonNameSelectBox);
 				previewAddonNameSelectBox.value = Dialog.list.editImageDialog.functions.editingAddon.name;
+
+				//画像種別ラジオを通常画像に戻す
+				document.querySelectorAll('#image-type-selector input[name="image-type"]').forEach((radio) => {
+					radio.checked = radio.value == "empty";
+				});
 
 				gebi("direction-selectbox").selectedIndex = 0;
 
@@ -869,17 +894,18 @@ window.addEventListener("load", function () {
 			}
 		},
 		clickPositionPointerCursor: function (e) {
+			let funcs = Dialog.list.editImageDialog.functions;
 			let addonWholeImageArea = gebi("addon-image-whole-preview");
-			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
+			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / funcs.imageDisplaySizeRatio);
 			if (e.shiftKey) {
 				DIRECTIONS.forEach((dir, i) => {
-					Dialog.list.editImageDialog.functions.editingAddon[`${EMPTYIMAGE}[${dir}]`] = `${Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]}.${y}.${i}`;
+					funcs.editingAddon[funcs.getEditingImageKey(dir)] = `${funcs.editingAddonMainImageData[0]}.${y}.${i}`;
 				});
-				Dialog.list.editImageDialog.functions.refresh();
+				funcs.refresh();
 			} else {
-				let x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / Dialog.list.editImageDialog.functions.imageDisplaySizeRatio);
-				Dialog.list.editImageDialog.functions.editingAddon[`${EMPTYIMAGE}[${Dialog.list.editImageDialog.functions.selectedDirection}]`] = `${Dialog.list.editImageDialog.functions.editingAddonMainImageData[0]}.${y}.${x}`;
-				Dialog.list.editImageDialog.functions.refresh();
+				let x = Math.floor((e.clientX - addonWholeImageArea.getBoundingClientRect().left) / PAK_TYPE / funcs.imageDisplaySizeRatio);
+				funcs.editingAddon[funcs.getEditingImageKey(funcs.selectedDirection)] = `${funcs.editingAddonMainImageData[0]}.${y}.${x}`;
+				funcs.refresh();
 			}
 		},
 		dispatchKeyDownEvent: function (e) {
@@ -912,22 +938,41 @@ window.addEventListener("load", function () {
 			let japaneseName = gebi("display-japanese-name");
 			japaneseName.innerHTML = getJapaneseNameFromAddon(Dialog.list.editImageDialog.functions.editingAddon, "(未設定)")
 
+			let funcs = Dialog.list.editImageDialog.functions;
+
+			//画像種別モードに応じたUI表示切替
+			let isReverse = funcs.editingImageType == "reverse";
+			gebi("reverse-image-note").style.display = isReverse ? "" : "none";
+			gebi("clear-reverse-image-button").style.display = isReverse ? "" : "none";
+
 			//セレクトボックスに方向をセット
 			let selectBox = gebi("direction-selectbox");
-			Dialog.list.editImageDialog.functions.selectedDirection = selectBox.value;
+			funcs.selectedDirection = selectBox.value;
 
-			//その方角に指定されている画像ファイル名をセット
-			Dialog.list.editImageDialog.functions.editingAddonMainImageData = getImageNameAndPositionsFromAddonByDirection(Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
+			//現在のモード・方向に対応する画像データを取得
+			let imageKey = funcs.getEditingImageKey(funcs.selectedDirection);
+			let imageDataStr = funcs.editingAddon[imageKey];
+			if (imageDataStr != undefined) {
+				funcs.editingAddonMainImageData = imageDataStr.split(".");
+			} else {
+				//未設定(主に反転画像)。基準スプライトシートのみ表示し位置は0,0扱い
+				let baseFile = funcs.reverseSheetOverride;
+				if (baseFile == undefined) {
+					let emptyStr = funcs.editingAddon[`${EMPTYIMAGE}[${funcs.selectedDirection}]`];
+					baseFile = emptyStr != undefined ? emptyStr.split(".")[0] : undefined;
+				}
+				funcs.editingAddonMainImageData = [baseFile, 0, 0];
+			}
 			let addonImageFileNameArea = gebi("addon-image-file-name");
-			addonImageFileNameArea.value = Dialog.list.editImageDialog.functions.editingAddonMainImageData[0];
+			addonImageFileNameArea.value = funcs.editingAddonMainImageData[0];
 
-			//その方角に指定されている画像プレビューをセット
+			//その方角に指定されている画像プレビューをセット(未設定キーはnoimage表示)
 			let addonImageArea = gebi("addon-image-preview");
 			addonImageArea.innerHTML = "";
-			let preview = setAddonPreviewImageByDirection(addonImageArea, Dialog.list.editImageDialog.functions.editingAddon, Dialog.list.editImageDialog.functions.selectedDirection);
+			let preview = setAddonPreviewImageByDirection(addonImageArea, funcs.editingAddon, funcs.selectedDirection, imageKey);
 			//方向別矢印をセット
 			preview.innerHTML = DIRECTION_ARROWS[selectBox.selectedIndex];
-			setBalloon(preview, `矢印の向きと車両の向きが同じであれば正しい方向にセットされています`);
+			setBalloon(preview, isReverse ? `反転画像はアドオン正方向(反転走行時と逆向き)で指定します` : `矢印の向きと車両の向きが同じであれば正しい方向にセットされています`);
 
 			//全体内での位置表示用の全体画像
 			gebi("open-select-image-dialog-button").onclick = () => {
@@ -978,16 +1023,45 @@ window.addEventListener("load", function () {
 		gebi("carsSelectBox").value = gebi("preview-addon-name").value;
 		gebi("carsSelectBox").dispatchEvent(new Event("change"));
 		Dialog.list.editImageDialog.functions.editingAddon = getEditingAddon();
+		//車両を切り替えたら基準シート上書きを解除
+		Dialog.list.editImageDialog.functions.reverseSheetOverride = undefined;
 		Dialog.list.editImageDialog.functions.refresh();
 	});
 	gebi("addon-image-file-name").addEventListener("change", () => {
-		changeImage(Dialog.list.editImageDialog.functions.editingAddon, gebi("addon-image-file-name").value);
-		Dialog.list.editImageDialog.functions.refresh();
+		let funcs = Dialog.list.editImageDialog.functions;
+		let newFile = gebi("addon-image-file-name").value;
+		if (funcs.editingImageType == "reverse") {
+			//反転モード: 設定済み方向のファイルを変更しつつ、未設定方向用の基準シートも更新
+			changeReverseImage(funcs.editingAddon, newFile);
+			funcs.reverseSheetOverride = newFile;
+		} else {
+			changeImage(funcs.editingAddon, newFile);
+		}
+		funcs.refresh();
+	});
+	//画像種別(通常/反転)ラジオ切替
+	document.querySelectorAll('#image-type-selector input[name="image-type"]').forEach((radio) => {
+		radio.addEventListener("change", () => {
+			let funcs = Dialog.list.editImageDialog.functions;
+			funcs.editingImageType = document.querySelector('#image-type-selector input[name="image-type"]:checked').value;
+			funcs.reverseSheetOverride = undefined;
+			funcs.refresh();
+		});
+	});
+	//反転画像を全削除
+	gebi("clear-reverse-image-button").addEventListener("click", () => {
+		let funcs = Dialog.list.editImageDialog.functions;
+		Dialog.list.confirmDialog.functions.display(`この車両の反転時画像(全方向)を削除してもよろしいですか？`, () => {
+			REVERSE_FREIGHTIMAGE_DIRECTIONS.forEach((key) => { delete funcs.editingAddon[key]; });
+			funcs.reverseSheetOverride = undefined;
+			funcs.refresh();
+			new Message(`反転時画像を削除しました。`, ["normal-message"], 3000, true, true);
+		});
 	});
 
 	new Dialog("couplingPreviewDialog", "連結プレビュー", `
 		<div>
-			<p>編成(<span id="preview-current-formation-count"></span>両)<button id="clear-preview-formation-button" onclick="Dialog.list.couplingPreviewDialog.functions.currentFormation=[];Dialog.list.couplingPreviewDialog.functions.refresh();" class="lsf-icon" icon="clear">編成クリア</button></p>
+			<p>編成(<span id="preview-current-formation-count"></span>両)<button id="clear-preview-formation-button" onclick="Dialog.list.couplingPreviewDialog.functions.currentFormation=[];Dialog.list.couplingPreviewDialog.functions.refresh();" class="lsf-icon" icon="clear">編成クリア</button><span class="mku-balloon" mku-balloon-message="各車両を反転時画像で表示します(順序は変わりません)"><label for="preview-reverse-toggle" class="mku-checkbox-container"><input id="preview-reverse-toggle" type="checkbox"></label><label for="preview-reverse-toggle">反転表示</label></span></p>
 			<div id="preview-current-formation" class="cars-container"></div>
 		</div>
 		<div>
@@ -1010,6 +1084,9 @@ window.addEventListener("load", function () {
 			let candidateArea = gebi("preview-current-candidate");
 			candidateArea.innerHTML = "";
 
+			//反転表示トグル(順序は維持し、各車両の画像のみ反転画像に切替)
+			let useReverse = gebi("preview-reverse-toggle").checked;
+
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			gebi("preview-current-formation-count").innerHTML = formation.length;
 			[
@@ -1022,7 +1099,7 @@ window.addEventListener("load", function () {
 			formation.forEach((car, i) => {
 				let outer = createOuter(false);
 				outer.dataset.addonName = car.name;
-				setAddonPreviewImage(outer, car);
+				setAddonPreviewImage(outer, car, useReverse ? getReverseDisplayImageKey(car) : undefined);
 				setAddonBalloon(outer, car);
 				if (i == formation.length - 1) {
 					outer.addEventListener("click", () => {
@@ -1081,6 +1158,10 @@ window.addEventListener("load", function () {
 		setAddonBalloon(outer, addon);
 		area.appendChild(outer);
 	}
+	//反転表示トグル
+	gebi("preview-reverse-toggle").addEventListener("change", () => {
+		Dialog.list.couplingPreviewDialog.functions.refresh();
+	});
 	new Dialog("formationTemplateDialog", "編成テンプレート (OTRP)", `<div id="formation-templates-area"></div><span>※「閉じる」を選択してもテンプレートは保存されています。必要なテンプレートを全て追加してから出力することもできます。</span>`, [{ "content": "ファイルを保存", "event": () => { const ftd = Dialog.list.formationTemplateDialog.functions; downloadFile(ftd.generateFormationTemplate(), "formationtemplate.tab"); const hasJaTab = ftd.templates.some(t => t.name?.trim() && t.japaneseName?.trim()); if (hasJaTab) { downloadFile(ftd.generateJaTab(), "ja.tab"); } }, "icon": "download" }, { "content": "クリア", "event": () => { Dialog.list.formationTemplateDialog.functions.templates = []; Dialog.list.formationTemplateDialog.functions.refresh(); }, "icon": "clear" }, { "content": "閉じる", "event": () => { Dialog.list.formationTemplateDialog.off(); }, "icon": "close" }], {
 		templates: [],
 		display: function () {
@@ -1307,14 +1388,17 @@ window.addEventListener("load", function () {
 		Dialog.list.calcCostDialog.functions.refresh();
 	})
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `< canvas id = "formated-addons-image" ></canvas > `, [{ "content": "クリップボードにコピー", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard(); }, "icon": "tabs" }, { "content": "保存", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.saveAsFile(); }, "icon": "download" }, { "content": "閉じる", "event": () => { Dialog.list.formatedAddonsImageDialog.off(); }, "icon": "close" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<div id="formated-image-controls"><span class="mku-balloon" mku-balloon-message="各車両を反転時画像で撮影します(順序は変わりません)"><label for="screenshot-reverse-toggle" class="mku-checkbox-container"><input id="screenshot-reverse-toggle" type="checkbox"></label><label for="screenshot-reverse-toggle">反転して撮影</label></span></div><canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard(); }, "icon": "tabs" }, { "content": "保存", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.saveAsFile(); }, "icon": "download" }, { "content": "閉じる", "event": () => { Dialog.list.formatedAddonsImageDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			loader.start();
 			setTimeout(() => {
+				//連結プレビューの反転表示状態を引き継ぐ
+				let useReverse = gebi("preview-reverse-toggle").checked;
+				gebi("screenshot-reverse-toggle").checked = useReverse;
 				let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 
 				for (let car of formation) {
-					if (!imageFiles.has(car[EMPTYIMAGE_DIRECTIONS[0]].split(".")[0])) {
+					if (!imageFiles.has(getFormationImageData(car, useReverse)[0])) {
 						Dialog.list.alertDialog.functions.display("画像が指定されていない車両があるため撮影できません。");
 						loader.finish();
 						return;
@@ -1327,6 +1411,8 @@ window.addEventListener("load", function () {
 			}, 0);
 		},
 		refresh: function () {
+			//反転時は順序を維持し、各車両の画像のみ反転画像を使用
+			let useReverse = gebi("screenshot-reverse-toggle").checked;
 			let formation = Dialog.list.couplingPreviewDialog.functions.currentFormation;
 			let canvas = document.createElement("canvas");
 			canvas.width = PAK_TYPE * 20;
@@ -1340,7 +1426,7 @@ window.addEventListener("load", function () {
 			let lengths = inverseFormation.map((car) => { return Number(car.length) });
 			let totalHeight = Math.floor(lengths.reduce((sum, val) => { return sum + val; }) / 2);
 			inverseFormation.forEach((car, i) => {
-				let [imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddon(car);
+				let [imgName, imgPositionY, imgPositionX] = getFormationImageData(car, useReverse);
 				let img = getTransparentImage(imgName, imgPositionY, imgPositionX);
 				let imgPutPointX = 0;
 				for (let j = formationCount - 1; j > i; j--) {
@@ -1368,6 +1454,10 @@ window.addEventListener("load", function () {
 			link.click();
 		}
 	}, true);
+	//反転して撮影トグル
+	gebi("screenshot-reverse-toggle").addEventListener("change", () => {
+		Dialog.list.formatedAddonsImageDialog.functions.refresh();
+	});
 	function calcPixelsFromLength(length) {
 		return length * 4;
 	}

@@ -22,10 +22,18 @@ const ADDON_NONE = { name: "none" };
 const CONSTRAINT = "constraint";
 const EMPTYIMAGE = "emptyimage";
 const FREIGHTIMAGE = "freightimage";
+const FREIGHTIMAGETYPE = "freightimagetype";
 const DIRECTIONS = ["s", "e", "se", "sw", "n", "w", "nw", "ne"];
 const DIRECTION_ARROWS = ["↙", "↘", "↓", "←", "↗", "↖", "↑", "→"];
 const EMPTYIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${EMPTYIMAGE}[${x}]`);
-const FREIGHTIMAGE_DIRECTIONS = DIRECTIONS.map(x => `${FREIGHTIMAGE}[${x}]`);
+//反転時画像(OTRP編成反転機能)。freightimage[1]が反転時画像のインデックス
+const REVERSE_IMAGE_TYPE_INDEX = 1;
+//freightimage[typeIndex][direction]形式のプロパティキーを生成
+function getFreightImageKey(typeIndex, direction) {
+	return `${FREIGHTIMAGE}[${typeIndex}][${direction}]`;
+}
+//反転時画像の各方向プロパティキー (freightimage[1][s] ...)
+const REVERSE_FREIGHTIMAGE_DIRECTIONS = DIRECTIONS.map(x => getFreightImageKey(REVERSE_IMAGE_TYPE_INDEX, x));
 //pakタイプ
 const PAK_TYPE = 128;
 

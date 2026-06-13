@@ -41,10 +41,11 @@ function viewJaTab() {
 }
 
 //アドオンプレビューをセット
-function setAddonPreviewImage(target, addon) {
-	return setAddonPreviewImageByDirection(target, addon, "s");
+//imageKey: 参照する画像プロパティキー(未指定時はemptyimage[s])。反転画像表示等で使用
+function setAddonPreviewImage(target, addon, imageKey) {
+	return setAddonPreviewImageByDirection(target, addon, "s", imageKey);
 }
-function setAddonPreviewImageByDirection(target, addon, direction) {
+function setAddonPreviewImageByDirection(target, addon, direction, imageKey) {
 	let imgName, imgPositionY, imgPositionX, img;
 	let div = document.createElement("div");
 	div.classList.add("image-container");
@@ -54,7 +55,16 @@ function setAddonPreviewImageByDirection(target, addon, direction) {
 		[imgPositionY, imgPositionX] = [0, 0];
 		div.classList.add("no-selection");
 	} else {
-		[imgName, imgPositionY, imgPositionX] = getImageNameAndPositionsFromAddonByDirection(addon, direction);
+		//imageKey未指定時はemptyimage[dir]を参照
+		let key = imageKey != undefined ? imageKey : `${EMPTYIMAGE}[${direction}]`;
+		let dataStr = addon[key];
+		if (dataStr != undefined) {
+			[imgName, imgPositionY, imgPositionX] = dataStr.split(".");
+		} else {
+			//指定キーが未設定の場合は画像なし扱い
+			imgName = undefined;
+			[imgPositionY, imgPositionX] = [0, 0];
+		}
 	}
 	img = imageFiles.get(imgName);
 
@@ -194,7 +204,8 @@ function refresh() {
 	nameInput.classList.remove("validation-error");
 
 	for (let prop in editingAddon) {
-		if (prop == "name" || prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE)) { continue }
+		//freightimage/freightimagetypeは反転画像UIで管理するためプロパティ表に出さない
+		if (prop == "name" || prop == CONSTRAINT || prop.startsWith(EMPTYIMAGE) || prop.startsWith(FREIGHTIMAGE)) { continue }
 		let tr = document.createElement("tr");
 		let tdProp = document.createElement("td");
 		let tdVal = document.createElement("td");

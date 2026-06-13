@@ -3,6 +3,18 @@
 		text-align: center;
 	}
 
+	#formated-image-controls {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		font-size: 0.85rem;
+		padding: 0.3em 0;
+
+		& label {
+			cursor: pointer;
+		}
+	}
+
 	& p {
 		margin-top: 0;
 

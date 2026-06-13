@@ -85,6 +85,16 @@ function getImageNameAndPositionsFromAddonByDirection(addon, direction) {
 	return addon[`${EMPTYIMAGE}[${direction}]`].split(".");
 }
 
+//反転表示で参照する画像プロパティキー(s方向)。反転画像があればそれ、なければ通常画像
+function getReverseDisplayImageKey(addon) {
+	let reverseKey = REVERSE_FREIGHTIMAGE_DIRECTIONS[0];
+	return addon[reverseKey] != undefined ? reverseKey : EMPTYIMAGE_DIRECTIONS[0];
+}
+//編成表示用の画像データ[name,y,x]を取得。useReverse時は反転画像(未設定なら通常画像)
+function getFormationImageData(addon, useReverse) {
+	return addon[useReverse ? getReverseDisplayImageKey(addon) : EMPTYIMAGE_DIRECTIONS[0]].split(".");
+}
+
 function addImageFileNameToMasterFromDat(propName, val) {
 	imageFileNames.add(val.split(".")[0]);
 	//内包表記的なやつの場合
@@ -187,7 +197,25 @@ function loadDatFile(file) {
 							continue;
 						}
 					}
-					if (propName.startsWith(FREIGHTIMAGE)) {
+					//反転時画像種別(freightimagetype[n])の処理 ※freightimageより前方一致するため先に判定
+					let freightImageTypeMatch = propName.match(/^freightimagetype\[(\d+)\]$/);
+					if (freightImageTypeMatch) {
+						//index0,1は保存時に再生成するため破棄。2以上(No_Electric等)のみ保全
+						if (Number(freightImageTypeMatch[1]) >= 2) {
+							tmpAddons.at(-1)[propName] = val;
+						}
+						continue;
+					}
+					//積載/反転時画像(freightimage[n][dir])の処理
+					let freightImageMatch = propName.match(/^freightimage\[(\d+)\]\[(\w+)\]$/);
+					if (freightImageMatch) {
+						//index0は保存時にemptyimageから再生成するため破棄
+						if (Number(freightImageMatch[1]) == 0) {
+							continue;
+						}
+						//index1(反転)および2以上(No_Electric)は画像名を登録のうえ保持
+						imageFileNames.add(val.split(".")[0]);
+						tmpAddons.at(-1)[propName] = val;
 						continue;
 					}
 
@@ -278,6 +306,16 @@ function changeImage(addon, newImageFileName) {
 	})
 }
 
+//反転画像のファイル名を変更(設定済み方向のみ、位置y/xは維持)
+function changeReverseImage(addon, newImageFileName) {
+	REVERSE_FREIGHTIMAGE_DIRECTIONS.forEach((key) => {
+		if (addon[key] != undefined) {
+			let positions = addon[key].split(".");
+			addon[key] = `${newImageFileName}.${positions[1]}.${positions[2]}`;
+		}
+	});
+}
+
 //画像をリストに登録
 function appendImageToImagesList(fileName, file) {
 	imageFileNames.add(fileName);
@@ -327,13 +365,61 @@ function writeDat() {
 					})
 				}
 			} else {
+				//freightimage/freightimagetypeは専用ブロックで生成するためスキップ
+				if (prop.startsWith(FREIGHTIMAGE)) { continue }
 				if (addon[prop].trim?.() == "") { continue }
 				dat += `${prop}=${addon[prop]}\n`;
 			}
 		}
+		//反転時画像(OTRP編成反転)ブロックを出力
+		dat += generateReverseImageDat(addon);
 		dat += datConstraints;
 		dat += `---\n`;
 	});
+	return dat;
+}
+
+//反転時画像(OTRP編成反転)のdat記述を生成
+function generateReverseImageDat(addon) {
+	//No_Electric等(index>=2)の保全分を収集
+	let rawTypes = "";
+	let rawImages = "";
+	for (let prop in addon) {
+		let typeMatch = prop.match(/^freightimagetype\[(\d+)\]$/);
+		if (typeMatch && Number(typeMatch[1]) >= 2) {
+			rawTypes += `${prop}=${addon[prop]}\n`;
+			continue;
+		}
+		let imageMatch = prop.match(/^freightimage\[(\d+)\]\[(\w+)\]$/);
+		if (imageMatch && Number(imageMatch[1]) >= 2) {
+			rawImages += `${prop}=${addon[prop]}\n`;
+		}
+	}
+	//反転画像が設定されている方向
+	let hasReverseImage = REVERSE_FREIGHTIMAGE_DIRECTIONS.some(key => addon[key] != undefined);
+	if (!hasReverseImage) {
+		//反転画像なし → No_Electric等の保全分のみ出力
+		return rawTypes + rawImages;
+	}
+	let dat = "";
+	let freight = addon.freight != undefined && addon.freight.trim() != "" ? addon.freight : "Passagiere";
+	dat += `freightimagetype[0]=${freight}\n`;
+	dat += `freightimagetype[1]=Reverse\n`;
+	dat += rawTypes;
+	//FreightImage[0] = EmptyImage(全8方向 / 存在するもののみ)
+	DIRECTIONS.forEach((dir, i) => {
+		let emptyKey = EMPTYIMAGE_DIRECTIONS[i];
+		if (addon[emptyKey] != undefined) {
+			dat += `${getFreightImageKey(0, dir)}=${addon[emptyKey]}\n`;
+		}
+	});
+	//FreightImage[1] = 反転画像(設定済み方向のみ)
+	REVERSE_FREIGHTIMAGE_DIRECTIONS.forEach((key) => {
+		if (addon[key] != undefined) {
+			dat += `${key}=${addon[key]}\n`;
+		}
+	});
+	dat += rawImages;
 	return dat;
 }
 
