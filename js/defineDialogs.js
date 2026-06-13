@@ -60,7 +60,7 @@ window.addEventListener("load", function () {
 		</table>
 		<input id="new-car-img-file" type="file" accept=".png">
 		<p><label for="auto-insert-property" class="mku-checkbox-container"><input id="auto-insert-property" type="checkbox" checked></label><label for="auto-insert-property">主要なプロパティの入力欄を自動で用意</label></span></p>
-	`, [{ "content": "車両作成", "event": ()=>{Dialog.list.addCarDialog.functions.addCar();}, "icon": "check" }, { "content": "キャンセル", "event": ()=>{Dialog.list.addCarDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "車両作成", "event": () => { Dialog.list.addCarDialog.functions.addCar(); }, "icon": "check" }, { "content": "キャンセル", "event": () => { Dialog.list.addCarDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			[gebi("new-car-name"), gebi("new-car-img-file"), gebi("new-car-length")].forEach(input => input.value = "");
 			gebi("new-car-img-file").dispatchEvent(new Event("change"));
@@ -169,7 +169,7 @@ window.addEventListener("load", function () {
 			<p>最低でも1件の有効な車両が記述されたdatファイルが含まれている必要があります</p>
 			<p id="overwrite-warn">既に読み込まれているデータがある場合、重複する内容は上書きされます</p>
 		</div>
-		`, [{ "content": "キャンセル", "event": ()=>{refresh();Dialog.list.openDatFileDialog.off();}, "icon": "close" }], {
+		`, [{ "content": "キャンセル", "event": () => { refresh(); Dialog.list.openDatFileDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			if (masterAddons.length > 0) {
 				gebi("overwrite-warn").style.display = "block";
@@ -192,7 +192,7 @@ window.addEventListener("load", function () {
 		<div id="selected-image-preview">
 		</div>
 		<input type="file" id="image-file-input" accept=".png">
-		`, [{ "content": "完了", "event": ()=>{Dialog.list.selectImageDialog.off();}, "icon": "check" }], {
+		`, [{ "content": "完了", "event": () => { Dialog.list.selectImageDialog.off(); }, "icon": "check" }], {
 		display: function (x) {
 			if (masterAddons.length == 0) {
 				Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
@@ -212,7 +212,7 @@ window.addEventListener("load", function () {
 		<div id="jatab-file-drop-area" class="filefield">
 			<p>ここにja.tabファイルをドラッグ＆ドロップ (複数ファイル可)</p>
 		</div>
-		`, [{ "content": "完了", "event": ()=>{Dialog.list.openJaTabFileDialog.off();}, "icon": "check" }], {
+		`, [{ "content": "完了", "event": () => { Dialog.list.openJaTabFileDialog.off(); }, "icon": "check" }], {
 		display: function (x) {
 			if (masterAddons.length == 0) {
 				Dialog.list.alertDialog.functions.display("先にdatファイルを読み込んでください。");
@@ -225,7 +225,7 @@ window.addEventListener("load", function () {
 
 	new Dialog("previewDialog", "プレビュー", `
 		<div id="dat-preview" class="dialog-preview"></div>
-		`, [{ "content": "クリップボードにコピー", "event": ()=>{navigator.clipboard.writeText(gebi("dat-preview").innerText).then(()=>{new Message('クリップボードにコピーしました。', ['normal-message'], 3000, true, true);})}, "icon": "tabs" }, { "content": "保存", "event": ()=>{saveFile(Dialog.list.previewDialog.functions.type);}, "icon": "download" }, { "content": "閉じる", "event": ()=>{Dialog.list.previewDialog.off();}, "icon": "close" }], {
+		`, [{ "content": "クリップボードにコピー", "event": () => { navigator.clipboard.writeText(gebi("dat-preview").innerText).then(() => { new Message('クリップボードにコピーしました。', ['normal-message'], 3000, true, true); }) }, "icon": "tabs" }, { "content": "保存", "event": () => { saveFile(Dialog.list.previewDialog.functions.type); }, "icon": "download" }, { "content": "閉じる", "event": () => { Dialog.list.previewDialog.off(); }, "icon": "close" }], {
 		type: "",
 		display: function (datText, type) {
 			Dialog.list.previewDialog.functions.type = type;
@@ -242,7 +242,7 @@ window.addEventListener("load", function () {
 
 	new Dialog("carListDialog", "車両リスト", `
 		<div id="car-list-table-container"></div>
-	`, [{ "content": "車両追加", "event": ()=>{Dialog.list.addCarDialog.functions.display();}, "icon": "add" }, { "content": "一括操作", "event": ()=>{Dialog.list.carListDialog.functions.ikkatsuSousa();}, "icon": "wrench", "id": "car-list-ikkatsu-sousa" }, { "content": "閉じる", "event": ()=>{Dialog.list.carListDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "車両追加", "event": () => { Dialog.list.addCarDialog.functions.display(); }, "icon": "add" }, { "content": "一括操作", "event": () => { Dialog.list.carListDialog.functions.ikkatsuSousa(); }, "icon": "wrench", "id": "car-list-ikkatsu-sousa" }, { "content": "閉じる", "event": () => { Dialog.list.carListDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			let currentChecked = Array.from(document.querySelectorAll("#carListDialog .row-selector:checked")).map(checkbox => checkbox.value);
 			let tableContainer = gebi("car-list-table-container");
@@ -289,7 +289,7 @@ window.addEventListener("load", function () {
 	}, true);
 	new Dialog("imageListDialog", "画像ファイルリスト", `
 		<div id="image-list-table-container"></div>
-	`, [{ "content": "新規画像を追加", "event": ()=>{Dialog.list.addNewImageDialog.functions.display();}, "icon": "add" }, { "content": "閉じる", "event": ()=>{Dialog.list.imageListDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "新規画像を追加", "event": () => { Dialog.list.addNewImageDialog.functions.display(); }, "icon": "add" }, { "content": "閉じる", "event": () => { Dialog.list.imageListDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			let tableContainer = gebi("image-list-table-container");
 			tableContainer.classList.add("list-table-container");
@@ -328,7 +328,7 @@ window.addEventListener("load", function () {
 	}, true);
 	new Dialog("imagePreviewDialog", "画像ファイルプレビュー", `
 		<div id="image-preview-dialog-image-preview-container"></div>
-	`, [{ "content": "閉じる", "event": ()=>{Dialog.list.imagePreviewDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "閉じる", "event": () => { Dialog.list.imagePreviewDialog.off(); }, "icon": "close" }], {
 		display: function (imageFileName) {
 			gebi("imagePreviewDialog").querySelector(".dialog-title").innerHTML = imageFileName;
 			let container = gebi("image-preview-dialog-image-preview-container");
@@ -342,7 +342,7 @@ window.addEventListener("load", function () {
 		<div><button class="lsf-icon" icon="image" onclick="gebi('new-img-img-file').click()">ファイルを選択する</button>
 		<span id="new-img-img-file-name-preview">ファイルを選択してください</span></div>
 		<input id="new-img-img-file" type="file" accept=".png">
-	`, [{ "content": "追加", "event": ()=>{Dialog.list.addNewImageDialog.functions.loadImage();}, "icon": "add", "id": "new-img-img-button", "disabled": "disabled" }, { "content": "閉じる", "event": ()=>{Dialog.list.addNewImageDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "追加", "event": () => { Dialog.list.addNewImageDialog.functions.loadImage(); }, "icon": "add", "id": "new-img-img-button", "disabled": "disabled" }, { "content": "閉じる", "event": () => { Dialog.list.addNewImageDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			gebi("new-img-img-file").value = "";
 			gebi("new-img-img-file").dispatchEvent(new Event("change"));
@@ -389,7 +389,7 @@ window.addEventListener("load", function () {
 			<!--<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.editProp()" class="lsf-icon dialog-main-button" icon="sync">プロパティ置換</button></li>-->
 			<li><button onclick="Dialog.list.ikkatsuSousaDialog.functions.delete()" class="lsf-icon dialog-main-button" icon="delete">削除</button></li>
 		</ul>
-	`, [{ "content": "閉じる", "event": ()=>{Dialog.list.ikkatsuSousaDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "閉じる", "event": () => { Dialog.list.ikkatsuSousaDialog.off(); }, "icon": "close" }], {
 		addons: [],
 		display: function (x) {
 			gebi("ikkatsu-car-count").innerText = x.length;
@@ -444,7 +444,7 @@ window.addEventListener("load", function () {
 		</div>
 	</div>
 
-	`, [{ "content": "コピー", "event": ()=>{Dialog.list.copyCarDialog.functions.copy();}, "icon": "tabs" }, { "content": "閉じる", "event": ()=>{Dialog.list.copyCarDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "コピー", "event": () => { Dialog.list.copyCarDialog.functions.copy(); }, "icon": "tabs" }, { "content": "閉じる", "event": () => { Dialog.list.copyCarDialog.off(); }, "icon": "close" }], {
 		addons: [],
 		display: function (addons) {
 			//対象アドオン
@@ -664,7 +664,7 @@ window.addEventListener("load", function () {
 		</table>
 		<div style="font-size:75%;color: #777;margin-top:0.5em;">※既に存在するプロパティは上書きされます</div>
 		<div style="margin-top:0.5em;"><label for="continuously-add-property" class="mku-checkbox-container"><input id="continuously-add-property" type="checkbox" checked="" onchange=""></label><label for="continuously-add-property">連続編集</label></div>
-	`, [{ "content": "追加", "event": ()=>{Dialog.list.addCarPropertyDialog.functions.addProperty();}, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": ()=>{Dialog.list.addCarPropertyDialog.off();}, "icon": "close" }], {
+	`, [{ "content": "追加", "event": () => { Dialog.list.addCarPropertyDialog.functions.addProperty(); }, "icon": "check", "id": "new-property-confirm" }, { "content": "キャンセル", "event": () => { Dialog.list.addCarPropertyDialog.off(); }, "icon": "close" }], {
 		addons: [],
 		addon: null,
 		display: function (targetAddons, propName) {
@@ -803,7 +803,7 @@ window.addEventListener("load", function () {
 		</div>
 		<button id="open-select-image-dialog-button" class="lsf-icon" icon="image">画像ファイルを指定</button>
 		<div id="addon-image-positions"></div>
-		`, [{ "content": "閉じる", "event": ()=>{Dialog.list.editImageDialog.off();}, "icon": "close" }], {
+		`, [{ "content": "閉じる", "event": () => { Dialog.list.editImageDialog.off(); }, "icon": "close" }], {
 		editingAddon: null,
 		imageDisplaySizeRatio: 1,
 		editingAddonMainImageData: null,
@@ -994,7 +994,7 @@ window.addEventListener("load", function () {
 			<p>連結候補</p>
 			<div id="preview-current-candidate" class="cars-container"></div>
 		</div>
-		`, [{ "content": "編成からコスト計算", "event": ()=>{Dialog.list.calcCostDialog.functions.display();}, "icon": "graph", "id": "open-calc-cost-dialog-button" }, { "content": "撮影", "event": ()=>{Dialog.list.formatedAddonsImageDialog.functions.display();}, "icon": "camera", "id": "open-formated-image-dialog-button" }, { "content": "編成テンプレートに追加", "event": ()=>{Dialog.list.formationTemplateDialog.functions.display();}, "icon": "add", "id": "open-formation-template-dialog-button" }, { "content": "終了", "event": ()=>{Dialog.list.couplingPreviewDialog.off();}, "icon": "close" }], {
+		`, [{ "content": "編成からコスト計算", "event": () => { Dialog.list.calcCostDialog.functions.display(); }, "icon": "graph", "id": "open-calc-cost-dialog-button" }, { "content": "撮影", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.display(); }, "icon": "camera", "id": "open-formated-image-dialog-button" }, { "content": "編成テンプレートに追加", "event": () => { Dialog.list.formationTemplateDialog.functions.display(); }, "icon": "add", "id": "open-formation-template-dialog-button" }, { "content": "終了", "event": () => { Dialog.list.couplingPreviewDialog.off(); }, "icon": "close" }], {
 		currentFormation: [],
 		display: function () {
 			if (masterAddons.length == 0) {
@@ -1081,11 +1081,11 @@ window.addEventListener("load", function () {
 		setAddonBalloon(outer, addon);
 		area.appendChild(outer);
 	}
-	new Dialog("formationTemplateDialog", "編成テンプレート (OTRP)", `<div id="formation-templates-area"></div><span>※「閉じる」を選択してもテンプレートは保存されています。必要なテンプレートを全て追加してから出力することもできます。</span>`, [{ "content": "クリップボードにコピー", "event": ()=>{navigator.clipboard.writeText(Dialog.list.formationTemplateDialog.functions.generateFormationTemplate()).then(()=>{new Message('編成テンプレートをクリップボードにコピーしました。', ['normal-message'], 3000, true, true);});}, "icon": "tabs" }, { "content": "クリア", "event": ()=>{Dialog.list.formationTemplateDialog.functions.templates=[];Dialog.list.formationTemplateDialog.functions.refresh();}, "icon": "clear" }, { "content": "閉じる", "event": ()=>{Dialog.list.formationTemplateDialog.off();}, "icon": "close" }], {
+	new Dialog("formationTemplateDialog", "編成テンプレート (OTRP)", `<div id="formation-templates-area"></div><span>※「閉じる」を選択してもテンプレートは保存されています。必要なテンプレートを全て追加してから出力することもできます。</span>`, [{ "content": "ファイルを保存", "event": () => { const ftd = Dialog.list.formationTemplateDialog.functions; downloadFile(ftd.generateFormationTemplate(), "formationtemplate.tab"); const hasJaTab = ftd.templates.some(t => t.name?.trim() && t.japaneseName?.trim()); if (hasJaTab) { downloadFile(ftd.generateJaTab(), "ja.tab"); } }, "icon": "download" }, { "content": "クリア", "event": () => { Dialog.list.formationTemplateDialog.functions.templates = []; Dialog.list.formationTemplateDialog.functions.refresh(); }, "icon": "clear" }, { "content": "閉じる", "event": () => { Dialog.list.formationTemplateDialog.off(); }, "icon": "close" }], {
 		templates: [],
 		display: function () {
 			let formation = [...Dialog.list.couplingPreviewDialog.functions.currentFormation];
-			Dialog.list.formationTemplateDialog.functions.templates.push({ "name": null, "formation": formation });
+			Dialog.list.formationTemplateDialog.functions.templates.push({ "name": null, "japaneseName": null, "formation": formation });
 			Dialog.list.formationTemplateDialog.functions.refresh();
 			Dialog.list.formationTemplateDialog.on();
 		},
@@ -1099,12 +1099,21 @@ window.addEventListener("load", function () {
 				const templateHeaderArea = document.createElement("div");
 				templateHeaderArea.classList.add("template-row-header");
 				templateArea.appendChild(templateHeaderArea);
+				const templateInputBoxContainer = document.createElement("div");
+				templateInputBoxContainer.classList.add("template-inputbox-container");
+				templateHeaderArea.appendChild(templateInputBoxContainer);
 				const templateNameArea = document.createElement("input");
 				templateNameArea.classList.add("template-name");
 				templateNameArea.value = template.name?.trim() ?? "";
 				templateNameArea.addEventListener("input", () => { template.name = templateNameArea.value.trim() });
 				templateNameArea.setAttribute("placeholder", "テンプレートの名前を入力")
-				templateHeaderArea.appendChild(templateNameArea);
+				templateInputBoxContainer.appendChild(templateNameArea);
+				const japaneseNameArea = document.createElement("input");
+				japaneseNameArea.classList.add("template-japanese-name");
+				japaneseNameArea.value = template.japaneseName?.trim() ?? "";
+				japaneseNameArea.addEventListener("input", () => { template.japaneseName = japaneseNameArea.value.trim() });
+				japaneseNameArea.setAttribute("placeholder", "日本語名");
+				templateInputBoxContainer.appendChild(japaneseNameArea);
 				const removeButton = document.createElement("button");
 				removeButton.classList.add("remove-button");
 				removeButton.innerText = "削除";
@@ -1139,6 +1148,18 @@ window.addEventListener("load", function () {
 				strs.push(`name=${template.name}\n${template.formation.map((car, i) => `vehicle[${i}]=${car.name}`).join("\n")}`);
 			});
 			return strs.join("\n-\n");
+		},
+		generateJaTab: function () {
+			const templates = Dialog.list.formationTemplateDialog.functions.templates;
+			let tab = "§###########################################################\n";
+			templates.forEach(template => {
+				const name = template.name?.trim();
+				const japaneseName = template.japaneseName?.trim();
+				if (name && japaneseName) {
+					tab += `${name}\n${japaneseName}\n`;
+				}
+			});
+			return tab;
 		}
 	}, true);
 	new Dialog("calcCostDialog", "編成からコスト計算(Pak128Japan専用)", `
@@ -1202,7 +1223,7 @@ window.addEventListener("load", function () {
 		</table >
 		<p><span class="mku-balloon" mku-balloon-message="オンにするとgear･cost･runningcostの値が上書きされる可能性があります"><label for="overwrite-exists-property" class="mku-checkbox-container"><input id="overwrite-exists-property" type="checkbox" checked></label><label for="overwrite-exists-property">既存のプロパティに上書き</label></span></p>
 		<p><span class="mku-balloon" mku-balloon-message="加速度が足りない場合はオンにしてください"><label for="boost-mode" class="mku-checkbox-container"><input id="boost-mode" type="checkbox"></label><label for="boost-mode">ブーストモード</label></span></p>
-	`, [{ "content": "適用", "event": ()=>{Dialog.list.calcCostDialog.functions.applyCostsheet(); }, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": ()=>{Dialog.list.calcCostDialog.off(); }, "icon": "close" }], {
+	`, [{ "content": "適用", "event": () => { Dialog.list.calcCostDialog.functions.applyCostsheet(); }, "icon": "check", "id": "apply-costsheet-button", "disabled": "disabled" }, { "content": "閉じる", "event": () => { Dialog.list.calcCostDialog.off(); }, "icon": "close" }], {
 		costs: {},
 		display: function () {
 			if (Dialog.list.calcCostDialog.functions.refresh()) {
@@ -1286,7 +1307,7 @@ window.addEventListener("load", function () {
 		Dialog.list.calcCostDialog.functions.refresh();
 	})
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `< canvas id = "formated-addons-image" ></canvas > `, [{ "content": "クリップボードにコピー", "event": ()=>{Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard(); }, "icon": "tabs" }, { "content": "保存", "event": ()=>{Dialog.list.formatedAddonsImageDialog.functions.saveAsFile(); }, "icon": "download" }, { "content": "閉じる", "event": ()=>{Dialog.list.formatedAddonsImageDialog.off(); }, "icon": "close" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `< canvas id = "formated-addons-image" ></canvas > `, [{ "content": "クリップボードにコピー", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard(); }, "icon": "tabs" }, { "content": "保存", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.saveAsFile(); }, "icon": "download" }, { "content": "閉じる", "event": () => { Dialog.list.formatedAddonsImageDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			loader.start();
 			setTimeout(() => {
@@ -1482,5 +1503,5 @@ window.addEventListener("load", function () {
 							<p>© 2023-2026 M_Kasumi</p>
 						</div>
 					</div>
-				`, [{ "content": "閉じる", "event": ()=>{Dialog.list.helpDialog.off(); }, "icon": "close" }], {}, true);
+				`, [{ "content": "閉じる", "event": () => { Dialog.list.helpDialog.off(); }, "icon": "close" }], {}, true);
 });
