@@ -41,6 +41,26 @@ The dat format uses `---` as a separator between vehicles. Properties are `key=v
 
 Image positions in dat: `emptyimage[s]=filename.row.col` (direction, y-position, x-position within the spritesheet).
 
+### Vehicle Reversal Images (Image for Reversing / OTRP)
+
+Supports Simutrans OTRP's reversal images (`FreightImage[1]`). Spec: [Wiki](https://github.com/teamhimeh/simutrans/wiki/編成反転時用画像について-Image-for-Reversing)
+
+**Data model (important):**
+- The only reverse data stored on an addon is the `freightimage[1][dir]` properties (the editable core data). `REVERSE_FREIGHTIMAGE_DIRECTIONS` (`constants.js`) is the array of all 8 direction keys.
+- "Has reverse images" = at least one `freightimage[1][dir]` property exists.
+- `freightimagetype[0]/[1]` and `freightimage[0][dir]` are **auto-generated on save (`writeDat`)** (`freightimage[0][dir] = emptyimage[dir]`, `freightimagetype[1]=Reverse`, `freightimagetype[0]=addon.freight ?? "Passagiere"`). Because the spec forbids having both loaded-cargo images and reverse images, the forward image must equal the empty-car image; generating it on save keeps it consistent even after EmptyImage is edited.
+- On load (`loadDatFile`), `freightimage[0]` / `freightimagetype[0]` / `freightimagetype[1]` are not persisted (discarded, since they are regenerated). `index>=2` (v52+ `No_Electric` / `Reverse_No_Electric`) is not editable but is preserved as raw properties and re-emitted to keep round-trips lossless.
+- `writeDat` skips `freightimage*` / `freightimagetype*` in its generic loop; `generateReverseImageDat(addon)` produces the dedicated block.
+
+**Display helpers (`main.js`):**
+- `getReverseDisplayImageKey(addon)` — returns the reverse-image key if present, otherwise the normal image key (s direction).
+- `getFormationImageData(addon, useReverse)` — returns image data `[name, y, x]` for formation rendering.
+- Because the reverse image itself already depicts the reversed appearance, previews/screenshots **keep the vehicle order and only swap to reverse images** (reversing the order would double-reverse it).
+
+**UI:**
+- The image-assignment dialog (`editImageDialog`) has a "normal / reverse" radio toggle. `editingImageType` (`"empty"`/`"reverse"`) and `getEditingImageKey(dir)` branch by mode.
+- The coupling preview (`couplingPreviewDialog`) and formation screenshot (`formatedAddonsImageDialog`) have a reverse toggle; the screenshot inherits the coupling preview's toggle state.
+
 ### Dialog System (js/dialog.js)
 
 `Dialog` is a class that manages all modal UI. Key patterns:
@@ -93,7 +113,8 @@ Vehicle images are rendered as CSS `background-position` crops from a spriteshee
 ## Key Conventions
 
 - `gebi` is a shorthand alias for `document.getElementById` (defined in `constants.js`).
-- Addon properties that are protected from user editing: `name`, `obj`, `constraint`, `emptyimage[*]`.
-- The `EMPTYIMAGE_DIRECTIONS` array (`emptyimage[s]`, `emptyimage[e]`, etc.) covers 8 compass directions.
+- Addon properties protected from user editing (excluded from the prop table, the add-property dialog, and copy targets): `name`, `obj`, `constraint`, `emptyimage[*]`, and `freightimage[*]` / `freightimagetype[*]` (reverse images are managed by their dedicated UI).
+- The `EMPTYIMAGE_DIRECTIONS` array (`emptyimage[s]`, `emptyimage[e]`, etc.) covers 8 compass directions. `REVERSE_FREIGHTIMAGE_DIRECTIONS` is the equivalent for reverse images (`freightimage[1][s]`, ...). Use `getFreightImageKey(typeIndex, dir)` to build a key.
 - `ADDON_NONE = { name: "none" }` is a sentinel object for "no coupling allowed" constraints.
 - Image transparency key color is RGB `(231, 255, 255)` — pixels of this color are made transparent during formation screenshot rendering.
+- Reverse images (`FreightImage[1]`) are for the OTRP vehicle-reversal feature. See the "Vehicle Reversal Images" subsection under Architecture for details.
