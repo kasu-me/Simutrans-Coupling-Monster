@@ -800,7 +800,7 @@ window.addEventListener("load", function () {
 			<label class="mku-radio-container"><input type="radio" name="image-type" value="reverse">反転時画像 (OTRP)</label>
 			<button id="clear-reverse-image-button" class="lsf-icon" icon="delete">反転画像を全削除</button>
 		</div>
-		<div id="reverse-image-note">※反転時画像は「アドオン正方向(反転走行時と逆向き)」で指定します。未設定の方向は通常画像が使用されます。表示には good.Reverse.pak の併用が必要です。</div>
+		<div id="reverse-image-note">※反転時画像は「アドオン正方向と逆向き」で指定します。未設定の場合は通常画像が使用されます。詳しくは<a href="https://github.com/teamhimeh/simutrans/wiki/%E7%B7%A8%E6%88%90%E5%8F%8D%E8%BB%A2%E6%99%82%E7%94%A8%E7%94%BB%E5%83%8F%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6-Image-for-Reversing" target="_blank">OTRPドキュメント</a>を参照してください。</div>
 		<div id="addon-image-preview"></div>
 		<p style="margin-bottom:0;text-align:center;">↓クリックで画像を指定・shift+クリックで1列をまとめて指定↓</p>
 		<div id="addon-image-whole-preview">
@@ -972,7 +972,7 @@ window.addEventListener("load", function () {
 			let preview = setAddonPreviewImageByDirection(addonImageArea, funcs.editingAddon, funcs.selectedDirection, imageKey);
 			//方向別矢印をセット
 			preview.innerHTML = DIRECTION_ARROWS[selectBox.selectedIndex];
-			setBalloon(preview, isReverse ? `反転画像はアドオン正方向(反転走行時と逆向き)で指定します` : `矢印の向きと車両の向きが同じであれば正しい方向にセットされています`);
+			setBalloon(preview, isReverse ? `反転画像はアドオン正方向と逆向きで指定します` : `矢印の向きと車両の向きが同じであれば正しい方向にセットされています`);
 
 			//全体内での位置表示用の全体画像
 			gebi("open-select-image-dialog-button").onclick = () => {
@@ -1061,7 +1061,7 @@ window.addEventListener("load", function () {
 
 	new Dialog("couplingPreviewDialog", "連結プレビュー", `
 		<div>
-			<p>編成(<span id="preview-current-formation-count"></span>両)<button id="clear-preview-formation-button" onclick="Dialog.list.couplingPreviewDialog.functions.currentFormation=[];Dialog.list.couplingPreviewDialog.functions.refresh();" class="lsf-icon" icon="clear">編成クリア</button><span class="mku-balloon" mku-balloon-message="各車両を反転時画像で表示します(順序は変わりません)"><label for="preview-reverse-toggle" class="mku-checkbox-container"><input id="preview-reverse-toggle" type="checkbox"></label><label for="preview-reverse-toggle">反転表示</label></span></p>
+			<p>編成(<span id="preview-current-formation-count"></span>両)<button id="clear-preview-formation-button" onclick="Dialog.list.couplingPreviewDialog.functions.currentFormation=[];Dialog.list.couplingPreviewDialog.functions.refresh();" class="lsf-icon" icon="clear">編成クリア</button><span class="mku-balloon" mku-balloon-message="各車両を反転時画像で表示します"><label for="preview-reverse-toggle" class="mku-checkbox-container"><input id="preview-reverse-toggle" type="checkbox"></label><label for="preview-reverse-toggle">反転表示</label></span></p>
 			<div id="preview-current-formation" class="cars-container"></div>
 		</div>
 		<div>
@@ -1388,7 +1388,7 @@ window.addEventListener("load", function () {
 		Dialog.list.calcCostDialog.functions.refresh();
 	})
 
-	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<div id="formated-image-controls"><span class="mku-balloon" mku-balloon-message="各車両を反転時画像で撮影します(順序は変わりません)"><label for="screenshot-reverse-toggle" class="mku-checkbox-container"><input id="screenshot-reverse-toggle" type="checkbox"></label><label for="screenshot-reverse-toggle">反転して撮影</label></span></div><canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard(); }, "icon": "tabs" }, { "content": "保存", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.saveAsFile(); }, "icon": "download" }, { "content": "閉じる", "event": () => { Dialog.list.formatedAddonsImageDialog.off(); }, "icon": "close" }], {
+	new Dialog("formatedAddonsImageDialog", "編成画像撮影", `<div id="formated-image-controls"><span class="mku-balloon" mku-balloon-message="各車両を反転時画像で撮影します"><label for="screenshot-reverse-toggle" class="mku-checkbox-container"><input id="screenshot-reverse-toggle" type="checkbox"></label><label for="screenshot-reverse-toggle">反転して撮影</label></span></div><canvas id="formated-addons-image"></canvas>`, [{ "content": "クリップボードにコピー", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.copyToClipboard(); }, "icon": "tabs" }, { "content": "保存", "event": () => { Dialog.list.formatedAddonsImageDialog.functions.saveAsFile(); }, "icon": "download" }, { "content": "閉じる", "event": () => { Dialog.list.formatedAddonsImageDialog.off(); }, "icon": "close" }], {
 		display: function () {
 			loader.start();
 			setTimeout(() => {
