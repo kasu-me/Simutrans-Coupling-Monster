@@ -37,6 +37,35 @@ const REVERSE_FREIGHTIMAGE_DIRECTIONS = DIRECTIONS.map(x => getFreightImageKey(R
 //pakタイプ
 const PAK_TYPE = 128;
 
+//反転時画像作成支援機能で使用する既定ファイル名サフィックス
+const REVERSE_IMAGE_SUFFIX = "_reverse";
+
+//Simutrans 特殊色プリセット(色ペアの from / to 双方で選択可能)
+//透過色 #E7FFFF は既存の透過キーカラー RGB(231,255,255)(getTransparentImage 参照)と同一
+const SPECIAL_COLOR_PRESETS = [
+	{
+		category: "透過色",
+		description: "ゲーム中では透過され表示されない",
+		colors: ["#E7FFFF"],
+	},
+	{
+		category: "プレイヤーカラー",
+		description: "ゲーム中では各プレイヤーの色に置き換えられる",
+		colors: [
+			"#244B67", "#395E7C", "#4C7191", "#6084A7", "#7497BD", "#88ABD3", "#9CBEE9", "#B0D2FF",
+			"#7B5803", "#8E6F04", "#A18605", "#B49D07", "#C6B408", "#D9CB0A", "#ECE20B", "#FFF90D",
+		],
+	},
+	{
+		category: "発光色",
+		description: "夜間に暗くならない色",
+		colors: [
+			"#01DD01", "#FF211D", "#FFFF53", "#7F9BF1", "#C1B1D1", "#57656F", "#E3E3FF", "#4D4D4D",
+			"#FF017F", "#0101FF", "#6B6B6B", "#9B9B9B", "#B3B3B3", "#C9C9C9", "#DFDFDF",
+		],
+	},
+];
+
 //各種プロパティと日本語名称の対応
 const FORMULAIC_PHRASE_FOR_DAT_PROP_WHOLE = {
 	length: "車体長",

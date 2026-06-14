@@ -330,6 +330,71 @@ function appendImageToImagesList(fileName, file) {
 		reader.readAsDataURL(file);
 	});
 }
+//反転時画像作成支援: 色変換ユーティリティ
+//"#rrggbb" → [r,g,b]
+function hexToRgb(hex) {
+	return [1, 3, 5].map((i) => parseInt(hex.substr(i, 2), 16));
+}
+//[r,g,b] → "#rrggbb"
+function rgbToHex(rgb) {
+	return "#" + rgb.map((v) => v.toString(16).padStart(2, "0")).join("");
+}
+
+//色置換した結果の canvas を生成する
+//image       : 元画像(スプライトシート全体)の HTMLImageElement
+//colorPairs  : [{ from:[r,g,b], to:[r,g,b] }, ...]
+//targetBlocks: Set<"col,row"> 置換対象の128pxブロック
+function createColorReplacedCanvas(image, colorPairs, targetBlocks) {
+	let canvas = document.createElement("canvas");
+	canvas.width = image.width;
+	canvas.height = image.height;
+	let ctx = canvas.getContext("2d");
+	ctx.drawImage(image, 0, 0);
+	let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	let data = imageData.data;
+	for (let p = 0; p < data.length; p += 4) {
+		if (data[p + 3] === 0) { continue; }				//透明ピクセルは対象外
+		let pixelIndex = p / 4;
+		let px = pixelIndex % canvas.width;
+		let py = Math.floor(pixelIndex / canvas.width);
+		let block = `${Math.floor(px / PAK_TYPE)},${Math.floor(py / PAK_TYPE)}`;
+		if (!targetBlocks.has(block)) { continue; }			//対象外ブロックはスキップ
+		for (let pair of colorPairs) {
+			if (data[p] === pair.from[0] && data[p + 1] === pair.from[1] && data[p + 2] === pair.from[2]) {
+				data[p] = pair.to[0];
+				data[p + 1] = pair.to[1];
+				data[p + 2] = pair.to[2];
+				break;										//1ピクセルにつき最初の一致のみ適用
+			}
+		}
+	}
+	ctx.putImageData(imageData, 0, 0);
+	return canvas;
+}
+
+//canvas を imageFiles / imageFileNames に登録する
+function registerCanvasAsImage(fileName, canvas) {
+	return new Promise((resolve) => {
+		canvas.toBlob((blob) => {
+			appendImageToImagesList(fileName, blob).then(resolve);
+		});
+	});
+}
+
+//canvas を PNG としてダウンロードする
+function downloadCanvas(canvas, fileName) {
+	let link = document.createElement("a");
+	link.href = canvas.toDataURL();
+	link.download = `${fileName}.png`;
+	link.click();
+}
+
+//キャッシュ済み ImageData から (x,y) のピクセル色 [r,g,b] を取得
+function getPixelColorFromImageData(imageData, x, y) {
+	let p = (y * imageData.width + x) * 4;
+	return [imageData.data[p], imageData.data[p + 1], imageData.data[p + 2]];
+}
+
 //jatabをリストに登録
 function appendJaTab(file) {
 	return new Promise((resolve) => {

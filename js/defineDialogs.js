@@ -310,7 +310,10 @@ window.addEventListener("load", function () {
 				table.addCell(`${fileName}`);
 				if (imageFiles.has(fileName)) {
 					table.addCell(`○`, { "class": "text-center" });
-					table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="画像を見る" onclick="Dialog.list.imageListDialog.functions.openImage('${fileName}')">eye</button>`);
+					table.addCell(
+						`<button class="lsf mku-balloon" mku-balloon-message="画像を見る" onclick="Dialog.list.imageListDialog.functions.openImage('${fileName}')">eye</button>` +
+						`<button class="lsf mku-balloon" mku-balloon-message="反転時画像を作成" onclick="Dialog.list.reverseImageCreatorDialog.functions.display('${fileName}')">invert</button>`
+					);
 				} else {
 					table.addCell(`×`, { "class": "text-center" });
 					table.addCell(`<button class="lsf mku-balloon" mku-balloon-message="ファイルから画像を読み込み" onclick="Dialog.list.selectImageDialog.functions.display('${fileName}')">image</button>`);
@@ -1522,6 +1525,417 @@ window.addEventListener("load", function () {
 		targetCtx.clearRect(0, 0, width, height);
 		targetCtx.drawImage(sourceCanvas, left, top, width, height, 0, 0, width, height);
 	}
+
+	//反転時画像 作成支援ダイアログ
+	new Dialog("reverseImageCreatorDialog", "反転時画像を作成", `
+		<table class="input-area">
+			<tr>
+				<td>元画像</td>
+				<td>
+					<span class="selectbox-fluctuation-button">
+						<select id="reverse-creator-source-image"></select>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>保存ファイル名</td>
+				<td><input id="reverse-creator-filename" type="text">.png</td>
+			</tr>
+		</table>
+		<p class="reverse-creator-section-title">色の置き換え</p>
+		<div id="reverse-creator-color-pairs"></div>
+		<button id="reverse-creator-add-pair" class="lsf-icon" icon="add">色のペアを追加</button>
+		<p class="reverse-creator-section-title">置換対象ブロック</p>
+		<p class="reverse-creator-hint">↓クリックでブロック毎に置換対象を切替↓</p>
+		<div id="reverse-creator-block-controls">
+			<button id="reverse-creator-select-all" class="lsf-icon" icon="check">全ブロック対象</button>
+			<button id="reverse-creator-deselect-all" class="lsf-icon" icon="close">全ブロック対象外</button>
+		</div>
+		<div id="reverse-creator-sheet"></div>
+		<p class="reverse-creator-section-title">プレビュー</p>
+		<div id="reverse-creator-preview">
+			<div><canvas id="reverse-creator-preview-after"></canvas></div>
+		</div>
+		<div id="reverse-creator-preset-palette"></div>
+	`, [{ "content": "作成", "event": () => { Dialog.list.reverseImageCreatorDialog.functions.create(); }, "icon": "download" }, { "content": "閉じる", "event": () => { Dialog.list.reverseImageCreatorDialog.off(); }, "icon": "close" }], {
+		sourceImageName: "",
+		colorPairs: [],
+		targetBlocks: new Set(),
+		sourceImageData: null,
+		presetTarget: null,			//{ index, slot } / null
+		sheetRatio: 1,
+		previewTimer: null,
+		//画像由来のレイアウト確定後に1度だけ中央寄せし直すためのフラグ
+		pendingRecenter: false,
+		display: function (fileName) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			//読込済み画像のみを元画像候補にする
+			let select = gebi("reverse-creator-source-image");
+			select.innerHTML = "";
+			for (let name of imageFileNames) {
+				if (!imageFiles.has(name)) { continue; }
+				let option = document.createElement("option");
+				option.value = name;
+				option.innerText = `${name}.png`;
+				select.appendChild(option);
+			}
+			if (select.options.length == 0) {
+				Dialog.list.alertDialog.functions.display("先に画像を読み込んでください。");
+				return;
+			}
+			funcs.colorPairs = [{ from: [231, 255, 255], to: [231, 255, 255] }];
+			funcs.closePresetPalette();
+			funcs.buildPresetPalette();
+			let target = (fileName && imageFiles.has(fileName)) ? fileName : select.options[0].value;
+			select.value = target;
+			funcs.selectSourceImage(target);
+			funcs.renderColorPairs();
+			Dialog.list.reverseImageCreatorDialog.on();
+		},
+		//元画像を確定し、ImageDataキャッシュ・全ブロック対象・ファイル名初期値・グリッド・プレビューを更新
+		selectSourceImage: function (fileName) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			funcs.sourceImageName = fileName;
+			let image = imageFiles.get(fileName);
+			let canvas = document.createElement("canvas");
+			canvas.width = image.width;
+			canvas.height = image.height;
+			let ctx = canvas.getContext("2d");
+			ctx.drawImage(image, 0, 0);
+			funcs.sourceImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			//デフォルトは全ブロック対象
+			funcs.targetBlocks = new Set();
+			let cols = Math.ceil(image.width / PAK_TYPE);
+			let rows = Math.ceil(image.height / PAK_TYPE);
+			for (let r = 0; r < rows; r++) {
+				for (let c = 0; c < cols; c++) {
+					funcs.targetBlocks.add(`${c},${r}`);
+				}
+			}
+			gebi("reverse-creator-filename").value = fileName + REVERSE_IMAGE_SUFFIX;
+			funcs.buildBlockGrid();
+			//画像でダイアログ幅が変わるため、プレビュー確定後に中央寄せし直す
+			funcs.pendingRecenter = true;
+			funcs.updatePreview();
+		},
+		//シート背景とブロックセルを生成
+		buildBlockGrid: function () {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			let image = imageFiles.get(funcs.sourceImageName);
+			let sheet = gebi("reverse-creator-sheet");
+			let ratio = 600 / image.width;
+			funcs.sheetRatio = ratio;
+			sheet.style.width = `${image.width * ratio}px`;
+			sheet.style.height = `${image.height * ratio}px`;
+			sheet.style.backgroundImage = `url(${image.src})`;
+			sheet.style.backgroundSize = "cover";
+			sheet.innerHTML = "";
+			let cellSize = PAK_TYPE * ratio;
+			let cols = Math.ceil(image.width / PAK_TYPE);
+			let rows = Math.ceil(image.height / PAK_TYPE);
+			for (let r = 0; r < rows; r++) {
+				for (let c = 0; c < cols; c++) {
+					let block = `${c},${r}`;
+					let cell = document.createElement("div");
+					cell.className = "reverse-creator-block";
+					cell.dataset.block = block;
+					cell.style.width = `${cellSize}px`;
+					cell.style.height = `${cellSize}px`;
+					cell.style.left = `${c * cellSize}px`;
+					cell.style.top = `${r * cellSize}px`;
+					if (funcs.targetBlocks.has(block)) { cell.classList.add("target"); }
+					cell.addEventListener("click", () => { funcs.toggleBlock(cell.dataset.block, cell); });
+					sheet.appendChild(cell);
+				}
+			}
+		},
+		toggleBlock: function (block, cell) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			if (funcs.targetBlocks.has(block)) {
+				funcs.targetBlocks.delete(block);
+				cell.classList.remove("target");
+			} else {
+				funcs.targetBlocks.add(block);
+				cell.classList.add("target");
+			}
+			funcs.updatePreview();
+		},
+		setAllBlocks: function (on) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			gebi("reverse-creator-sheet").querySelectorAll(".reverse-creator-block").forEach((cell) => {
+				if (on) {
+					funcs.targetBlocks.add(cell.dataset.block);
+					cell.classList.add("target");
+				} else {
+					funcs.targetBlocks.delete(cell.dataset.block);
+					cell.classList.remove("target");
+				}
+			});
+			funcs.updatePreview();
+		},
+		addColorPair: function () {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			funcs.colorPairs.push({ from: [231, 255, 255], to: [231, 255, 255] });
+			funcs.renderColorPairs();
+		},
+		removeColorPair: function (i) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			funcs.colorPairs.splice(i, 1);
+			funcs.closePresetPalette();
+			funcs.renderColorPairs();
+			funcs.updatePreview();
+		},
+		//色ペア行を再描画
+		renderColorPairs: function () {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			let container = gebi("reverse-creator-color-pairs");
+			container.innerHTML = "";
+			funcs.colorPairs.forEach((pair, i) => {
+				let row = document.createElement("div");
+				row.className = "reverse-creator-color-pair";
+				row.innerHTML = `
+					<div class="color-slot">
+						<span class="slot-label">変換前</span>
+						<input type="color" class="pair-from" value="${rgbToHex(pair.from)}">
+						<button class="pair-eyedropper" data-slot="from">スポイト</button>
+						<button class="pair-preset" data-slot="from">特殊色</button>
+					</div>
+					<span class="pair-arrow">→</span>
+					<div class="color-slot">
+						<span class="slot-label">変換後</span>
+						<input type="color" class="pair-to" value="${rgbToHex(pair.to)}">
+						<button class="pair-eyedropper" data-slot="to">スポイト</button>
+						<button class="pair-preset" data-slot="to">特殊色</button>
+					</div>
+					<button class="lsf pair-remove mku-balloon" mku-balloon-message="この色ペアを削除">delete</button>
+				`;
+				row.querySelector(".pair-from").addEventListener("input", (e) => { funcs.applyColorToTarget(i, "from", hexToRgb(e.target.value)); });
+				row.querySelector(".pair-to").addEventListener("input", (e) => { funcs.applyColorToTarget(i, "to", hexToRgb(e.target.value)); });
+				row.querySelectorAll(".pair-eyedropper").forEach((btn) => { btn.addEventListener("click", () => { funcs.startEyedropper(i, btn.dataset.slot); }); });
+				row.querySelectorAll(".pair-preset").forEach((btn) => { btn.addEventListener("click", (e) => { funcs.openPresetPalette(i, btn.dataset.slot, e.currentTarget); }); });
+				row.querySelector(".pair-remove").addEventListener("click", () => { funcs.removeColorPair(i); });
+				container.appendChild(row);
+			});
+		},
+		//ピッカー/スポイト/プリセット共通の反映経路
+		applyColorToTarget: function (index, slot, rgb) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			if (!funcs.colorPairs[index]) { return; }
+			funcs.colorPairs[index][slot] = rgb;
+			let row = gebi("reverse-creator-color-pairs").children[index];
+			if (row) {
+				let input = row.querySelector(slot == "from" ? ".pair-from" : ".pair-to");
+				if (input) { input.value = rgbToHex(rgb); }
+			}
+			funcs.updatePreview();
+		},
+		//スポイト: 拡大表示の専用ダイアログを開く
+		startEyedropper: function (index, slot) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			funcs.closePresetPalette();
+			Dialog.list.reverseImageEyedropperDialog.functions.display(index, slot);
+		},
+		buildPresetPalette: function () {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			let palette = gebi("reverse-creator-preset-palette");
+			if (palette.dataset.built) { return; }
+			let html = "";
+			SPECIAL_COLOR_PRESETS.forEach((cat) => {
+				html += `<div class="preset-category"><div class="preset-category-title">${cat.category}</div><div class="preset-category-desc">${cat.description}</div><div class="preset-swatches">`;
+				cat.colors.forEach((color) => {
+					let isTransparent = color.toUpperCase() == "#E7FFFF";
+					html += `<button class="preset-swatch mku-balloon${isTransparent ? " transparent" : ""}" mku-balloon-message="${color}" data-color="${color}" style="background-color:${color}"></button>`;
+				});
+				html += `</div></div>`;
+			});
+			palette.innerHTML = html;
+			palette.querySelectorAll(".preset-swatch").forEach((btn) => {
+				btn.addEventListener("click", () => {
+					if (!funcs.presetTarget) { return; }
+					funcs.applyColorToTarget(funcs.presetTarget.index, funcs.presetTarget.slot, hexToRgb(btn.dataset.color));
+					funcs.closePresetPalette();
+				});
+			});
+			palette.dataset.built = "1";
+		},
+		openPresetPalette: function (index, slot, btnEl) {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			//同じ対象なら閉じる(トグル)
+			if (funcs.presetTarget && funcs.presetTarget.index == index && funcs.presetTarget.slot == slot && gebi("reverse-creator-preset-palette").classList.contains("on")) {
+				funcs.closePresetPalette();
+				return;
+			}
+			funcs.presetTarget = { index, slot };
+			let palette = gebi("reverse-creator-preset-palette");
+			palette.classList.add("on");
+			let rect = btnEl.getBoundingClientRect();
+			palette.style.left = `${rect.left}px`;
+			palette.style.top = `${rect.bottom + 4}px`;
+		},
+		closePresetPalette: function () {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			funcs.presetTarget = null;
+			let palette = gebi("reverse-creator-preset-palette");
+			if (palette) { palette.classList.remove("on"); }
+		},
+		//createColorReplacedCanvas で after を更新(デバウンス)
+		updatePreview: function () {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			clearTimeout(funcs.previewTimer);
+			funcs.previewTimer = setTimeout(() => {
+				let image = imageFiles.get(funcs.sourceImageName);
+				if (!image) { return; }
+				let after = gebi("reverse-creator-preview-after");
+				let result = createColorReplacedCanvas(image, funcs.colorPairs, funcs.targetBlocks);
+				after.width = result.width;
+				after.height = result.height;
+				after.getContext("2d").drawImage(result, 0, 0);
+				//画像由来のレイアウトが確定したので中央寄せし直す(初回・元画像切替時のみ)
+				if (funcs.pendingRecenter) {
+					funcs.pendingRecenter = false;
+					Dialog.list.reverseImageCreatorDialog.setCenterPositionX();
+				}
+			}, 120);
+		},
+		create: function () {
+			let funcs = Dialog.list.reverseImageCreatorDialog.functions;
+			let fileName = gebi("reverse-creator-filename").value.trim();
+			if (!funcs.sourceImageName || !imageFiles.has(funcs.sourceImageName)) {
+				Dialog.list.alertDialog.functions.display("元画像が選択されていません。");
+				return;
+			}
+			if (fileName == "") {
+				Dialog.list.alertDialog.functions.display("保存ファイル名を入力してください。");
+				return;
+			}
+			let doCreate = () => {
+				loader.start();
+				let image = imageFiles.get(funcs.sourceImageName);
+				let canvas = createColorReplacedCanvas(image, funcs.colorPairs, funcs.targetBlocks);
+				registerCanvasAsImage(fileName, canvas).then(() => {
+					downloadCanvas(canvas, fileName);
+					loader.finish();
+					new Message(`反転時画像「${fileName}.png」を作成しました。`, ["normal-message"], 3000, true, true);
+					refresh();
+					Dialog.list.reverseImageCreatorDialog.off();
+				});
+			};
+			if (imageFileNames.has(fileName)) {
+				Dialog.list.confirmDialog.functions.display(`「${fileName}.png」は既に存在します。上書きしますか？`, doCreate);
+			} else {
+				doCreate();
+			}
+		}
+	}, true);
+	gebi("reverse-creator-source-image").addEventListener("change", (e) => {
+		Dialog.list.reverseImageCreatorDialog.functions.selectSourceImage(e.target.value);
+	});
+	gebi("reverse-creator-add-pair").addEventListener("click", () => {
+		Dialog.list.reverseImageCreatorDialog.functions.addColorPair();
+	});
+	gebi("reverse-creator-select-all").addEventListener("click", () => {
+		Dialog.list.reverseImageCreatorDialog.functions.setAllBlocks(true);
+	});
+	gebi("reverse-creator-deselect-all").addEventListener("click", () => {
+		Dialog.list.reverseImageCreatorDialog.functions.setAllBlocks(false);
+	});
+	//プリセットパレット外クリックで閉じる
+	document.addEventListener("mousedown", (e) => {
+		let palette = gebi("reverse-creator-preset-palette");
+		if (!palette || !palette.classList.contains("on")) { return; }
+		if (palette.contains(e.target) || e.target.closest(".pair-preset")) { return; }
+		Dialog.list.reverseImageCreatorDialog.functions.closePresetPalette();
+	});
+
+	//スポイト(拡大表示で色取得)ダイアログ
+	new Dialog("reverseImageEyedropperDialog", "スポイトで色を取得", `
+		<div id="reverse-eyedropper-controls">
+			<span class="reverse-eyedropper-zoom">
+				拡大率
+				<button id="reverse-eyedropper-zoom-out" class="lsf">zoomout</button>
+				<span id="reverse-eyedropper-zoom-label">4x</span>
+				<button id="reverse-eyedropper-zoom-in" class="lsf">zoomin</button>
+			</span>
+			<span class="reverse-eyedropper-hover">
+				<span id="reverse-eyedropper-hover-swatch"></span>
+				<span id="reverse-eyedropper-hover-text">画像にカーソルを合わせてください</span>
+			</span>
+		</div>
+		<p class="reverse-eyedropper-hint">クリックでその位置の色を取得します。</p>
+		<div id="reverse-eyedropper-image-container">
+			<canvas id="reverse-eyedropper-canvas"></canvas>
+		</div>
+	`, [{ "content": "キャンセル", "event": () => { Dialog.list.reverseImageEyedropperDialog.off(); }, "icon": "close" }], {
+		target: null,			//{ index, slot }
+		zoom: 4,
+		maxZoom: 16,
+		display: function (index, slot) {
+			let funcs = Dialog.list.reverseImageEyedropperDialog.functions;
+			let creator = Dialog.list.reverseImageCreatorDialog.functions;
+			let image = imageFiles.get(creator.sourceImageName);
+			if (!image) {
+				Dialog.list.alertDialog.functions.display("元画像が選択されていません。");
+				return;
+			}
+			funcs.target = { index, slot };
+			//キャンバスが極端に大きくならないよう拡大率の上限を算出
+			funcs.maxZoom = Math.max(2, Math.floor(4096 / Math.max(image.width, image.height)));
+			funcs.zoom = Math.min(8, funcs.maxZoom);
+			funcs.render();
+			//ホバー表示を初期化
+			gebi("reverse-eyedropper-hover-swatch").style.backgroundColor = "transparent";
+			gebi("reverse-eyedropper-hover-text").innerText = "画像にカーソルを合わせてください";
+			Dialog.list.reverseImageEyedropperDialog.on();
+		},
+		render: function () {
+			let funcs = Dialog.list.reverseImageEyedropperDialog.functions;
+			let creator = Dialog.list.reverseImageCreatorDialog.functions;
+			let image = imageFiles.get(creator.sourceImageName);
+			let canvas = gebi("reverse-eyedropper-canvas");
+			canvas.width = image.width * funcs.zoom;
+			canvas.height = image.height * funcs.zoom;
+			let ctx = canvas.getContext("2d");
+			ctx.imageSmoothingEnabled = false;
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+			gebi("reverse-eyedropper-zoom-label").innerText = `${funcs.zoom}x`;
+			gebi("reverse-eyedropper-zoom-in").disabled = funcs.zoom >= funcs.maxZoom;
+			gebi("reverse-eyedropper-zoom-out").disabled = funcs.zoom <= 1;
+		},
+		setZoom: function (delta) {
+			let funcs = Dialog.list.reverseImageEyedropperDialog.functions;
+			funcs.zoom = Math.min(funcs.maxZoom, Math.max(1, funcs.zoom + delta));
+			funcs.render();
+		},
+		//イベント座標からピクセル位置と色を求める
+		pickAt: function (e) {
+			let funcs = Dialog.list.reverseImageEyedropperDialog.functions;
+			let creator = Dialog.list.reverseImageCreatorDialog.functions;
+			let canvas = gebi("reverse-eyedropper-canvas");
+			let rect = canvas.getBoundingClientRect();
+			let x = Math.floor((e.clientX - rect.left) / funcs.zoom);
+			let y = Math.floor((e.clientY - rect.top) / funcs.zoom);
+			x = Math.min(Math.max(x, 0), creator.sourceImageData.width - 1);
+			y = Math.min(Math.max(y, 0), creator.sourceImageData.height - 1);
+			return { x, y, rgb: getPixelColorFromImageData(creator.sourceImageData, x, y) };
+		},
+		onMove: function (e) {
+			let funcs = Dialog.list.reverseImageEyedropperDialog.functions;
+			let { x, y, rgb } = funcs.pickAt(e);
+			gebi("reverse-eyedropper-hover-swatch").style.backgroundColor = rgbToHex(rgb);
+			gebi("reverse-eyedropper-hover-text").innerText = `(${x}, ${y})  ${rgbToHex(rgb).toUpperCase()}`;
+		},
+		onClick: function (e) {
+			let funcs = Dialog.list.reverseImageEyedropperDialog.functions;
+			let { rgb } = funcs.pickAt(e);
+			Dialog.list.reverseImageCreatorDialog.functions.applyColorToTarget(funcs.target.index, funcs.target.slot, rgb);
+			Dialog.list.reverseImageEyedropperDialog.off();
+		}
+	}, true);
+	gebi("reverse-eyedropper-zoom-in").addEventListener("click", () => { Dialog.list.reverseImageEyedropperDialog.functions.setZoom(1); });
+	gebi("reverse-eyedropper-zoom-out").addEventListener("click", () => { Dialog.list.reverseImageEyedropperDialog.functions.setZoom(-1); });
+	gebi("reverse-eyedropper-canvas").addEventListener("mousemove", (e) => { Dialog.list.reverseImageEyedropperDialog.functions.onMove(e); });
+	gebi("reverse-eyedropper-canvas").addEventListener("click", (e) => { Dialog.list.reverseImageEyedropperDialog.functions.onClick(e); });
 
 	new Dialog("helpDialog", "Coupling Monster について", `<div class="dialog-preview" >
 					<div class="mku-tab-container" id="help-tab">

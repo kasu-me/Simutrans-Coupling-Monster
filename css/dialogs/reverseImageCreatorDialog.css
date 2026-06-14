@@ -1,0 +1,291 @@
+/* 反転時画像 作成支援ダイアログ */
+#reverseImageCreatorDialog {
+	top: 3vh;
+
+	& div.dialog-main-message {
+		padding: 1.0em;
+		margin: 0 1.8em;
+		border: solid 1px var(--formation-table-main-border);
+		max-height: calc(100vh - 14em);
+		overflow-y: auto;
+	}
+
+	.input-area {
+		font-size: 0.85rem;
+		margin-bottom: 0.5em;
+		width: 100%;
+
+		& td:first-child {
+			white-space: nowrap;
+		}
+	}
+
+	#reverse-creator-source-image {
+		width: calc(600px - 8rem);
+	}
+
+	#reverse-creator-filename {
+		width: 20em;
+	}
+
+	.reverse-creator-section-title {
+		font-weight: bold;
+		font-size: 0.9rem;
+		margin: 0.9em 0 0.4em;
+		border-bottom: 1px solid var(--formation-table-main-border);
+		padding-bottom: 0.2em;
+	}
+
+	.reverse-creator-hint {
+		font-size: 0.75rem;
+		text-align: center;
+		margin: 0.2em 0;
+	}
+
+	/* 色ペアリスト */
+	#reverse-creator-color-pairs {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4em;
+	}
+
+	.reverse-creator-color-pair {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		flex-wrap: wrap;
+		font-size: 0.8rem;
+		padding: 0.3em 0.4em;
+		border: 1px solid var(--formation-table-main-border);
+		border-radius: 4px;
+	}
+
+	.reverse-creator-color-pair .color-slot {
+		display: flex;
+		align-items: center;
+		gap: 0.3em;
+	}
+
+	.reverse-creator-color-pair .slot-label {
+		color: #555;
+	}
+
+	.reverse-creator-color-pair input[type="color"] {
+		width: 2.4em;
+		height: 1.8em;
+		padding: 0;
+		border: 1px solid #aaa;
+		cursor: pointer;
+	}
+
+	.reverse-creator-color-pair .pair-arrow {
+		font-weight: bold;
+	}
+
+	.reverse-creator-color-pair button {
+		font-size: 0.72rem;
+		padding: 0.15em 0.5em;
+		cursor: pointer;
+	}
+
+	.reverse-creator-color-pair .pair-remove {
+		margin-left: auto;
+	}
+
+	#reverse-creator-add-pair {
+		margin-top: 0.5em;
+		font-size: 0.8rem;
+	}
+
+	#reverse-creator-block-controls {
+		display: flex;
+		gap: 0.5em;
+		margin-bottom: 0.4em;
+
+		& button {
+			font-size: 0.78rem;
+		}
+	}
+
+	/* ブロック選択シート */
+	#reverse-creator-sheet {
+		position: relative;
+		background-color: var(--simutrans-transparent);
+		background-repeat: no-repeat;
+		margin: 0 auto;
+	}
+
+	.reverse-creator-block {
+		position: absolute;
+		box-sizing: border-box;
+		/* 対象外: 暗くマスク */
+		background-color: rgba(0, 0, 0, 0.55);
+		cursor: pointer;
+
+		&.target {
+			/* 対象: マスクなし */
+			background-color: transparent;
+		}
+
+		&:hover {
+			outline: 2px solid #f1c40f;
+			outline-offset: -2px;
+		}
+	}
+
+	/* Before / After プレビュー */
+	#reverse-creator-preview {
+		display: flex;
+		gap: 1em;
+		flex-wrap: wrap;
+
+		&>div {
+			flex: 1;
+			min-width: 0;
+			text-align: center;
+		}
+
+		& p {
+			margin: 0.2em 0;
+			font-size: 0.8rem;
+		}
+
+		& canvas {
+			max-width: 100%;
+			image-rendering: pixelated;
+			background-color: var(--simutrans-transparent);
+			border: 1px solid var(--formation-table-main-border);
+		}
+	}
+
+	/* 特殊色プリセットパレット (ポップオーバー) */
+	#reverse-creator-preset-palette {
+		display: none;
+		position: fixed;
+		z-index: 10;
+		background: #fff;
+		border: 1px solid #888;
+		border-radius: 4px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+		padding: 0.5em;
+		max-width: 320px;
+		max-height: 60vh;
+		overflow-y: auto;
+
+		&.on {
+			display: block;
+		}
+	}
+
+	.preset-category {
+		margin-bottom: 0.6em;
+	}
+
+	.preset-category-title {
+		font-weight: bold;
+		font-size: 0.82rem;
+	}
+
+	.preset-category-desc {
+		font-size: 0.7rem;
+		color: #666;
+		margin-bottom: 0.3em;
+	}
+
+	.preset-swatches {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25em;
+	}
+
+	.preset-swatch {
+		width: 1.6em;
+		height: 1.6em;
+		padding: 0;
+		border: 1px solid #aaa;
+		cursor: pointer;
+
+		&:hover {
+			outline: 2px solid #f1c40f;
+			outline-offset: -1px;
+		}
+
+		/* 透過色見本はチェッカー背景で透明と区別 */
+		&.transparent {
+			background-image:
+				linear-gradient(45deg, #ccc 25%, transparent 25%),
+				linear-gradient(-45deg, #ccc 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, #ccc 75%),
+				linear-gradient(-45deg, transparent 75%, #ccc 75%);
+			background-size: 8px 8px;
+			background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+		}
+	}
+}
+
+/* スポイト(拡大表示)ダイアログ */
+#reverseImageEyedropperDialog {
+	top: 5vh;
+
+	#reverse-eyedropper-controls {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1em;
+		flex-wrap: wrap;
+		font-size: 0.85rem;
+		margin-bottom: 0.4em;
+	}
+
+	.reverse-eyedropper-zoom {
+		display: flex;
+		align-items: center;
+		gap: 0.4em;
+
+		& button {
+			cursor: pointer;
+		}
+	}
+
+	#reverse-eyedropper-zoom-label {
+		min-width: 2.5em;
+		text-align: center;
+	}
+
+	.reverse-eyedropper-hover {
+		display: flex;
+		align-items: center;
+		gap: 0.4em;
+	}
+
+	#reverse-eyedropper-hover-swatch {
+		display: inline-block;
+		width: 1.4em;
+		height: 1.4em;
+		border: 1px solid #888;
+		background-color: transparent;
+	}
+
+	#reverse-eyedropper-hover-text {
+		font-family: monospace;
+	}
+
+	.reverse-eyedropper-hint {
+		font-size: 0.75rem;
+		margin: 0.2em 0;
+	}
+
+	#reverse-eyedropper-image-container {
+		max-width: 80vw;
+		max-height: calc(100vh - 30em);
+		overflow: auto;
+		background-color: var(--simutrans-transparent);
+		border: 1px solid var(--formation-table-main-border);
+	}
+
+	#reverse-eyedropper-canvas {
+		display: block;
+		image-rendering: pixelated;
+		cursor: crosshair;
+	}
+}
