@@ -1023,13 +1023,17 @@ window.addEventListener("load", function () {
 				window.addEventListener("keydown", Dialog.list.editImageDialog.functions.dispatchKeyDownEvent);
 				window.addEventListener("keyup", Dialog.list.editImageDialog.functions.dispatchKeyUpEvent);
 
-				//全体内での現在位置表示
-				positionPointer.classList.add("on");
-				positionPointer.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-				positionPointer.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-				positionPointer.style.top = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[1] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-				positionPointer.style.left = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[2] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-				addonWholeImageArea.appendChild(positionPointer);
+				//全体内での現在位置表示(画像未設定の方向では0,0扱いになるため非表示)
+				if (imageDataStr != undefined) {
+					positionPointer.classList.add("on");
+					positionPointer.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+					positionPointer.style.height = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+					positionPointer.style.top = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[1] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+					positionPointer.style.left = `${PAK_TYPE * Dialog.list.editImageDialog.functions.editingAddonMainImageData[2] * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+					addonWholeImageArea.appendChild(positionPointer);
+				} else {
+					positionPointer.classList.remove("on");
+				}
 			} else {
 				//画像が存在しない場合
 				addonWholeImageArea.classList.remove("on");
