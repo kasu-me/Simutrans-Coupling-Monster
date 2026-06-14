@@ -800,8 +800,8 @@ window.addEventListener("load", function () {
 			<label class="mku-radio-container"><input type="radio" name="image-type" value="reverse">反転時画像 (OTRP)</label>
 			<button id="clear-reverse-image-button" class="lsf-icon" icon="delete">反転画像を全削除</button>
 		</div>
-		<div id="reverse-image-note">※反転時画像は「アドオン正方向と逆向き」で指定します。未設定の場合は通常画像が使用されます。詳しくは<a href="https://github.com/teamhimeh/simutrans/wiki/%E7%B7%A8%E6%88%90%E5%8F%8D%E8%BB%A2%E6%99%82%E7%94%A8%E7%94%BB%E5%83%8F%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6-Image-for-Reversing" target="_blank">OTRPドキュメント</a>を参照してください。</div>
 		<div id="addon-image-preview"></div>
+		<div id="reverse-image-note">※反転時画像は「アドオン正方向と逆向き」で指定します。未設定の場合は通常画像が使用されます。詳しくは<a href="https://github.com/teamhimeh/simutrans/wiki/%E7%B7%A8%E6%88%90%E5%8F%8D%E8%BB%A2%E6%99%82%E7%94%A8%E7%94%BB%E5%83%8F%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6-Image-for-Reversing" target="_blank">OTRPドキュメント</a>を参照してください。</div>
 		<p style="margin-bottom:0;text-align:center;">↓クリックで画像を指定・shift+クリックで1列をまとめて指定↓</p>
 		<div id="addon-image-whole-preview">
 			<div class="addon-image-whole-preview-position-pointer" id="position-pointer"></div>
