@@ -800,9 +800,9 @@ window.addEventListener("load", function () {
 			<label class="mku-radio-container"><input type="radio" name="image-type" value="reverse">反転時画像 (OTRP)</label>
 			<button id="clear-reverse-image-button" class="lsf-icon" icon="delete">反転画像を全削除</button>
 		</div>
-		<div id="addon-image-preview"></div>
 		<div id="reverse-image-note">※反転時画像は「アドオン正方向と逆向き」で指定します。未設定の場合は通常画像が使用されます。詳しくは<a href="https://github.com/teamhimeh/simutrans/wiki/%E7%B7%A8%E6%88%90%E5%8F%8D%E8%BB%A2%E6%99%82%E7%94%A8%E7%94%BB%E5%83%8F%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6-Image-for-Reversing" target="_blank">OTRPドキュメント</a>を参照してください。</div>
-		<p style="margin-bottom:0;text-align:center;">↓クリックで画像を指定・shift+クリックで1列をまとめて指定↓</p>
+		<div id="addon-image-preview"></div>
+		<p style="margin-bottom:0;text-align:center;">クリックで画像を指定・shift+クリックで1列をまとめて指定<br>ctrl押下中は通常/反転時画像(OTRP)を一時的に切替えて指定（shift併用可）</p>
 		<div id="addon-image-whole-preview">
 			<div class="addon-image-whole-preview-position-pointer" id="position-pointer"></div>
 			<div class="addon-image-whole-preview-position-pointer cursor" id="position-pointer-cursor"></div>
@@ -819,6 +819,8 @@ window.addEventListener("load", function () {
 		editingImageType: "empty",
 		//反転画像が未設定の方向で表示する基準スプライトシートのファイル名(任意)
 		reverseSheetOverride: undefined,
+		//ctrl押下中に一時切替する前のモード(押下前。離したら復元)。未押下時はundefined
+		ctrlTempOriginalMode: undefined,
 		//現在のモード・方向に対応する画像プロパティキーを返す
 		getEditingImageKey: function (direction) {
 			if (Dialog.list.editImageDialog.functions.editingImageType == "reverse") {
@@ -826,11 +828,22 @@ window.addEventListener("load", function () {
 			}
 			return `${EMPTYIMAGE}[${direction}]`;
 		},
+		//画像種別モードを切替(ラジオ・状態・表示を同期)
+		setImageType: function (mode) {
+			let funcs = Dialog.list.editImageDialog.functions;
+			funcs.editingImageType = mode;
+			funcs.reverseSheetOverride = undefined;
+			document.querySelectorAll('#image-type-selector input[name="image-type"]').forEach((radio) => {
+				radio.checked = radio.value == mode;
+			});
+			funcs.refresh();
+		},
 		display: function () {
 			Dialog.list.editImageDialog.functions.lastX = 0;
 			//ダイアログを開くたびに通常画像モードへリセット
 			Dialog.list.editImageDialog.functions.editingImageType = "empty";
 			Dialog.list.editImageDialog.functions.reverseSheetOverride = undefined;
+			Dialog.list.editImageDialog.functions.ctrlTempOriginalMode = undefined;
 			loader.start();
 
 			setTimeout(() => {
@@ -897,6 +910,7 @@ window.addEventListener("load", function () {
 			let funcs = Dialog.list.editImageDialog.functions;
 			let addonWholeImageArea = gebi("addon-image-whole-preview");
 			let y = Math.floor((e.clientY - addonWholeImageArea.getBoundingClientRect().top) / PAK_TYPE / funcs.imageDisplaySizeRatio);
+			//ctrl押下中はeditingImageTypeが一時的に反転側へ切替わっているため、現モードのキーをそのまま使う
 			if (e.shiftKey) {
 				DIRECTIONS.forEach((dir, i) => {
 					funcs.editingAddon[funcs.getEditingImageKey(dir)] = `${funcs.editingAddonMainImageData[0]}.${y}.${i}`;
@@ -909,18 +923,30 @@ window.addEventListener("load", function () {
 			}
 		},
 		dispatchKeyDownEvent: function (e) {
+			let funcs = Dialog.list.editImageDialog.functions;
 			let positionPointerCursor = gebi("position-pointer-cursor");
 			if (e.shiftKey && Dialog.list.editImageDialog.isActive && positionPointerCursor.classList.contains("on")) {
 				positionPointerCursor.style.left = 0;
 				positionPointerCursor.style.width = `600px`;
 			}
+			//ctrl押下中は一時的に現モードの逆(通常⇔反転)へ切替。離したら復元
+			if (e.ctrlKey && Dialog.list.editImageDialog.isActive && funcs.ctrlTempOriginalMode == undefined) {
+				funcs.ctrlTempOriginalMode = funcs.editingImageType;
+				funcs.setImageType(funcs.editingImageType == "reverse" ? "empty" : "reverse");
+			}
 		},
 		dispatchKeyUpEvent: function (e) {
-			let addonWholeImageArea = gebi("addon-image-whole-preview");
+			let funcs = Dialog.list.editImageDialog.functions;
 			let positionPointerCursor = gebi("position-pointer-cursor");
 			if (Dialog.list.editImageDialog.isActive && positionPointerCursor.classList.contains("on")) {
-				positionPointerCursor.style.left = `${Dialog.list.editImageDialog.functions.lastX * PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
-				positionPointerCursor.style.width = `${PAK_TYPE * Dialog.list.editImageDialog.functions.imageDisplaySizeRatio}px`;
+				positionPointerCursor.style.left = `${funcs.lastX * PAK_TYPE * funcs.imageDisplaySizeRatio}px`;
+				positionPointerCursor.style.width = `${PAK_TYPE * funcs.imageDisplaySizeRatio}px`;
+			}
+			//ctrlを離したら一時切替前のモードへ復元
+			if (e.key == "Control" && funcs.ctrlTempOriginalMode != undefined) {
+				let original = funcs.ctrlTempOriginalMode;
+				funcs.ctrlTempOriginalMode = undefined;
+				funcs.setImageType(original);
 			}
 		},
 		refresh: function () {
@@ -942,7 +968,6 @@ window.addEventListener("load", function () {
 
 			//画像種別モードに応じたUI表示切替
 			let isReverse = funcs.editingImageType == "reverse";
-			gebi("reverse-image-note").style.display = isReverse ? "" : "none";
 			gebi("clear-reverse-image-button").style.display = isReverse ? "" : "none";
 
 			//セレクトボックスに方向をセット
@@ -1043,9 +1068,9 @@ window.addEventListener("load", function () {
 	document.querySelectorAll('#image-type-selector input[name="image-type"]').forEach((radio) => {
 		radio.addEventListener("change", () => {
 			let funcs = Dialog.list.editImageDialog.functions;
-			funcs.editingImageType = document.querySelector('#image-type-selector input[name="image-type"]:checked').value;
-			funcs.reverseSheetOverride = undefined;
-			funcs.refresh();
+			//手動切替時はctrl一時切替の復元予約を解除
+			funcs.ctrlTempOriginalMode = undefined;
+			funcs.setImageType(document.querySelector('#image-type-selector input[name="image-type"]:checked').value);
 		});
 	});
 	//反転画像を全削除
