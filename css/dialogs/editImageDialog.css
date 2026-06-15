@@ -13,11 +13,6 @@
 		font-size: 0.8rem;
 		margin-bottom: 1em;
 		width: 600px;
-		position: sticky;
-		top: 0;
-		left: 0;
-		background: rgba(255, 255, 255, 0.9);
-		z-index: 2;
 
 		& td:first-child {
 			width: 6.5em;
@@ -35,6 +30,14 @@
 
 	.selectbox-fluctuation-button:has(#loading-conditions-selectbox) {
 		margin-left: 1.0em;
+	}
+
+	& #edit-image-dialog-sticky-header {
+		position: sticky;
+		top: 0;
+		left: 0;
+		background: rgba(255, 255, 255, 0.9);
+		z-index: 2;
 	}
 
 	/* 通常画像/反転時画像の切替 */
