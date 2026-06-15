@@ -107,7 +107,7 @@ body:has(.dialog-area.on) {
 		}
 
 		>div.dialog-main-message {
-			max-height: calc(100vh - 25em);
+			max-height: calc(100vh - 15em);
 			overflow-y: auto;
 
 			&:has(.dialog-icon) {
