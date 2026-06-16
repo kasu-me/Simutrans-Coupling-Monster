@@ -1,4 +1,6 @@
 #formationTemplateDialog {
+	top: 2rem;
+
 	& #formation-templates-area {
 		display: flex;
 		flex-direction: column;
